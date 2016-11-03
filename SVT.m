@@ -43,6 +43,12 @@ Import[$CodeDirectory<>"DerivedTensors.m"]
 Import[$CodeDirectory<>"AutomaticRules.m"]
 
 
+(****   Assumptions   ****)
+
+
+$Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0};
+
+
 (****   SVT Expand Rules   ****)
 
 

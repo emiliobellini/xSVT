@@ -11,7 +11,8 @@ metricrules = {metricg[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec
 	pertmetricg[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale[]^2 PD[-i]@pertB[LI[order]], 
 	pertmetricg[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale[]^2 PD[-i]@pertB[LI[order]], 
 	pertmetricg[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, 2 scale[]^2 (- pertphi[LI[order]] metric\[Delta][-i, -j] + PD[-i]@PD[-j]@pertE[LI[order]])]};
+		Module[{k, l}, 2 scale[]^2 (- pertphi[LI[order]] metric\[Delta][-i, -j] + PD[-i]@PD[-j]@pertE[LI[order]])],
+	Detmetricg[] :> -scale[]^8};
 
 
 Print[Column[{"Metric Decomposition", metricrules}]]
