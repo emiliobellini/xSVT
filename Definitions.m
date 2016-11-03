@@ -156,3 +156,9 @@ DefTensor[alphaT[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(T\)]\)",
 
 DefTensor[alphaH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(H\)]\)",
 	DefInfo -> {"tensor", "building function"}]
+
+
+(****   Scalar Functions   ****)
+
+
+DefScalarFunction[LG, PrintAs -> "\!\(\*SubscriptBox[\(L\), \(G\)]\)"]
