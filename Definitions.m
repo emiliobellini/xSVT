@@ -80,8 +80,8 @@ DefTensor[pertmatter[LI[order]], M4, PrintAs -> "\[Delta]\[CurlyPhi]",
 (****   Vector Field   ****)
 
 
-DefTensor[vectorcov[-\[Mu]], M4, PrintAs -> "A"]
-DefTensorPerturbation[pertvectorcov[LI[order], -\[Mu]], vectorcov[-\[Mu]], M4, PrintAs -> "\[Delta]A"]
+DefTensor[vectorcov[\[Mu]], M4, PrintAs -> "A"]
+DefTensorPerturbation[pertvectorcov[LI[order], \[Mu]], vectorcov[\[Mu]], M4, PrintAs -> "\[Delta]A"]
 
 
 DefTensor[vector0[], M4, PrintAs -> "A", DefInfo -> {"tensor", "background"}]
