@@ -24,6 +24,18 @@ AutomaticRules[timevec, {timevec[-a_?TangentM1`Q] timevec[a_?TangentM1`Q] :> 1,
 AutomaticRules[pertmetric\[Delta], {pertmetric\[Delta][LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]
 
 
+(****   Stress Energy Tensor   ****)
+
+
+AutomaticRules[stressenergy,
+	{stressenergy[\[Mu]_?TangentM4`pmQ, \[Nu]_?TangentM4`pmQ] :> (densitycov[] + pressurecov[]) velocitycov[\[Mu]] velocitycov[\[Nu]] + pressurecov[] metricg[\[Mu], \[Nu]] + shearcov[\[Mu], \[Nu]]}]
+
+
+AutomaticRules[velocitycov, {velocitycov[i_?TangentM3`pmQ] :> 0}]
+AutomaticRules[shearcov, {shearcov[i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0, shearcov[i_?TangentM3`pmQ, a_?TangentM1`pmQ] :> 0,
+	shearcov[a_?TangentM1`pmQ, i_?TangentM3`pmQ] :> 0, shearcov[a_?TangentM1`pmQ, b_?TangentM1`pmQ] :> 0}]
+
+
 (****   Background   ****)
 
 

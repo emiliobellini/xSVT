@@ -30,7 +30,24 @@ Print[Column[{"Scalar field Decomposition", scalarrules}]]
 (****   Matter Field   ****)
 
 
-matterrules = {mattercov[] :> matter[], pertmattercov[LI[order_]] :> pertmatter[LI[order]]};
+(* I am using the fact that velocitycov[\[Mu]] velocitycov[-\[Mu]] \[Equal] -1. If the metric is not conformal some of this should be changed *)
+
+
+matterrules = Flatten[{mattercov[] :> matter[], pertmattercov[LI[order_]] :> pertmatter[LI[order]],
+	densitycov[] :> density[],
+	pressurecov[] :> pressure[],
+	velocitycov[a_?TangentM1`Q] :> timevec[a] scale[]^-1,
+	pertdensitycov[LI[order_]] :> density[] pertdensity[LI[order]],
+	pertpressurecov[LI[order_]] :> pertpressure[LI[order]],
+	MakeRule[{pertvelocitycov[LI[1], a], timevec[a] (pertmetricg[LI[1], -b, -c] timevec[b] timevec[c])/2/scale[]^3}],
+	MakeRule[{pertvelocitycov[LI[1], i], metric\[Delta][i, j] (PD[-j]@pertvelocity[LI[1]]-scale[] PD[-j]@pertB[LI[1]])/scale[]^2}],
+	MakeRule[{pertshearcov[LI[1], -i, -j], (density[] + pressure[]) (3 PD[-i]@PD[-j]@pertshear[LI[1]] - metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[1]])/2}],
+	pertshearcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> 0,
+	pertshearcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> 0,
+	pertshearcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> 0}];
+
+
+Print[Column[{"Stress-Energy Tensor Decomposition", DownValues[stressenergy]}]]
 
 
 Print[Column[{"Matter field Decomposition", matterrules}]]

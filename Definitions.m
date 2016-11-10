@@ -77,6 +77,31 @@ DefTensor[pertmatter[LI[order]], M4, PrintAs -> "\[Delta]\[CurlyPhi]",
 	DefInfo -> {"tensor", "perturbation"}]
 
 
+DefTensor[stressenergy[-\[Mu], -\[Nu]], M4, PrintAs -> "T"]
+
+
+DefTensor[densitycov[], M4, PrintAs -> "\[Rho]"]
+DefTensor[pressurecov[], M4, PrintAs -> "p"]
+DefTensor[velocitycov[\[Mu]], M4, PrintAs -> "u"]
+DefTensor[shearcov[-\[Mu], -\[Nu]], M4, PrintAs -> "\[Sigma]"]
+
+
+DefTensorPerturbation[pertdensitycov[LI[order]], densitycov[], M4, PrintAs -> "\[Delta]\[Rho]"]
+DefTensorPerturbation[pertpressurecov[LI[order]], pressurecov[], M4, PrintAs -> "\[Delta]p"]
+DefTensorPerturbation[pertvelocitycov[LI[order], \[Mu]], velocitycov[\[Mu]], M4, PrintAs -> "\[Delta]u"]
+DefTensorPerturbation[pertshearcov[LI[order], -\[Mu], -\[Nu]], shearcov[-\[Mu], -\[Nu]], M4, PrintAs -> "\[Delta]\[Sigma]"]
+
+
+DefTensor[density[], M4, PrintAs -> "\[Rho]", DefInfo -> {"tensor", "background"}]
+DefTensor[pressure[], M4, PrintAs -> "p", DefInfo -> {"tensor", "background"}]
+
+
+DefTensor[pertdensity[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertvelocity[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertpressure[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]p\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertshear[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Sigma]\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
+
+
 (****   Vector Field   ****)
 
 
