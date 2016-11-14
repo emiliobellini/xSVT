@@ -184,7 +184,7 @@ TaylorExpand[order_][expr_] := Module[{ispert, eps, tmp},
 		eps^ReplaceRepeated[IndicesOf[LIndex][tens1] //.LI[ind_]:>ind,IndexList->Plus];
 	tmp = ispert[expr] //. PD[_]@eps:>0;
 	tmp = Normal[Series[tmp, {eps, 0, order}]] //.eps:>1;
-	tmp]
+	tmp //.Derivative[n_][Scalar][0]:>1]
 
 
 (****   Integration by parts   ****)
