@@ -172,7 +172,7 @@ CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, t
 (****   TaylorExpand   ****)
 
 
-TaylorExpand[order_][expr_] := Module[{ispert, eps, tmp},
+TaylorExpand[order_,ders_][expr_] := Module[{ispert, eps, tmp},
 	ispert[tens1_+tens2_] := ispert[tens1] + ispert[tens2];
 	ispert[tens1_*tens2_] := ispert[tens1] * ispert[tens2];
 	ispert[tens1_^n_] := ispert[tens1]^n;
@@ -182,9 +182,15 @@ TaylorExpand[order_][expr_] := Module[{ispert, eps, tmp},
 	ispert[tens1_] /; Length[IndicesOf[LIndex][tens1]] == 0 := tens1;
 	ispert[tens1_] /; Length[IndicesOf[LIndex][tens1]] > 0 := tens1
 		eps^ReplaceRepeated[IndicesOf[LIndex][tens1] //.LI[ind_]:>ind,IndexList->Plus];
-	tmp = ispert[expr] //. PD[_]@eps:>0;
+	tmp = ispert[expr] //. PD[_]@eps:>0 //.Scalar[eps obj_]:>eps Scalar[obj];
 	tmp = Normal[Series[tmp, {eps, 0, order}]] //.eps:>1;
-	tmp //.Derivative[n_][Scalar][0]:>1]
+	tmp = tmp //.Derivative[n_][Scalar][0]:>1;
+	tmp = tmp // Expand;
+	tmp = tmp //.Plus->List;
+	tmp = NoScalar[#]&/@tmp;
+	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
+	tmp = tmp //.List->Plus;
+	tmp // NoScalar // ToCanonical // NoScalar]
 
 
 (****   Integration by parts   ****)
