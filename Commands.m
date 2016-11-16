@@ -172,25 +172,18 @@ CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, t
 (****   TaylorExpand   ****)
 
 
-TaylorExpand[order_,ders_][expr_] := Module[{ispert, eps, tmp},
-	ispert[tens1_+tens2_] := ispert[tens1] + ispert[tens2];
-	ispert[tens1_*tens2_] := ispert[tens1] * ispert[tens2];
-	ispert[tens1_^n_] := ispert[tens1]^n;
-	ispert[PD[ind_]@tens1_] := PD[ind]@ispert[tens1];
-	ispert[fun_[args__]] /; ScalarFunctionQ[fun] := Map[ispert[#]&,{args}] //.List->fun;
-	ispert[Scalar[tens1_]] := Scalar[ispert[tens1]];
-	ispert[tens1_] /; Length[IndicesOf[LIndex][tens1]] == 0 := tens1;
-	ispert[tens1_] /; Length[IndicesOf[LIndex][tens1]] > 0 := tens1
-		eps^ReplaceRepeated[IndicesOf[LIndex][tens1] //.LI[ind_]:>ind,IndexList->Plus];
-	tmp = ispert[expr] //. PD[_]@eps:>0 //.Scalar[eps obj_]:>eps Scalar[obj];
-	tmp = Normal[Series[tmp, {eps, 0, order}]] //.eps:>1;
-	tmp = tmp //.Derivative[n_][Scalar][0]:>1;
-	tmp = tmp // Expand;
-	tmp = tmp //.Plus->List;
+TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
+	tmp = expr //.ten_[LI[li_],inds___] :> eps^li ten["done",LI[li],inds];
+	tmp = tmp //.ten_["done",LI[li_],inds___] :> ten[LI[li],inds];
+	tmp = tmp  //. PD[_]@eps :> 0;
+	tmp = tmp //.Scalar[eps obj_] :> eps Scalar[obj];
+	tmp = order! SeriesCoefficient[tmp, {eps, 0, order}];
+	tmp = tmp //.Plus -> List;
 	tmp = NoScalar[#]&/@tmp;
 	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
-	tmp = tmp //.List->Plus;
-	tmp // NoScalar // ToCanonical // NoScalar]
+	tmp = tmp //.List -> Plus;
+	tmp // ToCanonical // NoScalar
+]
 
 
 (****   Integration by parts   ****)
