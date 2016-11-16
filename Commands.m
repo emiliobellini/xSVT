@@ -186,6 +186,53 @@ TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
 ]
 
 
+(****   BuildScalars   ****)
+
+
+BuildScalars[order_, ders_][perts_]:=Module[{tmp, done, tmporder, tmpinds, tmpmetric},
+	(* Separate objects that are already scalars from the ones with free indices *)
+	done = Select[perts, IndicesOf[Free,TangentM3][#]===IndexList[]&];
+	tmp = Complement[perts, done];
+	(* Creates a list of all possible combinations *)
+	tmp = Subsets[Sort[Flatten[{tmp, tmp}]]];
+	(* Eliminates all the combinations give higher order perturbations *)
+	tmporder = tmp //.timevec[_] :> 1 //.PD[_]@obj_ :> obj //.ten_[LI[li_],inds___] :> li;
+	tmporder = ReplaceRepeated[#, List->Plus]&/@tmporder;
+	tmp = Extract[tmp, Position[tmporder,n_ /;0< n<=order]];
+	(* Eliminates elements with odd number of space indices *)
+	tmpinds = Map[Length[IndicesOf[Free,TangentM3][#]]&, tmp, {2}];
+	tmpinds = ReplaceRepeated[#, List->Plus]&/@tmpinds;
+	tmp = Extract[tmp, Position[tmpinds, _Integer?EvenQ]];
+	(* Replace indices with new ones of the same type *)
+	(*It works only for scalars*)
+	tmp = tmp //.PD[ind_?TangentM3`pmQ]@obj_ :> "done"[DummyAs[ind]]@obj;
+	tmp = tmp //."done"[ind_]@obj_ :> PD[ind]@obj;
+	(* First look for the free indices in the expressions, then builds all the possible combinations of the metric with these indices *)
+	tmpinds = Map[IndicesOf[Free][#]&, tmp, {2}] //.IndexList -> List;
+	tmpinds = -Flatten[#]&/@tmpinds;
+	tmpinds = Permutations[#]&/@tmpinds;
+	tmpmetric[ind1_,ind2_,inds__] := tmpmetric[ind1, ind2] tmpmetric[inds];
+	tmpmetric[{inds__}] := {tmpmetric[inds]};
+	tmpinds = Map[tmpmetric, tmpinds, {2}] //.tmpmetric -> metric\[Delta];
+	tmpinds = Map[Flatten, tmpinds];
+	tmpinds = DeleteDuplicates[ToCanonical[#]]&/@tmpinds;
+	(* Generates scalars combining the list of metrics just obtained with the list of perturbations *)
+	tmp = Map[ReplaceAll[#, List->Times]&, tmp];
+	tmp = MapThread[Times[#2,#1]&, {tmpinds, tmp}];
+	(* Delete duplicated elements *)
+	tmp = ToCanonical[#]&/@Flatten[tmp] // ReplaceDummies;
+	tmp = PutScalar[#]&/@tmp;
+	tmp = tmp //.Times[Scalar[expr1_], Scalar[expr2_]]:>Sequence[Scalar[expr1], Scalar[expr2]];
+	tmp = ToCanonical[#]&/@tmp // ReplaceDummies // DeleteDuplicates;
+	tmp = NoScalar[#]&/@tmp;
+	(* Union with the elements that were already scalars *)
+	tmp = Union[tmp, done];
+	(* Eliminates combinations that have more derivatives than required *)
+	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
+	PutScalar[#]&/@tmp
+]
+
+
 (****   Integration by parts   ****)
 
 
