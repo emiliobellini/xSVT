@@ -169,20 +169,29 @@ CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, t
 ]
 
 
-(****   TaylorExpand   ****)
+(****   BuildDerivatives   ****)
 
 
-TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
-	tmp = expr //.ten_[LI[li_],inds___] :> eps^li ten["done",LI[li],inds];
-	tmp = tmp //.ten_["done",LI[li_],inds___] :> ten[LI[li],inds];
-	tmp = tmp  //. PD[_]@eps :> 0;
-	tmp = tmp //.Scalar[eps obj_] :> eps Scalar[obj];
-	tmp = order! SeriesCoefficient[tmp, {eps, 0, order}];
-	tmp = tmp //.Plus -> List;
-	tmp = NoScalar[#]&/@tmp;
-	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
-	tmp = tmp //.List -> Plus;
-	tmp // ToCanonical // NoScalar
+BuildDerivatives[ders_][perts_] := Module[{tmp, derM1, derM3, tmpders, tmpfun1, tmpfun2, tmptime},
+	derM1 = PD[-DummyIn[TangentM1]];
+	derM3 = PD[-DummyIn[TangentM3]];
+	tmpders = Table[{derM1,derM3},ders];
+	tmpders = Subsets[Flatten[tmpders]];
+	tmpders = Sort[#]&/@tmpders;
+	tmpders = DeleteDuplicates[tmpders];
+	tmpders = Select[tmpders, Length[#]<=ders &];
+	tmpders = tmpders //.PD[ind_] :> PD["done", DummyAs[ind]];
+	tmpders = tmpders //.PD["done", ind_] :> PD[ind];
+	tmpfun1[list_, elem_] := Append[#, elem]&/@list;
+	tmp = tmpfun1[tmpders, #]&/@perts;
+	tmp = tmp //.List[pds___, PD[ind_], pert_] :> List[pds, PD[ind][pert]];
+	tmp = tmp // Flatten;
+	tmptime = -IndicesOf[Free,TangentM1][#]&/@tmp //.IndexList -> List;
+	SetAttributes[tmpfun2, Listable];
+	tmptime = tmpfun2[tmptime] //.tmpfun2 :> timevec;
+	tmptime = ReplaceRepeated[#, List->Times]&/@tmptime;
+	tmp = MapThread[Times, {tmptime, tmp}];
+	ReplaceDummies[#]&/@tmp
 ]
 
 
@@ -230,6 +239,23 @@ BuildScalars[order_, ders_][perts_]:=Module[{tmp, done, tmporder, tmpinds, tmpme
 	(* Eliminates combinations that have more derivatives than required *)
 	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
 	PutScalar[#]&/@tmp
+]
+
+
+(****   TaylorExpand   ****)
+
+
+TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
+	tmp = expr //.ten_[LI[li_],inds___] :> eps^li ten["done",LI[li],inds];
+	tmp = tmp //.ten_["done",LI[li_],inds___] :> ten[LI[li],inds];
+	tmp = tmp  //. PD[_]@eps :> 0;
+	tmp = tmp //.Scalar[eps obj_] :> eps Scalar[obj];
+	tmp = order! SeriesCoefficient[tmp, {eps, 0, order}];
+	tmp = tmp //.Plus -> List;
+	tmp = NoScalar[#]&/@tmp;
+	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
+	tmp = tmp //.List -> Plus;
+	tmp // ToCanonical // NoScalar
 ]
 
 
