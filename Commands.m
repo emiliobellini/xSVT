@@ -198,24 +198,37 @@ BuildDerivatives[ders_][perts_] := Module[{tmp, derM1, derM3, tmpders, tmpfun1, 
 (****   BuildScalars   ****)
 
 
-BuildScalars[order_, ders_][perts_]:=Module[{tmp, done, tmporder, tmpinds, tmpmetric},
+(* It works only for scalars and if all the perturbations are of the same order *)
+
+
+BuildScalars[order_, ders_][perts_]:=Module[{tmp, done, maxders, tmpinds, tmpmetric},
 	(* Separate objects that are already scalars from the ones with free indices *)
-	done = Select[perts, IndicesOf[Free,TangentM3][#]===IndexList[]&];
+	done = Select[perts, IndicesOf[Free][#]===IndexList[]&];
 	tmp = Complement[perts, done];
-	(* Creates a list of all possible combinations *)
-	tmp = Subsets[Sort[Flatten[{tmp, tmp}]]];
-	(* Eliminates all the combinations give higher order perturbations *)
-	tmporder = tmp //.timevec[_] :> 1 //.PD[_]@obj_ :> obj //.ten_[LI[li_],inds___] :> li;
-	tmporder = ReplaceRepeated[#, List->Plus]&/@tmporder;
-	tmp = Extract[tmp, Position[tmporder,n_ /;0< n<=order]];
+	(* Separate objects that have already the maximum number of derivatives since they can not be combined with anything *)
+	maxders = Select[tmp, Length[IndicesOf[PD][#]]==ders&];
+	tmp = Complement[tmp, maxders];
+	maxders = Select[maxders, Mod[Length[IndicesOf[TangentM3][#]],2]==0&];
+	(* Creates a list of all possible combinations at most of order order *)
+	tmp = Subsets[Sort[Flatten[{tmp, tmp}]],order];
+	tmp = tmp // DeleteDuplicates;
+	tmp = DeleteCases[tmp,{}];
+	(* Eliminates all the combinations with more derivatives than ders *)
+	tmpinds = Map[Length[IndicesOf[PD][#]]&, tmp, {2}];
+	tmpinds = ReplaceRepeated[#, List->Plus]&/@tmpinds;
+	tmp = Extract[tmp, Position[tmpinds, n_/;n<=ders]];
 	(* Eliminates elements with odd number of space indices *)
 	tmpinds = Map[Length[IndicesOf[Free,TangentM3][#]]&, tmp, {2}];
 	tmpinds = ReplaceRepeated[#, List->Plus]&/@tmpinds;
 	tmp = Extract[tmp, Position[tmpinds, _Integer?EvenQ]];
-	(* Replace indices with new ones of the same type *)
-	(*It works only for scalars*)
+	(* Reintroduces elements with maximum number of derivatives *)
+	tmp = Union[tmp, List[#]&/@maxders];
+	(* Replace Free and Dummy indices to avoid indices repetitions *)
 	tmp = tmp //.PD[ind_?TangentM3`pmQ]@obj_ :> "done"[DummyAs[ind]]@obj;
 	tmp = tmp //."done"[ind_]@obj_ :> PD[ind]@obj;
+	tmp = tmp //.PD[ind_?TangentM1`pmQ]@obj_ :> "done"[DummyAs[ind]]@obj;
+	tmp = tmp //.timevec[_] :> 1;
+	tmp = tmp //."done"[ind_]@obj_ :> timevec[-ind] PD[ind]@obj;
 	(* First look for the free indices in the expressions, then builds all the possible combinations of the metric with these indices *)
 	tmpinds = Map[IndicesOf[Free][#]&, tmp, {2}] //.IndexList -> List;
 	tmpinds = -Flatten[#]&/@tmpinds;
@@ -233,11 +246,8 @@ BuildScalars[order_, ders_][perts_]:=Module[{tmp, done, tmporder, tmpinds, tmpme
 	tmp = PutScalar[#]&/@tmp;
 	tmp = tmp //.Times[Scalar[expr1_], Scalar[expr2_]]:>Sequence[Scalar[expr1], Scalar[expr2]];
 	tmp = ToCanonical[#]&/@tmp // ReplaceDummies // DeleteDuplicates;
-	tmp = NoScalar[#]&/@tmp;
-	(* Union with the elements that were already scalars *)
+	(* Unify with the elements that were already scalars *)
 	tmp = Union[tmp, done];
-	(* Eliminates combinations that have more derivatives than required *)
-	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
 	PutScalar[#]&/@tmp
 ]
 
