@@ -275,7 +275,7 @@ TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
 $HideFunctions = {}
 
 
-HideFunctions[name_][expr_]:=Module[{zero, count, listfun, listten, newten},
+HideFunctions[name_][expr_] := Module[{zero, count, listfun, listten, newten},
 	zero = Length[$HideFunctions];
 	listfun = expr //.Plus->List;
 	listfun = listfun //.Times->List;
@@ -297,6 +297,20 @@ HideFunctions[name_][expr_]:=Module[{zero, count, listfun, listten, newten},
 	listten = MapThread[Rule,{listfun, listten}];
 	$HideFunctions = Union[$HideFunctions, listten];
 	expr //.listten
+]
+
+
+(****   RestoreFunctions   ****)
+
+
+RestoreFunctions[expr_] := Module[{rules, tens, tmp},
+	rules = $HideFunctions  /.Rule[left_,right_]:>Rule[right,left];
+	tmp = expr //.rules // Expand;
+	tens = $HideFunctions //.Rule[left_,right_]:>right;
+	tens = ToExpression[StringDrop[ToString[#],-2]]&/@tens;
+	UndefTensor[#]&/@tens;
+	$HideFunctions={};
+	tmp
 ]
 
 
