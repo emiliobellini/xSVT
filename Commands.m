@@ -165,7 +165,7 @@ CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, t
 	tens = FindPerts[tmp] //.Plus->List;
 	tens = tens //.n_ FindPerts[expr1_] :> FindPerts[expr1];
 	tens = tens //.FindPerts[expr1_] :> expr1;
-	Collect[tmp, Union[tens, more], options]
+	Collect[tmp, Join[tens, {more}], options]
 ]
 
 
