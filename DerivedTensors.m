@@ -61,4 +61,4 @@ DerivedTensors[#, "ddot"]&/@Union[backtensors, perttensors, funtensors, SelectTe
 DerivedTensors[#, "dddot"]&/@Union[backtensors, perttensors, funtensors, SelectTensors[$Tensors, "perturbation gauge"]];
 
 
-Clear[DerivedTensors, backtensors, perttensors, funtensors, ktensors]
+Clear[backtensors, perttensors, funtensors, ktensors]

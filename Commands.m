@@ -292,7 +292,15 @@ HideFunctions[name_][expr_] := Module[{zero, count, listfun, listten, newten},
 		HostsOf[newten] ^= {M4};
 		PrintAs[Evaluate[newten]] ^= Evaluate[ToString[Subscript[name, ToString[zero+count]], StandardForm]];
 		listten = Append[listten,newten];
+		AppendTo[$Tensors, newten];
 	];
+	DerivedTensors[#, "prime"]&/@listten;
+	DerivedTensors[#, "pprime"]&/@listten;
+	DerivedTensors[#, "ppprime"]&/@listten;
+	DerivedTensors[#, "dot"]&/@listten;
+	DerivedTensors[#, "ddot"]&/@listten;
+	DerivedTensors[#, "dddot"]&/@listten;
+	AutomaticRules[#, {PD[i_?TangentM3`pmQ]@#[] :> 0}]&/@SelectTensors[$Tensors, "hide function*"];
 	listten = #[]&/@listten;
 	listten = MapThread[Rule,{listfun, listten}];
 	$HideFunctions = Union[$HideFunctions, listten];
