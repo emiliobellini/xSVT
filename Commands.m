@@ -311,12 +311,18 @@ HideFunctions[name_][expr_] := Module[{zero, count, listfun, listten, newten},
 (****   RestoreFunctions   ****)
 
 
-RestoreFunctions[expr_] := Module[{rules, tens, tmp},
+RestoreFunctions[expr_] := Module[{rules, tens, tmp,dertens},
 	rules = $HideFunctions  /.Rule[left_,right_]:>Rule[right,left];
 	tmp = expr //.rules // Expand;
 	tens = $HideFunctions //.Rule[left_,right_]:>right;
 	tens = ToExpression[StringDrop[ToString[#],-2]]&/@tens;
-	UndefTensor[#]&/@tens;
+	dertens = ToExpression[StringInsert[ToString[#], "prime", 1]]&/@tens;
+	dertens = Union[ToExpression[StringInsert[ToString[#], "pprime", 1]]&/@tens, dertens];
+	dertens = Union[ToExpression[StringInsert[ToString[#], "ppprime", 1]]&/@tens, dertens];
+	dertens = Union[ToExpression[StringInsert[ToString[#], "dot", 1]]&/@tens, dertens];
+	dertens = Union[ToExpression[StringInsert[ToString[#], "ddot", 1]]&/@tens, dertens];
+	dertens = Union[ToExpression[StringInsert[ToString[#], "dddot", 1]]&/@tens, dertens];
+	UndefTensor[#]&/@Union[tens,dertens];
 	$HideFunctions={};
 	tmp
 ]
