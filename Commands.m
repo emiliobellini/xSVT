@@ -351,3 +351,12 @@ SelectPerts[tens__][expr_] := Module[{perts, list, newlist}, newlist = {};
 	If[StringMatchQ[ToString[TypeOfPert[#]], "*"<>ToString[perts]<>"*"], AppendTo[newlist, #]]&/@list;
 	newlist //.List->Plus
 ]
+
+
+(****   Utilities   ****)
+
+
+ToG[expr_]:= expr //.pert_[LI[li_],inds___]/;!StringMatchQ[ToString[pert],"pert*G"]:>ToExpression[ToString[pert]<>"G"][LI[li],inds]
+
+
+SubEQ[eq_,var_][expr_]:=expr //.MakeRule[{var,Evaluate[PutScalar[var //.Flatten[Solve[eq==0,var]]]]}] // ToCanonical // NoScalar
