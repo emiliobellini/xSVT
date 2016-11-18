@@ -269,6 +269,37 @@ TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
 ]
 
 
+(****   HideFunctions   ****)
+
+
+$HideFunctions = {}
+
+
+HideFunctions[name_][expr_]:=Module[{zero, count, listfun, listten, newten},
+	zero = Length[$HideFunctions];
+	listfun = expr //.Plus->List;
+	listfun = listfun //.Times->List;
+	listfun = listfun // Flatten;
+	listfun = Union[Cases[listfun, fun_[___]/;MemberQ[$ScalarFunctions,fun]], Cases[listfun, Derivative[___][fun_][___]/;MemberQ[$ScalarFunctions,fun]]];
+	listfun = Sort[DeleteDuplicates[listfun]];
+	listten = {};
+	For[count=1, count<=Length[listfun], count++,
+		newten=ToExpression[name<>ToString[zero+count]];
+		xTensorQ[newten] ^= True;
+		DefInfo[newten] ^= {"tensor", "hide function"};
+		SlotsOfTensor[newten] ^= {};
+		DependenciesOfTensor[newten] ^= {M4};
+		HostsOf[newten] ^= {M4};
+		PrintAs[Evaluate[newten]] ^= Evaluate[ToString[Subscript[name, ToString[zero+count]], StandardForm]];
+		listten = Append[listten,newten];
+	];
+	listten = #[]&/@listten;
+	listten = MapThread[Rule,{listfun, listten}];
+	$HideFunctions = Union[$HideFunctions, listten];
+	expr //.listten
+]
+
+
 (****   Integration by parts   ****)
 
 
