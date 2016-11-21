@@ -107,7 +107,9 @@ TimeDer[expr_] := Module[{tmp, ind},ind = DummyIn[TangentM1];
 (****   ToPhysical   ****)
 
 
-ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub},
+ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
+	isolate[tmp1_+tmp2_] := isolate[tmp1] + isolate[tmp2];
+	isolate[tmp1_*tmp2_] := isolate[tmp1] * isolate[tmp2];
 	match[tens_, str_] := StringMatchQ[ToString[tens], str];
 	sub[tens_, str1_, str2_] := ToExpression[StringReplace[ToString[tens], str1 -> str2]];
 	hubblerules = {hubbleC[] :> scale[] hubbleP[],
@@ -118,7 +120,8 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub},
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
 		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
 			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"])};
-	expr //.hubblerules //.primerules // Expand
+	tmp = isolate[expr] //.hubblerules //.primerules // Expand;
+	tmp //.isolate[tmp1_]:>tmp1 // Expand
 ]
 
 
