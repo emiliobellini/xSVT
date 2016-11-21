@@ -120,7 +120,7 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
 		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
 			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"])};
-	tmp = isolate[expr] //.hubblerules //.primerules // Expand;
+	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
 	tmp //.isolate[tmp1_]:>tmp1 // Expand
 ]
 
