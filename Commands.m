@@ -348,7 +348,7 @@ TypeOfPert[expr_] := Module[{tmp, tens},
 	tmp = tmp //.Plus->List;
 	tmp = tmp //.Coeff[tens_] :> 1;
 	tmp = tmp //.PD[\[Mu]_]@tens_ :> tens;
-	tmp // DeleteDuplicates
+	tmp // Flatten // DeleteDuplicates
 ]
 
 

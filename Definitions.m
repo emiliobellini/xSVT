@@ -189,6 +189,10 @@ DefTensor[alphaH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(H\)]\)",
 	DefInfo -> {"tensor", "building function"}]
 
 
+DefTensor[alphaD3[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(D3\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+
+
 DefTensor[alphaV0[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V0\)]\)",
 	DefInfo -> {"tensor", "building function"}]
 DefTensor[alphaV1[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V1\)]\)",
