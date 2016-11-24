@@ -130,6 +130,12 @@ DefTensor[lapse2[], M4, PrintAs -> "N", DefInfo -> {"tensor", "background"}]
 DefTensor[scale2[], M4, PrintAs -> "b", DefInfo -> {"tensor", "background"}]
 
 
+DefTensor[hubbleC2[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalH]\), \(2\)]\)",
+	DefInfo -> {"tensor", "background"}]
+DefTensor[hubbleP2[], M4, PrintAs -> "\!\(\*SubscriptBox[\(H\), \(2\)]\)",
+	DefInfo -> {"tensor", "background"}]
+
+
 DefTensor[pertphi2[LI[order]], M4, PrintAs -> "\!\(\*
 StyleBox[SubscriptBox[\"\[CapitalPhi]\", \"2\"],\nFontSize->14]\)",
 	DefInfo -> {"tensor", "perturbation"}]
@@ -183,7 +189,28 @@ DefTensor[alphaH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(H\)]\)",
 	DefInfo -> {"tensor", "building function"}]
 
 
+DefTensor[alphaV0[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V0\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaV1[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V1\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaV2[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V2\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaV3[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V3\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaV4[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V4\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaV5[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(V5\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+
+
+DefTensor[alphaL[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(L\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+
+
 (****   Scalar Functions   ****)
 
 
 DefScalarFunction[LG, PrintAs -> "\!\(\*SubscriptBox[\(L\), \(G\)]\)"]
+
+
+DefScalarFunction[V]

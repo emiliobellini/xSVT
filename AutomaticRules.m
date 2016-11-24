@@ -43,6 +43,10 @@ AutomaticRules[primescale, {primescale[] :> scale[] hubbleC[]}];
 AutomaticRules[dotscale, {dotscale[] :> scale[] hubbleP[]}];
 
 
+AutomaticRules[primescale2, {primescale2[] :> scale2[] hubbleC2[]}];
+AutomaticRules[dotscale2, {dotscale2[] :> scale2[] hubbleP2[]}];
+
+
 AutomaticRules[#, {PD[i_?TangentM3`pmQ]@#[] :> 0}]&/@SelectTensors[$Tensors, "background*"];
 
 

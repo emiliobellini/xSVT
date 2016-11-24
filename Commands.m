@@ -115,7 +115,11 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 	hubblerules = {hubbleC[] :> scale[] hubbleP[],
 		primehubbleC[] :> scale[]^2 (hubbleP[]^2 + dothubbleP[]), 
 		pprimehubbleC[] :> scale[]^3 (ddothubbleP[] + 4 hubbleP[] dothubbleP[] + 2 hubbleP[]^3),
-		ppprimehubbleC[] :> scale[]^4 (dddothubbleP[] + 4 dothubbleP[]^2 + 7 ddothubbleP[] hubbleP[] + 18 hubbleP[]^2 dothubbleP[] + 6 hubbleP[]^4)};
+		ppprimehubbleC[] :> scale[]^4 (dddothubbleP[] + 4 dothubbleP[]^2 + 7 ddothubbleP[] hubbleP[] + 18 hubbleP[]^2 dothubbleP[] + 6 hubbleP[]^4),
+		hubbleC2[] :> scale[] hubbleP2[],
+		primehubbleC2[] :> scale[]^2 (hubbleP[] hubbleP2[] + dothubbleP2[]),
+		pprimehubbleC2[] :> scale[]^3 (ddothubbleP[] + 3 hubbleP[] dothubbleP2[] + dothubbleP[] hubbleP2[] + 2 hubbleP[]^2 hubbleP2[]),
+		ppprimehubbleC2[] :> scale[]^4 (dddothubbleP2[] + 6 hubbleP[] ddothubbleP2[] + (4 dothubbleP[] + 11 hubbleP[]^2) dothubbleP2[] + (ddothubbleP[] + 6 hubbleP[]^3 + 7 hubbleP[] dothubbleP[]) hubbleP2[])};
 	primerules = {tens_ /; match[tens, "prime*"] :> scale[] sub[tens, "prime", "dot"],
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
 		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
