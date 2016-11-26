@@ -284,7 +284,8 @@ $HideFunctions = {}
 
 HideFunctions[name_][expr_] := Module[{zero, count, listfun, listten, newten},
 	zero = Length[$HideFunctions];
-	listfun = expr //.Plus->List;
+	listfun = expr //.$HideFunctions;
+	listfun = listfun //.Plus->List;
 	listfun = listfun //.Times->List;
 	listfun = listfun // Flatten;
 	listfun = Union[Cases[listfun, fun_[___]/;MemberQ[$ScalarFunctions,fun]], Cases[listfun, Derivative[___][fun_][___]/;MemberQ[$ScalarFunctions,fun]]];
@@ -311,7 +312,7 @@ HideFunctions[name_][expr_] := Module[{zero, count, listfun, listten, newten},
 	listten = #[]&/@listten;
 	listten = MapThread[Rule,{listfun, listten}];
 	$HideFunctions = Union[$HideFunctions, listten];
-	expr //.listten
+	expr //.$HideFunctions
 ]
 
 
@@ -332,6 +333,27 @@ RestoreFunctions[expr_] := Module[{rules, tens, tmp,dertens},
 	UndefTensor[#]&/@Union[tens,dertens];
 	$HideFunctions={};
 	tmp
+]
+
+
+(****   NoetherConstraints   ****)
+
+
+NoetherConstraints[vars_][eqs__] := Module[{tmpeqs, tmpvars, tmplist, tmpk, tmpfun, tmparray},
+	tmpeqs = Flatten[{eqs}];
+	tmpvars = Union[vars, timevec[a] PD[-a]@#&/@vars];
+	tmpvars = Union[tmpvars, timevec[a] timevec[b] PD[-a]@PD[-b]@#&/@vars];
+	tmpvars = Union[tmpvars, timevec[a] timevec[b] timevec[c] PD[-a]@PD[-b]@PD[-c]@#&/@vars];
+	tmpvars = PrintWell[#]&/@tmpvars;
+	tmplist = Coefficient[tmpeqs, #]&/@tmpvars;
+	tmplist = tmplist // Flatten;
+	tmpk = Table[kscal[]^(2 x),{x, Max[Exponent[tmplist, kscal[]]]/2}];
+	tmplist = Join[tmplist //.kscal[]:>0, Coefficient[tmplist, #]&/@tmpk];
+	tmplist = tmplist // Flatten;
+	tmplist = DeleteCases[tmplist, 0];
+	tmplist = Sort[tmplist, Length[#1] < Length[#2]&];
+	tmplist = #==0 &/@tmplist // Simplify;
+	tmplist
 ]
 
 
