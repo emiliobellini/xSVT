@@ -46,7 +46,7 @@ Import[$CodeDirectory<>"AutomaticRules.m"]
 (****   Assumptions   ****)
 
 
-$Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0, primematter[]!=0, primescalar[]!=0};
+$Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0};
 
 
 (****   SVT Expand Rules   ****)
