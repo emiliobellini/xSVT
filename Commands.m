@@ -205,57 +205,56 @@ BuildDerivatives[ders_][perts_] := Module[{tmp, derM1, derM3, tmpders, tmpfun1, 
 (****   BuildScalars   ****)
 
 
-(* It works only for scalars and if all the perturbations are of the same order *)
-
-
-BuildScalars[order_, ders_][perts_]:=Module[{tmp, done, maxders, tmpinds, tmpmetric},
+BuildScalars[order_, ders_][perts_] := Module[{tmp, done, tmpinds, tmpfun, tmpmetric},
 	(* Separate objects that are already scalars from the ones with free indices *)
 	done = Select[perts, IndicesOf[Free][#]===IndexList[]&];
 	tmp = Complement[perts, done];
-	(* Separate objects that have already the maximum number of derivatives since they can not be combined with anything *)
-	maxders = Select[tmp, Length[IndicesOf[PD][#]]==ders&];
-	tmp = Complement[tmp, maxders];
-	maxders = Select[maxders, Mod[Length[IndicesOf[TangentM3][#]],2]==0&];
-	(* Creates a list of all possible combinations at most of order order *)
-	tmp = Subsets[Sort[Flatten[{tmp, tmp}]],order];
+	(* Creates a list of all possible subsets at most with order number of elements *)
+	tmp = Subsets[Flatten[Table[tmp,order]], order];
 	tmp = tmp // DeleteDuplicates;
 	tmp = DeleteCases[tmp,{}];
-	(* Eliminates all the combinations with more derivatives than ders *)
+	(* Reintroduces elements with maximum number of derivatives *)
+	tmp = Union[tmp, List[#]&/@done];
+	(* Delete combinations with more derivatives than ders *)
 	tmpinds = Map[Length[IndicesOf[PD][#]]&, tmp, {2}];
 	tmpinds = ReplaceRepeated[#, List->Plus]&/@tmpinds;
 	tmp = Extract[tmp, Position[tmpinds, n_/;n<=ders]];
-	(* Eliminates elements with odd number of space indices *)
-	tmpinds = Map[Length[IndicesOf[Free,TangentM3][#]]&, tmp, {2}];
+	(* Delete combinations with odd number of free indices *)
+	tmpinds = Map[Length[IndicesOf[Free][#]]&, tmp, {2}];
 	tmpinds = ReplaceRepeated[#, List->Plus]&/@tmpinds;
 	tmp = Extract[tmp, Position[tmpinds, _Integer?EvenQ]];
-	(* Reintroduces elements with maximum number of derivatives *)
-	tmp = Union[tmp, List[#]&/@maxders];
+	(* Delete combinations with perturbation order higher than order *)
+	tmpinds = Map[IndicesOf[LIndex][#]&, tmp, {2}];
+	tmpinds = tmpinds //.IndexList[LI[li_]]:>li;
+	tmpinds = ReplaceRepeated[#,List->Plus]&/@tmpinds;
+	tmp = Extract[tmp, Position[tmpinds, n_/;n<=order]];
 	(* Replace Free and Dummy indices to avoid indices repetitions *)
-	tmp = tmp //.PD[ind_?TangentM3`pmQ]@obj_ :> "done"[DummyAs[ind]]@obj;
-	tmp = tmp //."done"[ind_]@obj_ :> PD[ind]@obj;
-	tmp = tmp //.PD[ind_?TangentM1`pmQ]@obj_ :> "done"[DummyAs[ind]]@obj;
 	tmp = tmp //.timevec[_] :> 1;
-	tmp = tmp //."done"[ind_]@obj_ :> timevec[-ind] PD[ind]@obj;
-	(* First look for the free indices in the expressions, then builds all the possible combinations of the metric with these indices *)
-	tmpinds = Map[IndicesOf[Free][#]&, tmp, {2}] //.IndexList -> List;
-	tmpinds = -Flatten[#]&/@tmpinds;
+	tmp = Replace[tmp,ind_/;AIndexQ[ind] :> DummyAs[ind], {1,Infinity}];
+	tmp = tmp //.PD[ind_]@obj_ :> "done"[DummyAs[ind]]@obj;
+	tmp = tmp //."done"[ind_]@obj_ :> PD[ind]@obj;
+	tmpinds = -Map[IndicesOf[Free,TangentM1][#]&, tmp, {2}] //.IndexList -> List;
+	SetAttributes[tmpfun, Listable];
+	tmpinds = tmpfun[tmpinds] //.tmpfun :> timevec;
+	tmpinds = ReplaceRepeated[#, List->Times]&/@tmpinds;
+	tmp = ReplaceRepeated[#, List->Times]&/@tmp;
+	tmp = MapThread[Times,{tmp, tmpinds}];
+	(* Builds all the possible combinations of the metric with free indices *)
+	tmpinds = -Map[IndicesOf[Free][#]&, tmp] //.IndexList -> List;
 	tmpinds = Permutations[#]&/@tmpinds;
 	tmpmetric[ind1_,ind2_,inds__] := tmpmetric[ind1, ind2] tmpmetric[inds];
 	tmpmetric[{inds__}] := {tmpmetric[inds]};
-	tmpinds = Map[tmpmetric, tmpinds, {2}] //.tmpmetric -> metric\[Delta];
+	tmpinds = Map[tmpmetric, tmpinds, {2}];
+	tmpinds = tmpinds //.tmpmetric[{}]:>1 //.tmpmetric -> metric\[Delta];
 	tmpinds = Map[Flatten, tmpinds];
 	tmpinds = DeleteDuplicates[ToCanonical[#]]&/@tmpinds;
-	(* Generates scalars combining the list of metrics just obtained with the list of perturbations *)
-	tmp = Map[ReplaceAll[#, List->Times]&, tmp];
+	(* Generates scalars combining the list of metrics with the list of perturbations *)
 	tmp = MapThread[Times[#2,#1]&, {tmpinds, tmp}];
 	(* Delete duplicated elements *)
 	tmp = ToCanonical[#]&/@Flatten[tmp] // ReplaceDummies;
 	tmp = PutScalar[#]&/@tmp;
 	tmp = tmp //.Times[Scalar[expr1_], Scalar[expr2_]]:>Sequence[Scalar[expr1], Scalar[expr2]];
-	tmp = ToCanonical[#]&/@tmp // ReplaceDummies // DeleteDuplicates;
-	(* Unify with the elements that were already scalars *)
-	tmp = Union[tmp, done];
-	PutScalar[#]&/@tmp
+	ToCanonical[#]&/@tmp // ReplaceDummies // DeleteDuplicates
 ]
 
 
