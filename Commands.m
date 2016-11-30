@@ -358,6 +358,35 @@ NoetherConstraints[vars_][eqs__] := Module[{tmpeqs, tmpvars, tmplist, tmpk, tmpf
 ]
 
 
+(****   SubNoether   ****)
+
+
+SubNoether[numvar_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq, tmpvar, tmprules, tmpflag},
+	{tmpnoe, tmpexpr} = {noe, expr};
+	der[smt_] := PrintWell[TimeDer[smt]];
+	For[count=1, count<=Length[numvar], count++,
+		tmpeq = tmpnoe[[numvar[[count,1]]]];
+		tmpvar = numvar[[count,2]];
+		tmprules = Solve[tmpeq,tmpvar];
+		If[StringMatchQ[ToString[tmpeq],"*ppprime*"],tmpflag=0,If[StringMatchQ[ToString[tmpeq],"*pprime*"],tmpflag=1,If[StringMatchQ[ToString[tmpeq],"*prime*"],tmpflag=2,tmpflag=3]]];
+		If[tmpflag>0,tmprules=Union[tmprules,Solve[der[tmpeq],der[tmpvar]]]];
+		If[tmpflag>1,tmprules=Union[tmprules,Solve[der[der[tmpeq]],der[der[tmpvar]]]]];
+		If[tmpflag>2,tmprules=Union[tmprules,Solve[der[der[der[tmpeq]]],der[der[der[tmpvar]]]]]];
+		tmprules=tmprules // Flatten;
+		tmpnoe=tmpnoe //.tmprules // Simplify // Expand;
+		tmpnoe=DeleteCases[tmpnoe,True];
+		tmpnoe = Sort[tmpnoe //.Equal[a_,b_]:>a-b, Length[#1] < Length[#2]&];
+		tmpnoe = #==0&/@tmpnoe // Simplify;
+		tmpexpr=tmpexpr //.tmprules;
+	];
+	If[Length[tmpnoe]>0,
+		Print[CollectPerts[tmpexpr,{kscal[]},Factor]];
+	Print[MatrixForm[tmpnoe]];
+	];
+	{tmpnoe,tmpexpr}
+]
+
+
 (****   Integration by parts   ****)
 
 
