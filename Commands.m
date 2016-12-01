@@ -377,6 +377,7 @@ SubNoether[numvar_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq,
 		tmpnoe = DeleteCases[tmpnoe,True];
 		tmpnoe = Sort[tmpnoe //.Equal[a_,b_]:>a-b, Length[#1] < Length[#2]&];
 		tmpnoe = #==0&/@tmpnoe // Simplify;
+		tmpnoe = tmpnoe // DeleteDuplicates;
 		tmpexpr=tmpexpr //.tmprules;
 	];
 	If[Length[tmpnoe]>0,
