@@ -53,6 +53,14 @@ DefTensor[pertE[LI[order]], M4, PrintAs -> "E",
 	DefInfo -> {"tensor", "perturbation"}]
 
 
+DefTensor[pertS[LI[order], -i], M3, PrintAs -> "S",
+	DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertF[LI[order], -i], M3, PrintAs -> "F",
+	DefInfo -> {"tensor", "perturbation"}]
+DefTensor[perth[LI[order], -i, -j], M3, Symmetric[{-i, -j}], PrintAs -> "h",
+	DefInfo -> {"tensor", "perturbation"}]
+
+
 (****   Scalar Field   ****)
 
 
