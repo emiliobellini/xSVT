@@ -174,6 +174,8 @@ DefTensor[pertgaugealpha[LI[order]], M4, PrintAs -> "\[Alpha]",
 	DefInfo -> {"tensor", "perturbation"}]
 DefTensor[pertgaugebeta[LI[order]], M4, PrintAs -> "\[Beta]",
 	DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertgaugegamma[LI[order], -i], M4, PrintAs -> "\[Gamma]",
+	DefInfo -> {"tensor", "perturbation"}]
 
 
 (****   Parametrization Functions   ****)

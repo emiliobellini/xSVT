@@ -84,7 +84,7 @@ Print[Column[{"Tensor field Decomposition", tensorrules}]]
 
 
 gaugerules = {gauge[\[Mu]_] :> 0, pertgauge[LI[order_], a_?TangentM1`Q] :> timevec[a] pertgaugealpha[LI[order]], 
-	pertgauge[LI[order_], i_?TangentM3`Q] :> Module[{j}, metric\[Delta][i, j] PD[-j]@pertgaugebeta[LI[order]]]};
+	pertgauge[LI[order_], i_?TangentM3`Q] :> Module[{j}, metric\[Delta][i, j] (PD[-j]@pertgaugebeta[LI[order]] + pertgaugegamma[LI[order], -j])]};
 
 
 Print[Column[{"Gauge Decomposition", gaugerules}]]
