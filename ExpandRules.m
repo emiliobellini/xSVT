@@ -8,10 +8,11 @@ metricrules = {metricg[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec
 	metricg[a_?TangentM1`Q, b_?TangentM1`Q] :> -timevec[a] timevec[b] scale[]^-2, 
 	metricg[i_?TangentM3`Q, j_?TangentM3`Q] :> scale[]^-2 metric\[Delta][i, j], 
 	pertmetricg[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> -2 scale[]^2 pertpsi[LI[order]] timevec[-a] timevec[-b], 
-	pertmetricg[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale[]^2 PD[-i]@pertB[LI[order]], 
-	pertmetricg[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale[]^2 PD[-i]@pertB[LI[order]], 
+	pertmetricg[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale[]^2 (PD[-i]@pertB[LI[order]] - pertS[LI[order], -i]), 
+	pertmetricg[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale[]^2 (PD[-i]@pertB[LI[order]] - pertS[LI[order], -i]), 
 	pertmetricg[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, 2 scale[]^2 (- pertphi[LI[order]] metric\[Delta][-i, -j] + PD[-i]@PD[-j]@pertE[LI[order]])],
+		Module[{k, l}, scale[]^2 (-2 pertphi[LI[order]] metric\[Delta][-i, -j] + perth[LI[order], -i, -j] + PD[-i]@pertF[LI[order], -j]
+			+ PD[-j]@pertF[LI[order], -i] + 2 PD[-i]@PD[-j]@pertE[LI[order]])],
 	Detmetricg[] :> -scale[]^8};
 
 
