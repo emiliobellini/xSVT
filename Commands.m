@@ -30,6 +30,7 @@ FirstDummies[expr_] := expr //.
 SVTExpand[expr_] := Module[{tmp, inds}, tmp = expr //.expandrules;
 	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
 	tmp = tmp // ContractMetric // FirstS // FirstDummies // NoScalar;
+	tmp = tmp //.$Rules // ToCanonical // NoScalar;
 	If[ToString[tmp] == ToString[0], tmp,
 		inds = IndicesOf[TangentM3][tmp];
 		inds = DeleteCases[inds, -_?TangentM3`Q];

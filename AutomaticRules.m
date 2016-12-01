@@ -67,6 +67,12 @@ AutomaticRules[#, {PD[i_?TangentM3`Q]@#[LI[order_], -i_?TangentM3`Q] :> 0, PD[-i
 AutomaticRules[#, {kvec[i_?TangentM3`Q] #[LI[order_], -i_?TangentM3`Q] :> 0, kvec[-i_?TangentM3`Q] #[LI[order_], i_?TangentM3`Q] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==2];
 
 
+AutomaticRules[#, {kvec[i_?TangentM3`Q] PD[-a_?TangentM1`Q]@#[LI[order_], -i_?TangentM3`Q] :> 0, kvec[-i_?TangentM3`Q] PD[-a_?TangentM1`Q]@#[LI[order_], i_?TangentM3`Q] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==2];
+
+
+AutomaticRules[#, {kvec[i_?TangentM3`Q] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@#[LI[order_], -i_?TangentM3`Q] :> 0, kvec[-i_?TangentM3`Q] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@#[LI[order_], i_?TangentM3`Q] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==2];
+
+
 (****   Divergence-Free and Traceless Tensors   ****)
 
 
@@ -77,6 +83,14 @@ AutomaticRules[#, {#[LI[order_], i_?TangentM3`Q, -i_?TangentM3`Q] :> 0, #[LI[ord
 
 AutomaticRules[#, {kvec[i_?TangentM3`Q] #[LI[order_], -i_?TangentM3`Q, j_?TangentM3`pmQ] :> 0, kvec[-i_?TangentM3`Q] #[LI[order_], i_?TangentM3`Q, j_?TangentM3`pmQ] :> 0, 
     kvec[i_?TangentM3`Q] #[LI[order_], j_?TangentM3`pmQ, -i_?TangentM3`Q] :> 0, kvec[-i_?TangentM3`Q] #[LI[order_], j_?TangentM3`pmQ, i_?TangentM3`Q] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==3];
+
+
+AutomaticRules[#, {kvec[i_?TangentM3`Q] PD[-a_?TangentM1`Q]@#[LI[order_], -i_?TangentM3`Q, j_?TangentM3`pmQ] :> 0, kvec[-i_?TangentM3`Q] PD[-a_?TangentM1`Q]@#[LI[order_], i_?TangentM3`Q, j_?TangentM3`pmQ] :> 0, 
+    kvec[i_?TangentM3`Q] PD[-a_?TangentM1`Q]@#[LI[order_], j_?TangentM3`pmQ, -i_?TangentM3`Q] :> 0, kvec[-i_?TangentM3`Q] PD[-a_?TangentM1`Q]@#[LI[order_], j_?TangentM3`pmQ, i_?TangentM3`Q] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==3];
+
+
+AutomaticRules[#, {kvec[i_?TangentM3`Q] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@#[LI[order_], -i_?TangentM3`Q, j_?TangentM3`pmQ] :> 0, kvec[-i_?TangentM3`Q] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@#[LI[order_], i_?TangentM3`Q, j_?TangentM3`pmQ] :> 0, 
+    kvec[i_?TangentM3`Q] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@#[LI[order_], j_?TangentM3`pmQ, -i_?TangentM3`Q] :> 0, kvec[-i_?TangentM3`Q] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@#[LI[order_], j_?TangentM3`pmQ, i_?TangentM3`Q] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==3];
 
 
 (****   k vectors   ****)
