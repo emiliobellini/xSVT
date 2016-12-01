@@ -20,12 +20,16 @@ FirstT[expr_] := expr //. PD[a_?TangentM1`pmQ]@PD[i_?TangentM3`pmQ]@object_ :> P
 FirstS[expr_] := expr //. PD[i_?TangentM3`pmQ]@PD[a_?TangentM1`pmQ]@object_ :> PD[a]@PD[i]@object
 
 
+FirstDummies[expr_] := expr //. 
+       PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@tens_ /; (! FreeQ[tens, ChangeIndex[i]] && FreeQ[tens, ChangeIndex[j]]) :> PD[j]@PD[i]@tens;
+
+
 (****   SVTExpand   ****)
 
 
 SVTExpand[expr_] := Module[{tmp, inds}, tmp = expr //.expandrules;
 	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
-	tmp = tmp // ContractMetric // NoScalar;
+	tmp = tmp // ContractMetric // FirstS // FirstDummies // NoScalar;
 	If[ToString[tmp] == ToString[0], tmp,
 		inds = IndicesOf[TangentM3][tmp];
 		inds = DeleteCases[inds, -_?TangentM3`Q];
