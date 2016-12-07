@@ -21,12 +21,16 @@ DerivedTensors[tensin_, type_] := Module[{tensout, print},
 		print[expr_] := expr'';];
 	If[StringMatchQ[type, "ppprime"], tensout = ToExpression[type<>ToString[tensin]];
 		print[expr_] := expr''';];
+	If[StringMatchQ[type, "pppprime"], tensout = ToExpression[type<>ToString[tensin]];
+		print[expr_] := expr'''';];
 	If[StringMatchQ[type, "dot"], tensout = ToExpression[type<>ToString[tensin]];
 		print[expr_] := Overscript[expr, "\[Bullet]"]];
 	If[StringMatchQ[type, "ddot"], tensout = ToExpression[type<>ToString[tensin]];
 		print[expr_] := Overscript[expr, "\[Bullet]\[Bullet]"]];
 	If[StringMatchQ[type, "dddot"], tensout = ToExpression[type<>ToString[tensin]];
 		print[expr_] := Overscript[expr, "\[Bullet]\[Bullet]\[Bullet]"]];
+	If[StringMatchQ[type, "ddddot"], tensout = ToExpression[type<>ToString[tensin]];
+		print[expr_] := Overscript[expr, "\[Bullet]\[Bullet]\[Bullet]\[Bullet]"]];
 
 	xTensorQ[tensout] ^= True;
 	DefInfo[tensout] ^= {"tensor", DefInfo[tensin][[2]]<>" "<>type};
@@ -52,6 +56,9 @@ DerivedTensors[#, "pprime"]&/@Union[backtensors, perttensors, funtensors, Select
 DerivedTensors[#, "ppprime"]&/@Union[backtensors, perttensors, funtensors, SelectTensors[$Tensors, "perturbation gauge"]];
 
 
+DerivedTensors[#, "pppprime"]&/@Union[backtensors, perttensors, funtensors, SelectTensors[$Tensors, "perturbation gauge"]];
+
+
 DerivedTensors[#, "dot"]&/@Union[backtensors, perttensors, funtensors, SelectTensors[$Tensors, "perturbation gauge"]];
 
 
@@ -59,6 +66,9 @@ DerivedTensors[#, "ddot"]&/@Union[backtensors, perttensors, funtensors, SelectTe
 
 
 DerivedTensors[#, "dddot"]&/@Union[backtensors, perttensors, funtensors, SelectTensors[$Tensors, "perturbation gauge"]];
+
+
+DerivedTensors[#, "ddddot"]&/@Union[backtensors, perttensors, funtensors, SelectTensors[$Tensors, "perturbation gauge"]];
 
 
 Clear[backtensors, perttensors, funtensors, ktensors]
