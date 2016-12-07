@@ -1,5 +1,17 @@
 (* ::Package:: *)
 
+(****   Scalar-Vector-Tensor   ****)
+
+
+If[$Scalar==0, AutomaticRules[#, {#[LI[order_]] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==1];];
+
+
+If[$Vector==0, AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==2];];
+
+
+If[$Tensor==0, AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==3];];
+
+
 (****   Covariant   ****)
 
 
