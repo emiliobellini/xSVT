@@ -378,10 +378,10 @@ SubNoether[numvar_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq,
 		If[tmpflag>1,tmprules = Union[tmprules,Solve[der[der[tmpeq]],der[der[tmpvar]]]]];
 		If[tmpflag>2,tmprules = Union[tmprules,Solve[der[der[der[tmpeq]]],der[der[der[tmpvar]]]]]];
 		tmprules = tmprules // Flatten;
-		tmpnoe = tmpnoe //.tmprules // Simplify // Expand;
+		tmpnoe = tmpnoe //.tmprules // Expand;
 		tmpnoe = DeleteCases[tmpnoe,True];
 		tmpnoe = Sort[tmpnoe //.Equal[a_,b_]:>a-b, Length[#1] < Length[#2]&];
-		tmpnoe = #==0&/@tmpnoe // Simplify;
+		tmpnoe = #==0&/@tmpnoe // Simplify // Expand;
 		tmpnoe = tmpnoe // DeleteDuplicates;
 		tmpexpr=tmpexpr //.tmprules;
 	];
