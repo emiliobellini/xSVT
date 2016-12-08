@@ -127,3 +127,12 @@ AutomaticRules[#, {PD[-a_?TangentM1`Q]@#[] :>
 
 AutomaticRules[#, {PD[-a_?TangentM1`Q]@#[] :>
 	timevec[-a] ToExpression["p"<>ToString[#]<>"[]"]}]&/@SelectTensors[$Tensors, "building function *prime"];
+
+
+(****   Alphas   ****)
+
+
+AutomaticRules[primemass2, {primemass2[] :> hubbleC[] mass2[] alphaM[]}]
+
+
+AutomaticRules[dotmass2, {dotmass2[] :> hubbleP[] mass2[] alphaM[]}]
