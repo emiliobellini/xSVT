@@ -366,7 +366,7 @@ NoetherConstraints[vars_][eqs__] := Module[{tmpeqs, tmpvars, tmplist, tmpk, tmpf
 (****   SubNoether   ****)
 
 
-SubNoether[numvar_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq, tmpvar, tmprules, tmpflag},
+SubNoether[numvar_,tf_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq, tmpvar, tmprules, tmpflag},
 	{tmpnoe, tmpexpr} = {noe, expr};
 	der[smt_] := PrintWell[TimeDer[smt]];
 	For[count=1, count<=Length[numvar], count++,
@@ -384,8 +384,11 @@ SubNoether[numvar_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq,
 		tmpnoe = #==0&/@tmpnoe // Simplify // Expand;
 		tmpnoe = tmpnoe // DeleteDuplicates;
 		tmpexpr=tmpexpr //.tmprules;
+		If[tf,
+			Print[ToString[count]<>"/"<>ToString[Length[numvar]]];
+		];
 	];
-	If[Length[tmpnoe]>0,
+	If[Length[tmpnoe]>0 && tf,
 		Print[ScreenDollarIndices[CollectPerts[tmpexpr,{kscal[]},Factor]]];
 		Print[MatrixForm[tmpnoe]];
 	];
