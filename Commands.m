@@ -386,8 +386,8 @@ SubNoether[numvar_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq,
 		tmpexpr=tmpexpr //.tmprules;
 	];
 	If[Length[tmpnoe]>0,
-		Print[CollectPerts[tmpexpr,{kscal[]},Factor]];
-	Print[MatrixForm[tmpnoe]];
+		Print[ScreenDollarIndices[CollectPerts[tmpexpr,{kscal[]},Factor]]];
+		Print[MatrixForm[tmpnoe]];
 	];
 	{tmpnoe,tmpexpr}
 ]
