@@ -273,7 +273,7 @@ TaylorExpand[order_, ders_][expr_] := Module[{eps, tmp},
 	tmp = tmp //.ten_["done",LI[li_],inds___] :> ten[LI[li],inds];
 	tmp = tmp  //. PD[_]@eps :> 0;
 	tmp = tmp //.Scalar[eps obj_] :> eps Scalar[obj];
-	tmp = order! SeriesCoefficient[tmp, {eps, 0, order}];
+	tmp = SeriesCoefficient[tmp, {eps, 0, order}];
 	tmp = tmp //.Plus -> List;
 	tmp = NoScalar[#]&/@tmp;
 	tmp = Select[tmp, Length[IndicesOf[PD][#]]<=ders&];
