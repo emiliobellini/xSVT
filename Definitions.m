@@ -131,6 +131,10 @@ DefTensor[pertvector1[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]A
 	DefInfo -> {"tensor", "perturbation"}]
 
 
+DefTensor[pertvector2[LI[order], -i], M3, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]A\), \(2\)]\)",
+	DefInfo -> {"tensor", "perturbation"}]
+
+
 (****   Tensor Field   ****)
 
 

@@ -59,7 +59,7 @@ Print[Column[{"Matter field Decomposition", matterrules}]]
 
 vectorrules = {vectorcov[a_?TangentM1`Q] :> timevec[a] vector0[], 
 	pertvectorcov[LI[order_], a_?TangentM1`Q] :> timevec[a] pertvector0[LI[order]],
-	pertvectorcov[LI[order_], i_?TangentM3`Q] :> PD[i]@pertvector1[LI[order]]};
+	pertvectorcov[LI[order_], i_?TangentM3`Q] :> PD[i]@pertvector1[LI[order]] + pertvector2[LI[order], i]};
 
 
 Print[Column[{"Vector field Decomposition", vectorrules}]]
