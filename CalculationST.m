@@ -282,27 +282,27 @@ CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst4Ss.m",%%]
 
 
-VarD[pertscalar[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
-%/mass2[]/scale[]^4 // Expand;
-EQfirst5=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
+VarD[pertS[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+EQfirst5=2 %/mass2[]/scale[]^2/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst5Ss.m",%%]
 
 
-VarD[pertS[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
-EQfirst6=2 %/mass2[]/scale[]^2/kscal[]^2 // Expand;
+VarD[pertF[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+EQfirst6=-2 %/mass2[]/scale[]^2/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst6Ss.m",%%]
 
 
-VarD[pertF[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
-EQfirst7=-2 %/mass2[]/scale[]^2/kscal[]^2 // Expand;
+VarD[perth[LI[1],i,j],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+EQfirst7=-4 %/mass2[]/scale[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst7Ss.m",%%]
 
 
-VarD[perth[LI[1],i,j],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
-EQfirst8=-4 %/mass2[]/scale[]^2 // Expand;
+VarD[pertscalar[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+%/mass2[]/scale[]^4 // Expand;
+EQfirst8=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Ss.m",%%]
 
@@ -356,25 +356,28 @@ CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst4Sm.m",%%]
 
 
-EQfirst5;
+EQfirst5-T0iV // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst5Sm.m",%%]
 
 
-EQfirst6-T0iV // Expand;
+EQfirst6-TiiV // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst6Sm.m",%%]
 
 
-EQfirst7-TiiV // Expand;
+EQfirst7-TijT;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst7Sm.m",%%]
 
 
-EQfirst8-TijT;
+EQfirst8;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Sm.m",%%]
+
+
+
