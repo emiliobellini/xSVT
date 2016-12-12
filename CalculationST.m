@@ -8,6 +8,9 @@
 (*Settings*)
 
 
+$OutputDirectory=NotebookDirectory[]<>"../Equations/"
+
+
 $Scalar=1;
 $Vector=1;
 $Tensor=1;
@@ -88,6 +91,13 @@ EQs0=-scale[] %/primescalar[] // Expand;
 (*Scalar-Tensor*)
 
 
+(* Use RestoreFunctions[expr] to rewrite expr in terms of the original scalar functions *)
+
+
+(* ::Subsection::Closed:: *)
+(*Calculation Lagrangian*)
+
+
 pertsgravity={pertmetricg[LI[1],-a,-b],pertmetricg[LI[1],-a,-i],pertmetricg[LI[1],-i,-j],pertscalarcov[LI[1]]}
 pertstotal={pertphi[LI[1]],pertpsi[LI[1]],pertB[LI[1]],pertE[LI[1]],pertscalar[LI[1]],pertmatter[LI[1]],pertgaugealpha[LI[1]],pertgaugebeta[LI[1]],pertS[LI[1],-i],pertF[LI[1],-i],perth[LI[1],-i,-j]}
 expansionorder=2
@@ -144,7 +154,9 @@ EQGsec=VarD[pertgaugegamma[LI[1],i],PD][Nsec] //.delta[-LI[1],LI[1]]:>1 // Print
 Nsec=NoetherConstraints[pertstotal][EQAsec,EQBsec,EQGsec];
 
 
-noetherlist={{1,L31[]},{1,L65[]},{1,L78[]},{1,L92[]},{2,L64[]},{1,L58[]},{2,L38[]},{2,L34[]},{2,L45[]},{2,L43[]},{2,L41[]},{2,L91[]},{2,L89[]},{2,L85[]},{2,L56[]},{2,L82[]},{2,L87[]},{2,L77[]},{2,L84[]},{2,L83[]},{2,L86[]},{2,L96[]},{2,L93[]},{2,L40[]},{2,L79[]},{2,L59[]},{2,L69[]},{2,L67[]},{2,L44[]},{2,L88[]},{2,L72[]},{2,L94[]},{2,L68[]},{2,L80[]},{3,L95[]},{3,L81[]},{1,pprimematter[]}};
+noetherlist={{1,L31[]},{1,L65[]},{1,L78[]},{1,L92[]},{2,L64[]},{1,L58[]},{2,L38[]},{2,L34[]},{2,L45[]},{2,L43[]},{2,L41[]},{2,L91[]},{2,L89[]},{2,L85[]},
+	{2,L56[]},{2,L82[]},{2,L87[]},{2,L77[]},{2,L84[]},{2,L83[]},{2,L86[]},{2,L96[]},{2,L93[]},{2,L40[]},{2,L79[]},{2,L59[]},{2,L69[]},{2,L67[]},
+	{2,L44[]},{2,L88[]},{2,L72[]},{2,L94[]},{2,L68[]},{2,L80[]},{3,L95[]},{3,L81[]},{1,pprimematter[]}};
 {Nsec2,Lsec2}={Nsec,Lsec} // SubNoether[noetherlist,True]; // AbsoluteTiming
 
 
@@ -169,7 +181,9 @@ EQalphaB=Coefficient[PrintWell[Lsec3],pertB[LI[1]] primepertscalar[LI[1]]]/kscal
 EQalphaK=2 Coefficient[PrintWell[Lsec3],primepertscalar[LI[1]]^2]-hubbleC[]^2 mass2[] alphaK[] // Expand
 
 
-rules=Flatten[{Solve[EQmass2==0,L23[]],Solve[PrintWell[TimeDer[EQmass2]]==0,primeL23[]],Solve[EQalphaT==0,L37[]],Solve[EQalphaB==0,L11[]],Solve[PrintWell[TimeDer[EQalphaB]]==0,primeL11[]],Solve[EQalphaK==0,L47[]],Solve[PrintWell[TimeDer[EQalphaK]]==0,primeL47[]]}]
+rules=Flatten[{Solve[EQmass2==0,L23[]],Solve[PrintWell[TimeDer[EQmass2]]==0,primeL23[]],Solve[EQalphaT==0,L37[]],
+	Solve[EQalphaB==0,L11[]],Solve[PrintWell[TimeDer[EQalphaB]]==0,primeL11[]],
+	Solve[EQalphaK==0,L47[]],Solve[PrintWell[TimeDer[EQalphaK]]==0,primeL47[]]}]
 
 
 Lsec3;
@@ -178,16 +192,16 @@ Lsec4=% // ToCanonical // NoScalar;
 CollectPerts[%,{kscal[]},Factor]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Lagrangian*)
 
 
 Lsec4;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/L2ST.m",Lsec4]
+Export[$OutputDirectory<>"L2ST.m",Lsec4]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Scalar field to Matter*)
 
 
@@ -217,150 +231,150 @@ Decomposition[1,\[Mu]->i,\[Nu]->j][deltaTmatter]/scale[]^2/mass2[];
 TijT=-2 scale[]^2 % // SVTExpand // FourierT
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Background (with scalar field)*)
 
 
 EQback1=densityS[]-3 mass2[] hubbleC[]^2/scale[]^2+primematter[]^2/2/scale[]^2+V[matter[]] // Expand
-Export[NotebookDirectory[]<>"Equations/EQback1Ss.m",%]
+Export[$OutputDirectory<>"EQback1Ss.m",%]
 
 
 EQback2=pressureS[]+mass2[] (hubbleC[]^2+2 primehubbleC[])/scale[]^2+primematter[]^2/2/scale[]^2-V[matter[]] // Expand
-Export[NotebookDirectory[]<>"Equations/EQback2Ss.m",%]
+Export[$OutputDirectory<>"EQback2Ss.m",%]
 
 
 EQback3=pprimematter[]+2 hubbleC[] primematter[]+scale[]^2 V'[matter[]] // Expand
-Export[NotebookDirectory[]<>"Equations/EQback3Ss.m",%]
+Export[$OutputDirectory<>"EQback3Ss.m",%]
 
 
 TimeDer[EQback1];
 % //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 % //.Flatten[Solve[EQback2==0,primehubbleC[]]] // Expand;
 EQback4=%+3 hubbleC[] EQback1 // Expand
-Export[NotebookDirectory[]<>"Equations/EQback4Ss.m",%]
+Export[$OutputDirectory<>"EQback4Ss.m",%]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Equations of motion (with scalar field)*)
 
 
 VarD[pertpsi[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 EQfirst1=-%/scale[]^4/mass2[] // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst1Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst1Ss.m",%%]
 
 
 VarD[pertB[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 EQfirst2=%/kscal[]^2/scale[]^3/mass2[] // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst2Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst2Ss.m",%%]
 
 
 VarD[pertE[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 EQfirst3=-%/kscal[]^2/scale[]^4/mass2[] // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst3Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst3Ss.m",%%]
 
 
 VarD[pertphi[LI[1]],PD][Lsec4]-3 VarD[pertE[LI[1]],PD][Lsec4]/kscal[]^2 //.delta[-LI[1],LI[1]]:>1;
 EQfirst4=%/scale[]^2/2/mass2[]/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst4Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst4Ss.m",%%]
 
 
 VarD[pertscalar[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 %/mass2[]/scale[]^4 // Expand;
 EQfirst5=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst5Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst5Ss.m",%%]
 
 
 VarD[pertS[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 EQfirst6=2 %/mass2[]/scale[]^2/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst6Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst6Ss.m",%%]
 
 
 VarD[pertF[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 EQfirst7=-2 %/mass2[]/scale[]^2/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst7Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst7Ss.m",%%]
 
 
 VarD[perth[LI[1],i,j],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 EQfirst8=-4 %/mass2[]/scale[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst8Ss.m",%%]
+Export[$OutputDirectory<>"EQfirst8Ss.m",%%]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Background (with matter)*)
 
 
 EQback1=EQback1 //.subback // Expand
-Export[NotebookDirectory[]<>"Equations/EQback1Sm.m",%]
+Export[$OutputDirectory<>"EQback1Sm.m",%]
 
 
 EQback2=EQback2 //.subback // Expand
-Export[NotebookDirectory[]<>"Equations/EQback2Sm.m",%]
+Export[$OutputDirectory<>"EQback2Sm.m",%]
 
 
 EQback3=primematter[]/scale[]^2 EQback3 //.subback // Expand
-Export[NotebookDirectory[]<>"Equations/EQback3Sm.m",%]
+Export[$OutputDirectory<>"EQback3Sm.m",%]
 
 
 EQback4=EQback4 //.subback // Expand
-Export[NotebookDirectory[]<>"Equations/EQback4Sm.m",%]
+Export[$OutputDirectory<>"EQback4Sm.m",%]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Equations of motion (with matter)*)
 
 
 EQfirst1-T00 // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst1Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst1Sm.m",%%]
 
 
 EQfirst2-T0i // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst2Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst2Sm.m",%%]
 
 
 EQfirst3-Tij // Expand;
 % //.subback // Expand;
 % //.Flatten[Solve[EQback3==0,primedensity[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst3Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst3Sm.m",%%]
 
 
 EQfirst4+3/2 scale[]^2 Tii/kscal[]^2-3/2 scale[]^2 Tij/kscal[]^2 // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst4Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst4Sm.m",%%]
 
 
 EQfirst5;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst5Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst5Sm.m",%%]
 
 
 EQfirst6-T0iV // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst6Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst6Sm.m",%%]
 
 
 EQfirst7-TiiV // Expand;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst7Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst7Sm.m",%%]
 
 
 EQfirst8-TijT;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
-Export[NotebookDirectory[]<>"Equations/EQfirst8Sm.m",%%]
+Export[$OutputDirectory<>"EQfirst8Sm.m",%%]
