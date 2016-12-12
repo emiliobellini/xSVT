@@ -178,7 +178,13 @@ DefTensor[pertgaugegamma[LI[order], -i], M4, PrintAs -> "\[Gamma]",
 	DefInfo -> {"tensor", "perturbation"}]
 
 
-(****   Parametrization Functions   ****)
+(****   Parametrization Functions - Scalar   ****)
+
+
+DefTensor[densityS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalE]\), \(S\)]\)",
+	DefInfo -> {"tensor", "building function"}]
+DefTensor[pressureS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(S\)]\)",
+	DefInfo -> {"tensor", "building function"}]
 
 
 DefTensor[mass2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(*\)], \(2\)]\)",
@@ -197,6 +203,9 @@ DefTensor[alphaT[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(T\)]\)",
 
 DefTensor[alphaH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(H\)]\)",
 	DefInfo -> {"tensor", "building function"}]
+
+
+(****   Parametrization Functions - Vector   ****)
 
 
 DefTensor[alphaD3[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(D3\)]\)",
