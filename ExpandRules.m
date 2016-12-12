@@ -22,7 +22,7 @@ Print[Column[{"Metric Decomposition", metricrules}]]
 (****   Scalar Field   ****)
 
 
-scalarrules = {scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> pertscalar[LI[order]]};
+scalarrules = {scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> -primescalar[] pertscalar[LI[order]]};
 
 
 Print[Column[{"Scalar field Decomposition", scalarrules}]]
