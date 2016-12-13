@@ -16,7 +16,7 @@ metricrules = {metricg[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec
 	Detmetricg[] :> -scale[]^8};
 
 
-Print[Column[{"Metric Decomposition", metricrules}]]
+Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 
 
 (****   Scalar Field   ****)
@@ -25,7 +25,7 @@ Print[Column[{"Metric Decomposition", metricrules}]]
 scalarrules = {scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> -primescalar[]/scale[] pertscalar[LI[order]]};
 
 
-Print[Column[{"Scalar field Decomposition", scalarrules}]]
+Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[scalarrules]}]]
 
 
 (****   Matter Field   ****)
@@ -48,10 +48,10 @@ matterrules = Flatten[{mattercov[] :> matter[], pertmattercov[LI[order_]] :> per
 	pertshearcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> 0}];
 
 
-Print[Column[{"Stress-Energy Tensor Decomposition", DownValues[stressenergy]}]]
+Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[DownValues[stressenergy]]}]]
 
 
-Print[Column[{"Matter field Decomposition", matterrules}]]
+Print[Column[{"Matter field Decomposition", ScreenDollarIndices[matterrules]}]]
 
 
 (****   Vector Field   ****)
@@ -59,10 +59,10 @@ Print[Column[{"Matter field Decomposition", matterrules}]]
 
 vectorrules = {vectorcov[a_?TangentM1`Q] :> timevec[a] vector0[], 
 	pertvectorcov[LI[order_], a_?TangentM1`Q] :> timevec[a] pertvector0[LI[order]],
-	pertvectorcov[LI[order_], i_?TangentM3`Q] :> PD[i]@pertvector1[LI[order]] + pertvector2[LI[order], i]};
+	pertvectorcov[LI[order_], i_?TangentM3`Q] :> vector0[] (PD[i]@(pertvector1[LI[order]]/scale[] - pertB[LI[order]]) + pertvector2[LI[order], i])};
 
 
-Print[Column[{"Vector field Decomposition", vectorrules}]]
+Print[Column[{"Vector field Decomposition", ScreenDollarIndices[vectorrules]}]]
 
 
 (****   Tensor Field   ****)
@@ -77,7 +77,7 @@ tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timev
 		Module[{k, l}, 2 scale2[]^2 (- pertphi2[LI[order]] metric\[Delta][-i, -j] + PD[-i]@PD[-j]@pertE2[LI[order]])]};
 
 
-Print[Column[{"Tensor field Decomposition", tensorrules}]]
+Print[Column[{"Tensor field Decomposition", ScreenDollarIndices[tensorrules]}]]
 
 
 (****   Gauge Fields   ****)
@@ -87,7 +87,7 @@ gaugerules = {gauge[\[Mu]_] :> 0, pertgauge[LI[order_], a_?TangentM1`Q] :> timev
 	pertgauge[LI[order_], i_?TangentM3`Q] :> Module[{j}, metric\[Delta][i, j] (PD[-j]@pertgaugebeta[LI[order]] + pertgaugegamma[LI[order], -j])]};
 
 
-Print[Column[{"Gauge Decomposition", gaugerules}]]
+Print[Column[{"Gauge Decomposition", ScreenDollarIndices[gaugerules]}]]
 
 
 (****   Total   ****)
