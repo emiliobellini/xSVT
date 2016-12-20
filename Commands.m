@@ -437,3 +437,22 @@ ToG[expr_]:= expr //.pert_[LI[li_],inds___]/;!StringMatchQ[ToString[pert],"pert*
 
 
 SubEQ[eq_,var_][expr_]:=expr //.MakeRule[{var,Evaluate[PutScalar[var //.Flatten[Solve[eq==0,var]]]]}] // ToCanonical // NoScalar
+
+
+ImportEquations[dir_] := Module[{files, names},
+	files = FileNames[dir<>"*.m"];
+	names = StringReplace[files, dir->""];
+	names = StringDrop[names, -2];
+	MapThread[Set, {ToExpression[#] & /@ names, Import[#] & /@ files}];
+	names
+]
+
+
+NoL[list___][expr_] := Module[{tmp, tmplist},
+	tmp=#&/@{list};
+	tmplist = ToExpression["L"<>ToString[#]<>"[]:>0"]&/@tmp;
+	tmplist = Union[tmplist,ToExpression["primeL"<>ToString[#]<>"[]:>0"]&/@tmp];
+	tmplist = Union[tmplist,ToExpression["pprimeL"<>ToString[#]<>"[]:>0"]&/@tmp];
+	tmplist = Union[tmplist,ToExpression["ppprimeL"<>ToString[#]<>"[]:>0"]&/@tmp];
+	expr //.tmplist
+]
