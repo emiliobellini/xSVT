@@ -105,16 +105,7 @@ EQv2 = (%/scale[]^2 - vector0[] PD[-i]@(EQv1/scale[] - EQg1))/vector0[] // SVTEx
 (* Use RestoreFunctions[expr] to rewrite expr in terms of the original scalar functions *)
 
 
-Clear[NoL]
-NoL[list___][expr_]:=Module[{tmp,tmplist},tmp=#&/@{list};
-tmplist=ToExpression["L"<>ToString[#]<>"[]:>0"]&/@tmp;
-tmplist=Union[tmplist,ToExpression["primeL"<>ToString[#]<>"[]:>0"]&/@tmp];
-tmplist=Union[tmplist,ToExpression["pprimeL"<>ToString[#]<>"[]:>0"]&/@tmp];
-tmplist=Union[tmplist,ToExpression["ppprimeL"<>ToString[#]<>"[]:>0"]&/@tmp];
-expr //.tmplist]
-
-
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Calculation Lagrangian*)
 
 
@@ -259,32 +250,32 @@ Lsec7=% // ToCanonical // NoScalar;
 test=CollectPerts[%,{kscal[]},Factor] // ScreenDollarIndices
 
 
-rules={alpha0[]:>0,primealpha0[]:>0,alpha1[]:>0,primealpha1[]:>0,alpha3[]:>0,primealpha3[]:>0,alpha4[]:>0,primealpha4[]:>0,alphaTV[]:>0,primealphaTV[]:>0,
-	alphaKV0[]:>0,primealphaKV0[]:>0,alphaKV1[]:>0,primealphaKV1[]:>0,alphaBV0[]:>0,primealphaBV0[]:>0,primealpha2[]:>0,alphaMV[]:>0,pertmatter[LI[1]]:>0,primepertmatter[LI[1]]:>0}
+(*rules={alpha0[]\[RuleDelayed]0,primealpha0[]\[RuleDelayed]0,alpha1[]\[RuleDelayed]0,primealpha1[]\[RuleDelayed]0,alpha3[]\[RuleDelayed]0,primealpha3[]\[RuleDelayed]0,alpha4[]\[RuleDelayed]0,primealpha4[]\[RuleDelayed]0,alphaTV[]\[RuleDelayed]0,primealphaTV[]\[RuleDelayed]0,
+	alphaKV0[]\[RuleDelayed]0,primealphaKV0[]\[RuleDelayed]0,alphaKV1[]\[RuleDelayed]0,primealphaKV1[]\[RuleDelayed]0,alphaBV0[]\[RuleDelayed]0,primealphaBV0[]\[RuleDelayed]0,primealpha2[]\[RuleDelayed]0,alphaMV[]\[RuleDelayed]0,pertmatter[LI[1]]\[RuleDelayed]0,primepertmatter[LI[1]]\[RuleDelayed]0}*)
 
 
 (* NO *)
-test[[{21,22,23,24,25,27,28,29,30,32,33,38,39,40,41,42,47,49}]]
+(*test[[{21,22,23,24,25,27,28,29,30,32,33,38,39,40,41,42,47,49}]]*)
 
 
 (* A0 *)
-test[[{3,4,11,12,13,14,15,16,17,45,53,54}]]
+(*test[[{3,4,11,12,13,14,15,16,17,45,53,54}]]*)
 
 
 (* A1 *)
-test[[{2,6,7,8,9,10,18,19,20}]]
+(*test[[{2,6,7,8,9,10,18,19,20}]]*)
 
 
 (* Mix *)
-test[[{1,5}]]
+(*test[[{1,5}]]*)
 
 
 (* A2 *)
-test[[{31,43,44,46,48}]]
+(*test[[{31,43,44,46,48}]]*)
 
 
 (* M *)
-test[[{26,34,35,36,37,50,51,52,55}]]
+(*test[[{26,34,35,36,37,50,51,52,55}]]*)
 
 
 (* ::Subsection::Closed:: *)
