@@ -268,3 +268,78 @@ DefScalarFunction[LG, PrintAs -> "\!\(\*SubscriptBox[\(L\), \(G\)]\)"]
 
 
 DefScalarFunction[V]
+
+
+(****   Tex Correction   ****)
+
+
+xAct`TexAct`Private`OpenParenthesis[0] := "\\left";
+xAct`TexAct`Private`CloseParenthesis[0] := "\\right";
+xAct`TexAct`Private`OpenParenthesis[1] := "\\left";
+xAct`TexAct`Private`CloseParenthesis[1] := "\\right";
+xAct`TexAct`Private`OpenParenthesis[2] := "\\left";
+xAct`TexAct`Private`CloseParenthesis[2] := "\\right";
+xAct`TexAct`Private`OpenParenthesis[3] := "\\left";
+xAct`TexAct`Private`CloseParenthesis[3] := "\\right";
+xAct`TexAct`Private`OpenParenthesis[4] := "\\left";
+xAct`TexAct`Private`CloseParenthesis[4] := "\\right";
+xAct`TexAct`Private`OpenParenthesis[level_Integer?NonNegative] := "\\left";
+xAct`TexAct`Private`CloseParenthesis[level_Integer?NonNegative] := "\\right";
+
+
+Tex[f_?ScalarFunctionQ[vars__]] := Tex[f]
+
+
+Tex[Derivative[ders__][f_?ScalarFunctionQ][vars__]] := StringInsert[StringDrop[StringJoin[Insert[Flatten[{StringSplit[Tex[f], "_"], Map[StringInsert[#, " ", -1] &, Map[ToString, Flatten[MapThread[Table[#1, {#2}] &, {Map[Tex, {vars}], {ders}}]]]]}], "_{", 2]], -1], "}", -1]
+
+
+Tex[Lap[expr_]] := "\\nabla^2\\left(" <> Tex[expr] <> "\\right)"
+
+
+Tex[x_Rational]:="\\frac{"<>ToString[Numerator[x]]<>"}{"<>ToString[Denominator[x]]<>"}"
+
+
+ExtraSpaceIfBackslash[str_String]:=If[StringFreeQ[str,"\\"],str,StringJoin[str," "]];
+TexIndexForm[index_]:=Tex[IndexForm[index]]
+(* One index *)
+TexUpIndex[index_]:=ExtraSpaceIfBackslash@TexIndexForm@index;
+$TexPrintInitialBracesQ=False;
+initbraces[]:=If[$TexPrintInitialBracesQ,"{}",""];
+(* Main *)
+TexIndices[]:=Sequence[];
+TexIndices[first_?UpIndexQ,more___]:=StringJoin[initbraces[],"^{",TexUpIndex[first],TexIndicesFromUp[more],"}"];
+TexIndices[first_?DownIndexQ,more___]:=StringJoin[initbraces[],"_{",TexUpIndex[ChangeIndex@first],TexIndicesFromDown[more],"}"];
+(* Previous index was up *)
+TexIndicesFromUp[]:=Sequence[];
+TexIndicesFromUp[first_?UpIndexQ,more___]:=StringJoin[TexUpIndex[first],TexIndicesFromUp[more]];
+TexIndicesFromUp[first_?DownIndexQ,more___]:=StringJoin["}{}_{",TexUpIndex[ChangeIndex@first],TexIndicesFromDown[more]];
+(* Previous index was down *)
+TexIndicesFromDown[]:=Sequence[];
+TexIndicesFromDown[first_?DownIndexQ,more___]:=StringJoin[TexUpIndex[ChangeIndex@first],TexIndicesFromDown[more]];
+TexIndicesFromDown[first_?UpIndexQ,more___]:=StringJoin["}{}^{",TexUpIndex[first],TexIndicesFromUp[more]];
+(* With derivative indices in postfix notation *)
+TexCovDIndices[post_][first_?UpIndexQ,more___]:=StringJoin["{}^{",post,TexUpIndex[first],TexIndicesFromUp[more],"}"];
+TexCovDIndices[post_][first_?DownIndexQ,more___]:=StringJoin["{}_{",post,TexUpIndex[ChangeIndex@first],TexIndicesFromDown[more],"}"];
+(* Tensors *)
+Tex[tensor_?xTensorQ[LI[1],indices___]]:=StringJoin[Tex[tensor],TexIndices[indices]];
+
+
+Tex[pertphi2] ^= "\\Phi_2";
+Tex[pertpsi2] ^= "\\Psi_2";
+Tex[pertB2] ^= "B_2";
+Tex[pertE2] ^= "E_2";
+
+
+Tex[mass2S] ^= "M_S^2";
+Tex[alphaMS] ^= "\\hat{\\alpha}_\\textrm{M}";
+Tex[alphaKS] ^= "\\hat{\\alpha}_\\textrm{K}";
+Tex[alphaBS] ^= "\\hat{\\alpha}_\\textrm{B}";
+Tex[alphaTS] ^= "\\hat{\\alpha}_\\textrm{T}";
+
+
+Tex[mass2V] ^= "M_V^2";
+Tex[alphaMV] ^= "\\tilde{\\alpha}_\\textrm{M}";
+Tex[alphaTV] ^= "\\tilde{\\alpha}_\\textrm{T}";
+Tex[alphaKV0] ^= "\\tilde{\\alpha}_\\textrm{K0}";
+Tex[alphaBV0] ^= "\\tilde{\\alpha}_\\textrm{B0}";
+Tex[alphaKV1] ^= "\\tilde{\\alpha}_\\textrm{K1}";
