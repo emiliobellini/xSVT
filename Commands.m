@@ -358,7 +358,7 @@ NoetherConstraints[vars_][eqs__] := Module[{tmpeqs, tmpvars, tmplist, tmpk, tmpf
 	tmplist = tmplist // Flatten;
 	tmplist = DeleteCases[tmplist, 0];
 	tmplist = Sort[tmplist, Length[#1] < Length[#2]&];
-	tmplist = #==0 &/@tmplist // Simplify;
+	tmplist = Expand[#]==0 &/@tmplist;
 	tmplist
 ]
 
@@ -366,26 +366,35 @@ NoetherConstraints[vars_][eqs__] := Module[{tmpeqs, tmpvars, tmplist, tmpk, tmpf
 (****   SubNoether   ****)
 
 
-SubNoether[numvar_,tf_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, count, der, tmpeq, tmpvar, tmprules, tmpflag},
+SubNoether[numvar_,tf_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, der, foundeq, count1, count2, tmpeq, tmpvar, tmprules,tmpflag},
 	{tmpnoe, tmpexpr} = {noe, expr};
 	der[smt_] := PrintWell[TimeDer[smt]];
-	For[count=1, count<=Length[numvar], count++,
-		tmpeq = tmpnoe[[numvar[[count,1]]]];
-		tmpvar = numvar[[count,2]];
-		tmprules = Solve[tmpeq,tmpvar];
-		If[StringMatchQ[ToString[tmpeq],"*ppprime*"],tmpflag=0,If[StringMatchQ[ToString[tmpeq],"*pprime*"],tmpflag=1,If[StringMatchQ[ToString[tmpeq],"*prime*"],tmpflag=2,tmpflag=3]]];
-		If[tmpflag>0,tmprules = Union[tmprules,Solve[der[tmpeq],der[tmpvar]]]];
-		If[tmpflag>1,tmprules = Union[tmprules,Solve[der[der[tmpeq]],der[der[tmpvar]]]]];
-		If[tmpflag>2,tmprules = Union[tmprules,Solve[der[der[der[tmpeq]]],der[der[der[tmpvar]]]]]];
-		tmprules = tmprules // Flatten;
-		tmpnoe = tmpnoe //.tmprules // Expand;
-		tmpnoe = DeleteCases[tmpnoe,True];
-		tmpnoe = Sort[tmpnoe //.Equal[a_,b_]:>a-b, Length[#1] < Length[#2]&];
-		tmpnoe = #==0&/@tmpnoe // Simplify // Expand;
-		tmpnoe = tmpnoe // DeleteDuplicates;
-		tmpexpr=tmpexpr //.tmprules;
+	For[count1=1, count1<=Length[numvar], count1++,
+		foundeq = False;
+		count2 = 1;
+		While[!foundeq && count2<Length[tmpnoe],
+			If[FreeQ[tmpnoe[[count2]],numvar[[count1]]],count2+=1;,foundeq = True;];
+		];
+		If[foundeq,
+			tmpeq = Simplify[tmpnoe[[count2]]];
+			tmpvar = numvar[[count1]];
+			tmprules = Solve[tmpeq,tmpvar];
+			If[StringMatchQ[ToString[tmpeq],"*ppprime*"],tmpflag=0,If[StringMatchQ[ToString[tmpeq],"*pprime*"],tmpflag=1,If[StringMatchQ[ToString[tmpeq],"*prime*"],tmpflag=2,tmpflag=3]]];
+			If[tmpflag>0,tmprules = Union[tmprules,Solve[der[tmpeq],der[tmpvar]]]];
+			If[tmpflag>1,tmprules = Union[tmprules,Solve[der[der[tmpeq]],der[der[tmpvar]]]]];
+			If[tmpflag>2,tmprules = Union[tmprules,Solve[der[der[der[tmpeq]]],der[der[der[tmpvar]]]]]];
+			tmprules = tmprules // Flatten;
+			tmpnoe = tmpnoe //.tmprules // Expand;
+			tmpnoe = DeleteCases[tmpnoe,True];
+			tmpnoe = Sort[tmpnoe //.Equal[a_,b_]:>a-b, Length[#1] < Length[#2]&];
+			tmpnoe = #==0&/@tmpnoe;
+			tmpnoe = Factor[#]&/@tmpnoe;
+			tmpnoe = tmpnoe // DeleteDuplicates;
+			tmpexpr=tmpexpr //.tmprules;,
+			Print["Variable "<>ToString[numvar[[count1]]]<>" not found!"]
+		];
 		If[tf,
-			Print[ToString[count]<>"/"<>ToString[Length[numvar]]];
+			Print[ToString[count1]<>"/"<>ToString[Length[numvar]]];
 		];
 	];
 	If[Length[tmpnoe]>0 && tf,
