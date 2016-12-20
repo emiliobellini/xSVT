@@ -132,7 +132,13 @@ AutomaticRules[#, {PD[-a_?TangentM1`Q]@#[] :>
 (****   Alphas   ****)
 
 
-AutomaticRules[primemass2, {primemass2[] :> hubbleC[] mass2[] alphaM[]}]
+AutomaticRules[primemass2S, {primemass2S[] :> hubbleC[] mass2S[] alphaMS[]}]
 
 
-AutomaticRules[dotmass2, {dotmass2[] :> hubbleP[] mass2[] alphaM[]}]
+AutomaticRules[dotmass2S, {dotmass2S[] :> hubbleP[] mass2S[] alphaMS[]}]
+
+
+AutomaticRules[primemass2V, {primemass2V[] :> hubbleC[] mass2V[] alphaMV[]}]
+
+
+AutomaticRules[dotmass2V, {dotmass2V[] :> hubbleP[] mass2V[] alphaMV[]}]
