@@ -115,7 +115,7 @@ Lmatter=-Sqrt[-Detmetricg[]] (1/2 metricg[\[Mu],\[Nu]] PD[-\[Mu]]@mattercov[] PD
 
 
 TaylorExpand[expansionorder,numberofderivatives][Lgravity];
-%+Decomposition[expansionorder][Lmatter] //.pert_[LI[2]]:>0 // Simplify;
+%+Simplify[Decomposition[expansionorder][Lmatter]] //.pert_[LI[2]]:>0;
 %/expansionorder! // SVTExpand;
 HideFunctions["L"][%];
 Lsec=% // FourierT // NoScalar;
@@ -166,12 +166,14 @@ Coeff[%];
 % //.Coeff[coeff_] pert_ PD[-a_?TangentM1`Q]@pertB[LI[1]]:>-Coeff[coeff] PD[-a]@pert pertB[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pert pertB[LI[1]];
 % //.Coeff[coeff_] pert_ PD[-a_?TangentM1`Q]@pertpsi[LI[1]]:>-Coeff[coeff] PD[-a]@pert pertpsi[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pert pertpsi[LI[1]];
 % //.Coeff[coeff_] pertphi[LI[1]] PD[-a_?TangentM1`Q]@pertE[LI[1]]:>-Coeff[coeff] PD[-a]@pertphi[LI[1]] pertE[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertphi[LI[1]] pertE[LI[1]];
-% //.Coeff[coeff_] pertscalar[LI[1]] PD[-a_?TangentM1`Q]@pertE[LI[1]]:>-Coeff[coeff] PD[-a]@pertscalar[LI[1]] pertE[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertscalar[LI[1]] pertE[LI[1]];
-% //.Coeff[coeff_] pertscalar[LI[1]] PD[-a_?TangentM1`Q]@pertphi[LI[1]]:>-Coeff[coeff] PD[-a]@pertscalar[LI[1]] pertphi[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertscalar[LI[1]] pertphi[LI[1]];
+% //.Coeff[coeff_] pertE[LI[1]] PD[-a_?TangentM1`Q]@pertscalar[LI[1]]:>-Coeff[coeff] PD[-a]@pertE[LI[1]] pertscalar[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertE[LI[1]] pertscalar[LI[1]];
+% //.Coeff[coeff_] pertphi[LI[1]] PD[-a_?TangentM1`Q]@pertscalar[LI[1]]:>-Coeff[coeff] PD[-a]@pertphi[LI[1]] pertscalar[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertphi[LI[1]] pertscalar[LI[1]];
 % //.Coeff[coeff_] pertF[LI[1],i1_] PD[-a_?TangentM1`Q]@pertF[LI[1],i2_]:>-1/2 Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertF[LI[1],i1] pertF[LI[1],i2];
 % //.Coeff[coeff_] pertS[LI[1],i1_] PD[-a_?TangentM1`Q]@pertS[LI[1],i2_]:>-1/2 Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertS[LI[1],i1] pertS[LI[1],i2];
 % //.Coeff[coeff_] pertF[LI[1],i1_] PD[-a_?TangentM1`Q]@pertS[LI[1],i2_]:>-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertF[LI[1],i1] pertS[LI[1],i2]-Coeff[coeff] PD[-a]@pertF[LI[1],i1] pertS[LI[1],i2];
 % //.Coeff[coeff_] perth[LI[1],i1_,i2_] PD[-a_?TangentM1`Q]@perth[LI[1],i3_,i4_]:>-1/2 Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] perth[LI[1],i1,i2] perth[LI[1],i3,i4];
+% //.Coeff[coeff_] pertphi[LI[1]] PD[-a_?TangentM1`Q]@pertmatter[LI[1]]:>-Coeff[coeff] PD[-a]@pertphi[LI[1]] pertmatter[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertphi[LI[1]] pertmatter[LI[1]];
+% //.Coeff[coeff_] pertE[LI[1]] PD[-a_?TangentM1`Q]@pertmatter[LI[1]]:>-Coeff[coeff] PD[-a]@pertE[LI[1]] pertmatter[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertE[LI[1]] pertmatter[LI[1]];
 Lsec3=% //.Coeff[coeff_]:>coeff // ToCanonical // NoScalar;
 CollectPerts[%,{kscal[]},Factor];
 
@@ -191,15 +193,6 @@ Lsec3;
 % //.rules // Expand;
 Lsec4=% // ToCanonical // NoScalar;
 CollectPerts[%,{kscal[]},Factor]
-
-
-(* ::Subsection::Closed:: *)
-(*Lagrangian*)
-
-
-Lsec4;
-CollectPerts[%,{kscal[]},Factor]
-Export[$OutputDirectory<>"L2ST.m",Lsec4]
 
 
 (* ::Subsection::Closed:: *)
@@ -256,54 +249,71 @@ Export[$OutputDirectory<>"EQback4Ss.m",%]
 
 
 (* ::Subsection::Closed:: *)
+(*Lagrangian*)
+
+
+Lsec4;
+Lsec5 = % //.Flatten[Solve[EQback3==0,pprimematter[]]] // ToCanonical // NoScalar;
+test=CollectPerts[%,{kscal[]},Factor]
+Export[$OutputDirectory<>"L2ST.m",Lsec5]
+
+
+(* ::Subsection::Closed:: *)
 (*Equations of motion (with scalar field)*)
 
 
-VarD[pertpsi[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertpsi[LI[1]],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst1=-%/scale[]^4/mass2S[] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst1Ss.m",%%]
 
 
-VarD[pertB[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertB[LI[1]],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst2=%/kscal[]^2/scale[]^3/mass2S[] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst2Ss.m",%%]
 
 
-VarD[pertE[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertE[LI[1]],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst3=-%/kscal[]^2/scale[]^4/mass2S[] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst3Ss.m",%%]
 
 
-VarD[pertphi[LI[1]],PD][Lsec4]-3 VarD[pertE[LI[1]],PD][Lsec4]/kscal[]^2 //.delta[-LI[1],LI[1]]:>1;
+VarD[pertphi[LI[1]],PD][Lsec5]-3 VarD[pertE[LI[1]],PD][Lsec5]/kscal[]^2 //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst4=%/scale[]^2/2/mass2S[]/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst4Ss.m",%%]
 
 
-VarD[pertS[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertS[LI[1],i],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst5=2 %/mass2S[]/scale[]^2/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst5Ss.m",%%]
 
 
-VarD[pertF[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertF[LI[1],i],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst6=-2 %/mass2S[]/scale[]^2/kscal[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst6Ss.m",%%]
 
 
-VarD[perth[LI[1],i,j],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+VarD[perth[LI[1],i,j],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 EQfirst7=-4 %/mass2S[]/scale[]^2 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst7Ss.m",%%]
 
 
-VarD[pertscalar[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
-%/mass2S[]/scale[]^4 // Expand;
-EQfirst8=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
+VarD[pertscalar[LI[1]],PD][Lsec5] //.delta[-LI[1],LI[1]]:>1;
+% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
+EQfirst8=%/mass2S[]/scale[]^4 // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Ss.m",%%]
 
@@ -379,6 +389,12 @@ EQfirst8;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Sm.m",%%]
+
+
+
+
+
+
 
 
 
