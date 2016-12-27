@@ -59,7 +59,7 @@ Print[Column[{"Matter field Decomposition", ScreenDollarIndices[matterrules]}]]
 
 vectorrules = {vectorcov[a_?TangentM1`Q] :> timevec[a] vector0[], 
 	pertvectorcov[LI[order_], a_?TangentM1`Q] :> -timevec[a] ((primevector0[] + hubbleC[] vector0[])/scale[] pertvector0[LI[order]] + vector0[] pertpsi[LI[order]]),
-	pertvectorcov[LI[order_], i_?TangentM3`Q] :> vector0[] (PD[i]@(pertvector1[LI[order]]/scale[] - pertB[LI[order]]) + pertvector2[LI[order], i])};
+	pertvectorcov[LI[order_], i_?TangentM3`Q] :> vector0[] (PD[i]@(pertvector1[LI[order]]/scale[] - pertB[LI[order]]) + pertvector2[LI[order], i]/scale[] + pertS[LI[order], i])};
 
 
 Print[Column[{"Vector field Decomposition", ScreenDollarIndices[vectorrules]}]]
