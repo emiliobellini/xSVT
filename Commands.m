@@ -305,6 +305,7 @@ HideFunctions[name_][expr_] := Module[{zero, count, listfun, listten, newten},
 		DependenciesOfTensor[newten] ^= {M4};
 		HostsOf[newten] ^= {M4};
 		PrintAs[Evaluate[newten]] ^= Evaluate[ToString[Subscript[name, ToString[zero+count]], StandardForm]];
+		Tex[newten] ^= name<>"_"<>ToString[zero+count];
 		listten = Append[listten,newten];
 		AppendTo[$Tensors, newten];
 	];
