@@ -227,6 +227,8 @@ DefTensor[alphaMV[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(
 	DefInfo -> {"tensor", "building function"}]
 DefTensor[alphaTV[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(~\)]\)\), \(T\)]\)",
 	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaVV[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(~\)]\)\), \(V\)]\)",
+	DefInfo -> {"tensor", "building function"}]
 
 
 DefTensor[alphaKV0[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(~\)]\)\), \(K0\)]\)",
@@ -340,6 +342,7 @@ Tex[alphaTS] ^= "\\hat{\\alpha}_\\textrm{T}";
 Tex[mass2V] ^= "M_V^2";
 Tex[alphaMV] ^= "\\tilde{\\alpha}_\\textrm{M}";
 Tex[alphaTV] ^= "\\tilde{\\alpha}_\\textrm{T}";
+Tex[alphaVV] ^= "\\tilde{\\alpha}_\\textrm{V}";
 Tex[alphaKV0] ^= "\\tilde{\\alpha}_\\textrm{K0}";
 Tex[alphaBV0] ^= "\\tilde{\\alpha}_\\textrm{B0}";
 Tex[alphaKV1] ^= "\\tilde{\\alpha}_\\textrm{K1}";
