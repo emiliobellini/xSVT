@@ -70,11 +70,12 @@ Print[Column[{"Vector field Decomposition", ScreenDollarIndices[vectorrules]}]]
 
 tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale2[]^2 lapse2[]^2, 
 	tensorcov[-i_?TangentM3`Q, -j_?TangentM3`Q] :> scale2[]^2 metric\[Delta][-i, -j], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> -2 scale2[]^2 pertpsi2[LI[order]] timevec[-a] timevec[-b], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale2[]^2 PD[-i]@pertB2[LI[order]], 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale2[]^2 PD[-i]@pertB2[LI[order]], 
+	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> -2 scale2[]^2 lapse2[]^2 (pertpsi2[LI[order]] - (hubbleC2[]+primelapse2[]/lapse2[])/hubbleC[] pertphi[LI[1]]) timevec[-a] timevec[-b], 
+	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale2[]^2 (PD[-i]@(pertB2[LI[order]] + lapse2[]^2/hubbleC[] pertphi[LI[1]]) - pertS2[LI[order], -i]), 
+	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale2[]^2 (PD[-i]@(pertB2[LI[order]] + lapse2[]^2/hubbleC[] pertphi[LI[1]]) - pertS2[LI[order], -i]), 
 	perttensorcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, 2 scale2[]^2 (- pertphi2[LI[order]] metric\[Delta][-i, -j] + PD[-i]@PD[-j]@pertE2[LI[order]])]};
+		Module[{k, l}, scale2[]^2 (-2 hubbleC2[]/scale[] pertphi2[LI[order]] metric\[Delta][-i, -j] + perth2[LI[order], -i, -j] + PD[-i]@pertF2[LI[order], -j]
+			+ PD[-j]@pertF2[LI[order], -i] + 2 PD[-i]@PD[-j]@pertE2[LI[order]])]};
 
 
 Print[Column[{"Tensor field Decomposition", ScreenDollarIndices[tensorrules]}]]

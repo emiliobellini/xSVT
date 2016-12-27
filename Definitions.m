@@ -165,6 +165,14 @@ DefTensor[pertE2[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(E\), \(2\)]\)"
 	DefInfo -> {"tensor", "perturbation"}]
 
 
+DefTensor[pertS2[LI[order], -i], M3, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(2\)]\)",
+	DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertF2[LI[order], -i], M3, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(2\)]\)",
+	DefInfo -> {"tensor", "perturbation"}]
+DefTensor[perth2[LI[order], -i, -j], M3, Symmetric[{-i, -j}], PrintAs -> "\!\(\*SubscriptBox[\(h\), \(2\)]\)",
+	DefInfo -> {"tensor", "perturbation"}]
+
+
 (****   k vectors   ****)
 
 
