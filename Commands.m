@@ -125,7 +125,7 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 		ppprimehubbleC[] :> scale[]^4 (dddothubbleP[] + 4 dothubbleP[]^2 + 7 ddothubbleP[] hubbleP[] + 18 hubbleP[]^2 dothubbleP[] + 6 hubbleP[]^4),
 		hubbleC2[] :> scale[] hubbleP2[],
 		primehubbleC2[] :> scale[]^2 (hubbleP[] hubbleP2[] + dothubbleP2[]),
-		pprimehubbleC2[] :> scale[]^3 (ddothubbleP[] + 3 hubbleP[] dothubbleP2[] + dothubbleP[] hubbleP2[] + 2 hubbleP[]^2 hubbleP2[]),
+		pprimehubbleC2[] :> scale[]^3 (ddothubbleP2[] + 3 hubbleP[] dothubbleP2[] + dothubbleP[] hubbleP2[] + 2 hubbleP[]^2 hubbleP2[]),
 		ppprimehubbleC2[] :> scale[]^4 (dddothubbleP2[] + 6 hubbleP[] ddothubbleP2[] + (4 dothubbleP[] + 11 hubbleP[]^2) dothubbleP2[] + (ddothubbleP[] + 6 hubbleP[]^3 + 7 hubbleP[] dothubbleP[]) hubbleP2[])};
 	primerules = {tens_ /; match[tens, "prime*"] :> scale[] sub[tens, "prime", "dot"],
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
@@ -165,6 +165,15 @@ PrintWell[expr_] := Module[{tmp}, tmp = FirstT[expr];
 	tmp = tmp //.PD[-a_?TangentM1`Q]@tens_?xTensorQ[inds___] /; !StringMatchQ[ToString[tens],"*prime*"]:> timevec[-a] ToExpression["prime" <> ToString[tens]][inds];
 	tmp = tmp //.PD[-a_?TangentM1`Q]@tens_?xTensorQ[inds___] /; StringMatchQ[ToString[tens],"*prime*"]:> timevec[-a] ToExpression["p" <> ToString[tens]][inds];
 	tmp = tmp // ContractMetric // ToLaplacian // NoScalar
+]
+
+
+InvPrintWell[expr_]:= Module[{tmp}, tmp = expr;
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"pp*ime*"] :>Module[{a}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]^n];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"pp*ime*"] :>Module[{a}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]];
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"prime*"] :>Module[{a}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]^n];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"prime*"] :>Module[{a}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]];
+	tmp = tmp // SeparateMetric[] // NoScalar
 ]
 
 
@@ -373,18 +382,18 @@ SubNoether[numvar_,tf_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, der, foundeq, 
 	For[count1=1, count1<=Length[numvar], count1++,
 		foundeq = False;
 		count2 = 1;
-		While[!foundeq && count2<Length[tmpnoe],
+		While[!foundeq && count2<=Length[tmpnoe],
 			If[FreeQ[tmpnoe[[count2]],numvar[[count1]]],count2+=1;,foundeq = True;];
 		];
 		If[foundeq,
 			tmpeq = Simplify[tmpnoe[[count2]]];
 			tmpvar = numvar[[count1]];
-			tmprules = Solve[tmpeq,tmpvar];
-			If[StringMatchQ[ToString[tmpeq],"*ppprime*"],tmpflag=0,If[StringMatchQ[ToString[tmpeq],"*pprime*"],tmpflag=1,If[StringMatchQ[ToString[tmpeq],"*prime*"],tmpflag=2,tmpflag=3]]];
-			If[tmpflag>0,tmprules = Union[tmprules,Solve[der[tmpeq],der[tmpvar]]]];
-			If[tmpflag>1,tmprules = Union[tmprules,Solve[der[der[tmpeq]],der[der[tmpvar]]]]];
-			If[tmpflag>2,tmprules = Union[tmprules,Solve[der[der[der[tmpeq]]],der[der[der[tmpvar]]]]]];
-			tmprules = tmprules // Flatten;
+			tmprules = Solve[tmpeq,tmpvar] // Factor;
+			If[StringMatchQ[ToString[tmprules],"*ppprime*"],tmpflag=0,If[StringMatchQ[ToString[tmprules],"*pprime*"],tmpflag=1,If[StringMatchQ[ToString[tmprules],"*prime*"],tmpflag=2,tmpflag=3]]];
+			If[tmpflag>0,tmprules = Union[tmprules,{der[tmpvar]->der[tmpvar //.Flatten[tmprules]]}];];
+			If[tmpflag>1,tmprules = Union[tmprules,{der[der[tmpvar]]->der[der[tmpvar] //.Flatten[tmprules]]}];];
+			If[tmpflag>2,tmprules = Union[tmprules,{der[der[der[tmpvar]]]->der[der[der[tmpvar]] //.Flatten[tmprules]]}];];
+			tmprules = tmprules // Flatten // Factor;
 			tmpnoe = tmpnoe //.tmprules // Expand;
 			tmpnoe = DeleteCases[tmpnoe,True];
 			tmpnoe = Sort[tmpnoe //.Equal[a_,b_]:>a-b, Length[#1] < Length[#2]&];
@@ -394,9 +403,7 @@ SubNoether[numvar_,tf_][{noe_,expr_}] := Module[{tmpnoe, tmpexpr, der, foundeq, 
 			tmpexpr=tmpexpr //.tmprules;,
 			Print["Variable "<>ToString[numvar[[count1]]]<>" not found!"]
 		];
-		If[tf,
-			Print[ToString[count1]<>"/"<>ToString[Length[numvar]]];
-		];
+		Print[ToString[count1]<>"/"<>ToString[Length[numvar]]];
 	];
 	If[Length[tmpnoe]>0 && tf,
 		Print[ScreenDollarIndices[CollectPerts[tmpexpr,{kscal[]},Factor]]];

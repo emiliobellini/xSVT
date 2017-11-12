@@ -4,7 +4,10 @@
 
 
 $CodeDirectory="~/Dropbox/SVT/xSVT/";
-$RecursionLimit = 8192;
+
+
+$RecursionLimit = 32768;
+$IterationLimit = 32768;
 
 
 << xAct`xTensor`

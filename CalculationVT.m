@@ -83,19 +83,19 @@ EQm0 = GaugeTransformation[pertmattercov[LI[1]], pertgauge];
 
 
 GaugeTransformation[pertvectorcov[LI[1],\[Mu]], pertgauge, \[Mu]->a];
-EQv0 = - scale[] (%+vector0[] EQg0)/(primevector0[] + hubbleC[] vector0[]) // Simplification // Expand;
-% // PrintWell // ToPhysical
+EQv0 = - (% + vector0[]/scale[] EQg0) scale[]^2/primevector0[] // Expand;
+% // CollectPerts
 
 
 GaugeTransformation[pertvectorcov[LI[1],-\[Mu]], pertgauge, \[Mu]->i];
 metric\[Delta][i,j]/scale[]^2 PD[-j]@% // ToCanonical // FourierT;
-EQv1 = scale[] (-%/kscal[]^2/vector0[] + EQg1) // SVTExpand;
-% // PrintWell // ToPhysical
+EQv1 = - (% scale[]/kscal[]^2/vector0[] - EQg1) scale[] // SVTExpand;
+% // CollectPerts
 
 
 GaugeTransformation[pertvectorcov[LI[1],-\[Mu]], pertgauge, \[Mu]->i];
-EQv2 = ((%/scale[]^2 - vector0[] PD[-i]@(EQv1/scale[] - EQg1))/vector0[] - EQg4) scale[] // SVTExpand;
-% // PrintWell // ToPhysical
+EQv2 = %/vector0[] - PD[-i]@EQv1 + scale[] PD[-i]@EQg1 - scale[] EQg4 // SVTExpand;
+% // CollectPerts
 
 
 (* ::Section:: *)
@@ -105,13 +105,13 @@ EQv2 = ((%/scale[]^2 - vector0[] PD[-i]@(EQv1/scale[] - EQg1))/vector0[] - EQg4)
 (* Use RestoreFunctions[expr] to rewrite expr in terms of the original scalar functions *)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Calculation Lagrangian*)
 
 
 pertsgravity={pertmetricg[LI[1],-a,-b],pertmetricg[LI[1],-a,-i],pertmetricg[LI[1],-i,-j],pertvectorcov[LI[1],a],pertvectorcov[LI[1],i]}
 pertstotal={pertphi[LI[1]],pertpsi[LI[1]],pertB[LI[1]],pertE[LI[1]],pertvector0[LI[1]],pertvector1[LI[1]],pertvector2[LI[1],-i],
-	pertmatter[LI[1]],pertgaugealpha[LI[1]],pertgaugebeta[LI[1]],pertS[LI[1],-i],pertF[LI[1],-i],perth[LI[1],-i,-j]}
+	pertmatter[LI[1]],pertgaugealpha[LI[1]],pertgaugebeta[LI[1]],pertgaugegamma[LI[1],-i],pertS[LI[1],-i],pertF[LI[1],-i],perth[LI[1],-i,-j]}
 expansionorder=2
 numberofderivatives=2
 
@@ -131,15 +131,15 @@ TaylorExpand[expansionorder,numberofderivatives][Lgravity];
 %/expansionorder! // SVTExpand;
 HideFunctions["L"][%];
 Lsec=% // FourierT // NoScalar;
-CollectPerts[%,{kscal[]},Factor];
+% // Length
 
 
 Lsec;
 Coeff[%];
 % //.Coeff[coeff_] pert1_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert2_:>-Coeff[coeff] PD[-a]@pert1 PD[-b]@pert2-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pert1 PD[-b]@pert2;
 % //.Coeff[coeff_] pert_ PD[-a_?TangentM1`Q]@pert_:>-1/2 Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pert^2;
-Lsec=% //.Coeff[coeff_]:>coeff // SVTExpand // Simplify // ToCanonical // NoScalar;
-CollectPerts[%,{kscal[]},Factor];
+Lsec=% //.Coeff[coeff_]:>coeff // SVTExpand;
+% // Length
 
 
 Lsec;
@@ -157,7 +157,6 @@ Lsec;
 % // SubEQ[EQv2,pertvector2G[LI[1],-i]];
 % // SubEQ[EQm0,pertmatterG[LI[1]]];
 Nsec=% // SVTExpand;
-CollectPerts[%,{kscal[]},Factor];
 
 
 EQAsec=VarD[pertgaugealpha[LI[1]],PD][Nsec] //.delta[-LI[1],LI[1]]:>1 // PrintWell;
@@ -168,12 +167,28 @@ EQGsec=VarD[pertgaugegamma[LI[1],i],PD][Nsec] //.delta[-LI[1],LI[1]]:>1 // Print
 Nsec=NoetherConstraints[pertstotal][EQAsec,EQBsec,EQGsec];
 
 
-noetherlist={ L82[],  L63[],  L58[],  L71[],  L64[], L138[], L128[], L127[],  L81[], L122[],
-              L66[],  L78[],  L75[],  L76[], L137[], L117[], L116[], L121[], L113[], L135[],
-             L126[], L129[], L132[], L131[], L111[],  L73[],  L74[],  L67[], L110[], L130[],
-              L96[], L133[], L115[], L114[], L139[], L118[],  L70[],  L49[],  L79[], L134[],
-             L142[], L125[], L124[], L141[], L140[]};
-{Nsec2,Lsec2}={Nsec,Lsec} // SubNoether[noetherlist,True]; // AbsoluteTiming
+noetherlist={ L71[], L117[], L122[],  L63[],  L58[],  L82[], L126[], L129[], L138[],  L64[],
+			  L81[], L137[], L128[], L127[], L131[], L110[],  L75[],  L78[],  L76[], L116[],
+			 L121[], L113[], L118[], L135[], L133[], L111[], L132[], L100[],  L74[],  L73[],
+			  L96[],  L66[],  L67[], L114[], L130[], L115[], L139[],  L49[],  L70[], L124[],
+			  L79[], L140[], L125[], L109[], L142[], L141[], L134[], pprimematter[]};
+{Nsec2,Lsec2}={Nsec,Lsec} // SubNoether[noetherlist,False]; // AbsoluteTiming
+Lsec2 = Lsec2 // ToCanonical // NoScalar;
+% // Length
+
+
+noetherlist
+Coefficient[Nsec2,#]&/@% // Flatten // DeleteDuplicates
+Coefficient[Nsec2,#]&/@PrintWell[TimeDer[%%]] // Flatten // DeleteDuplicates
+Coefficient[Nsec2,#]&/@PrintWell[TimeDer[TimeDer[%%%]]] // Flatten // DeleteDuplicates
+Coefficient[Nsec2,#]&/@PrintWell[TimeDer[TimeDer[TimeDer[%%%%]]]] // Flatten // DeleteDuplicates
+
+
+noetherlist
+Coefficient[Lsec2,#]&/@% // DeleteDuplicates
+Coefficient[Lsec2,#]&/@PrintWell[TimeDer[%%]] // DeleteDuplicates
+Coefficient[Lsec2,#]&/@PrintWell[TimeDer[TimeDer[%%%]]] // DeleteDuplicates
+Coefficient[Lsec2,#]&/@PrintWell[TimeDer[TimeDer[TimeDer[%%%%]]]] // DeleteDuplicates
 
 
 Lsec2;
@@ -197,71 +212,97 @@ Coeff[%];
 % //.Coeff[coeff_] pertvector1[LI[1]] PD[-a_?TangentM1`Q]@pertvector0[LI[1]]:>-Coeff[coeff] PD[-a]@pertvector1[LI[1]] pertvector0[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertvector1[LI[1]] pertvector0[LI[1]];
 % //.Coeff[coeff_] pertphi[LI[1]] PD[-a_?TangentM1`Q]@pertmatter[LI[1]]:>-Coeff[coeff] PD[-a]@pertphi[LI[1]] pertmatter[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertphi[LI[1]] pertmatter[LI[1]];
 % //.Coeff[coeff_] pertE[LI[1]] PD[-a_?TangentM1`Q]@pertmatter[LI[1]]:>-Coeff[coeff] PD[-a]@pertE[LI[1]] pertmatter[LI[1]]-Coeff[timevec[-a] PrintWell[TimeDer[coeff]]] pertE[LI[1]] pertmatter[LI[1]];
-Lsec3=% //.Coeff[coeff_]:>coeff // ToCanonical // NoScalar;
-CollectPerts[%,{kscal[]},Factor];
+Lsec3=% //.Coeff[coeff_]:>coeff //.Flatten[Solve[Nsec[[1]], pprimematter[]]] // ToCanonical // NoScalar;
+% // Length
 
 
-Nsec3 = Nsec2 // Simplify // DeleteDuplicates // Expand;
+LsecPW = PrintWell[Lsec3];
+EQmass2 = (- mass2V[] + 8 Coefficient[LsecPW //.primeperth[LI[1],-i_,-j_] primeperth[LI[1],i_,j_]:>x,x]/scale[]^2) scale[]/2/vector0[] // Expand;
+EQalphaT = -(- (alphaTV[] + 1) mass2V[] - 8/scale[]^2 Coefficient[LsecPW //.perth[LI[1],-i_,-j_] perth[LI[1],i_,j_]:>x,x]/kscal[]^2) 2 scale[]^4 hubbleC[]^2/primevector0[]^2 // Expand;
+EQalphaK0 = (- alphaKV0[] mass2V[] + 2 Coefficient[LsecPW, primepertvector0[LI[1]]^2]/hubbleC[]^2) 2 scale[]^4 hubbleC[]^2/primevector0[]^2 // Expand;
+EQalphaB0 = (- alphaBV0[] mass2V[] + Coefficient[LsecPW,primepertphi[LI[1]] primepertvector0[LI[1]]]/3/scale[]/hubbleC[]) 2 scale[] hubbleC[]/primevector0[] // Expand;
+EQalphaK = -(- alphaKV[] mass2V[] + 2 Coefficient[LsecPW, primepertvector1[LI[1]]^2]/kscal[]^2)/scale[]^2 // Expand;
+EQalphaS = (- (-alphaCV[]^2 + 2*alphaKV[]*alphaSV[])/2 mass2V[] - 2 Coefficient[LsecPW //.pertvector2[LI[1],-i_] pertvector2[LI[1],i_]:>x,kscal[]^2 x]) scale[]^4/vector0[]^2 // Expand;
+EQalphaC = (- (1 + alphaCV[]) mass2V[] - EQmass2/2 - Coefficient[LsecPW,kscal[]^2 pertphi[LI[1]] pertpsi[LI[1]]]/scale[]^2/2)/scale[]^2 // Expand;
+EQalphaV = (- (- alphaVV[] + alphaDV[] - alphaDV[] primehubbleC[]/hubbleC[]^2) mass2V[] + Coefficient[LsecPW, kscal[]^2 pertvector0[LI[1]] pertvector1[LI[1]]]/hubbleC[]^2) 2 scale[]^4 hubbleC[]^2/primevector0[]/vector0[] // Expand;
+EQalphaD = (- alphaDV[] mass2V[] + 6 Coefficient[LsecPW, pertB[LI[1]]^2]/kscal[]^4/scale[]^2) 2 scale[]^4/3/vector0[]^2 // Expand;
+EQalphaA = -(- alphaAV[] mass2V[] - Coefficient[LsecPW, pertvector0[LI[1]] primepertvector1[LI[1]]]/kscal[]^2/hubbleC[]) 2 scale[]^4 hubbleC[]/primevector0[]/vector0[] // Expand;
 
 
-rules={primevector0[]:>L82[]-vector0[] hubbleC[],pprimevector0[]:>Evaluate[PrintWell[TimeDer[L82[]-vector0[] hubbleC[]]]],
-	ppprimevector0[]:>Evaluate[PrintWell[TimeDer[TimeDer[L82[]-vector0[] hubbleC[]]]]]}
+EQalphaC;
+% //.Flatten[Solve[EQmass2==0, L34[]]] // Expand;
+% //.Flatten[Solve[EQalphaS==0, L51[]]] // Expand;
+EQalphaC = %;
 
 
-{Nsec4,Lsec4}={Nsec3,Lsec3} //.rules // ToCanonical // NoScalar;
+EQalphaD;
+% //.Flatten[Solve[EQalphaS==0, L51[]]] // Expand;
+EQalphaD = %;
 
 
-noetherlist={L100[], L109[], pprimematter[]};
-{Nsec5,Lsec5}={Nsec4,Lsec4} // SubNoether[noetherlist,True]; // AbsoluteTiming
+EQalphaV;
+% //.Flatten[Solve[EQalphaA==0, L101[]]] // Expand;
+EQalphaV = %;
 
 
-Lsec6=Lsec5 //.rules // ToCanonical // NoScalar;
+EQalphaB0;
+% //.Flatten[Solve[EQalphaA==0, L101[]]] // Expand;
+EQalphaB0 = %;
 
 
-EQmass2 = - mass2V[] + 8 Coefficient[PrintWell[Lsec6] //.primeperth[LI[1],-i_,-j_] primeperth[LI[1],i_,j_]:>x,x]/scale[]^2 // Expand
-EQalphaT = - (alphaTV[] + 1) mass2V[] - 8/scale[]^2 Coefficient[PrintWell[Lsec6] //.perth[LI[1],-i_,-j_] perth[LI[1],i_,j_]:>x,x]/kscal[]^2 // Expand
-EQalphaK0 = - alphaKV0[] mass2V[] + 2 Coefficient[PrintWell[Lsec6], primepertvector0[LI[1]]^2]/hubbleC[]^2 // Expand
-EQalphaB0 = - alphaBV0[] mass2V[] + Coefficient[PrintWell[Lsec6],primepertphi[LI[1]] primepertvector0[LI[1]]]/3/scale[]/hubbleC[] // Expand
-EQalphaK1 = - alphaKV1[] mass2V[] + 2 Coefficient[PrintWell[Lsec6], primepertvector1[LI[1]]^2]/kscal[]^2 // Expand
-EQalpha0 = - alpha0[] mass2V[] + 6 Coefficient[PrintWell[Lsec6], pertB[LI[1]]^2]/kscal[]^4/scale[]^2 // Expand
-EQalpha1 = - alpha1[] mass2V[] + 2 Coefficient[PrintWell[Lsec6], pertvector0[LI[1]] primepertvector1[LI[1]]]/kscal[]^2/hubbleC[] // Expand
-EQalpha2 = - alpha2[] mass2V[] - mass2V[]/2 + scale[]^2 (L14[]-L36[]) - vector0[]^2/scale[]^2 (L2[]-L51[]) // Expand
-EQalpha3 = - (alpha3[] + 2 alpha0[] - 2 alpha0[] primehubbleC[]/hubbleC[]^2) mass2V[] + (L82[] (L82[] - 2 hubbleC[] vector0[]) (L101[] - L19[] + L60[] - L83[]) + L82[] vector0[] (L99[] - L54[] + primeL60[] - primeL83[]))/scale[]^2/hubbleC[]^2 // Expand
-EQalphaV = - (-alpha2[]^2 + 2*alphaKV1[] + 2*alphaKV1[]*alphaVV[])/2 mass2V[] - vector0[]^2 (L2[]-L51[])/scale[]^2
+EQmass2;
+% //.Flatten[Solve[EQalphaC==0, L14[]]] // Expand;
+% //.Flatten[Solve[EQalphaS==0, L51[]]] // Expand;
+EQmass2 = %;
 
 
-Lsec6;
-% //.Flatten[Solve[EQalphaT==0,L95[]]] // Expand;
-% //.Flatten[Solve[PrintWell[TimeDer[EQalpha0]]==0,primeL80[]]] // Expand;
-% //.Flatten[Solve[PrintWell[TimeDer[EQalphaB0]]==0,primeL106[]]] // Expand;
-% //.Flatten[Solve[PrintWell[TimeDer[EQalpha1]]==0,primeL101[]]] // Expand;
+EQalphaT;
+% //.Flatten[Solve[PrintWell[TimeDer[EQmass2]]==0, primeL34[]]] // Expand;
+% //.Flatten[Solve[PrintWell[TimeDer[EQalphaB0]]==0, primeL106[]]] // Expand;
+% //.Flatten[Solve[PrintWell[TimeDer[EQalphaC]]==0, primeL14[]]] // Expand;
+% //.Flatten[Solve[PrintWell[TimeDer[EQalphaA]]==0, primeL101[]]] // Expand;
+% //.Flatten[Solve[EQmass2==0, L34[]]] // Expand;
+% //.Flatten[Solve[EQalphaB0==0, L106[]]] // Expand;
+% //.Flatten[Solve[EQalphaS==0, L51[]]] // Expand;
+% //.Flatten[Solve[EQalphaC==0, L14[]]] // Expand;
+% //.Flatten[Solve[EQalphaV==0, L99[]]] // Expand;
+% //.Flatten[Solve[EQalphaD==0, L80[]]] // Expand;
+% //.Flatten[Solve[EQalphaA==0, L101[]]] // Expand;
+EQalphaT = %;
+
+
+{EQmass2, EQalphaT, EQalphaK0, EQalphaB0, EQalphaK, EQalphaS, EQalphaC, EQalphaV, EQalphaD, EQalphaA};
+{L34[], L95[], L85[], L106[], L46[], L51[], L14[], L99[], L80[], L101[]};
+{MatrixForm[Coefficient[%%,#]&/@%], MatrixForm[Coefficient[%%,#]&/@PrintWell[TimeDer[%]]], MatrixForm[Coefficient[%%,#]&/@PrintWell[TimeDer[TimeDer[%]]]], MatrixForm[Coefficient[%%,#]&/@PrintWell[TimeDer[TimeDer[TimeDer[%]]]]]}
+
+
+Lsec3;
 % //.Flatten[Solve[PrintWell[TimeDer[EQmass2]]==0,primeL34[]]] // Expand;
-% //.Flatten[Solve[PrintWell[TimeDer[EQalpha2]]==0,primeL14[]]] // Expand;
-% //.Flatten[Solve[PrintWell[TimeDer[EQalphaK1]]==0,primeL46[]]] // Expand;
-% //.Flatten[Solve[EQalpha3==0,L99[]]] // Expand;
-% //.Flatten[Solve[EQalpha0==0,L80[]]] // Expand;
-% //.Flatten[Solve[EQalphaB0==0,L106[]]] // Expand;
-% //.Flatten[Solve[EQalpha1==0,L101[]]] // Expand;
-% //.Flatten[Solve[EQmass2==0,L34[]]] // Expand;
-% //.Flatten[Solve[EQalpha2==0,L14[]]] // Expand;
-% //.Flatten[Solve[EQalphaV==0,L51[]]] // Expand;
-% //.Flatten[Solve[EQalphaK1==0,L46[]]] // Expand;
-% //.Flatten[Solve[EQalphaK0==0,L85[]]] // Expand;
-% //.rules // Expand;
-Lsec7=% // ToCanonical // NoScalar;
-CollectPerts[%,{kscal[]},Factor] // ScreenDollarIndices
-
-
-Lsec7 // Length
+% //.Flatten[Solve[PrintWell[TimeDer[EQalphaB0]]==0,primeL106[]]] // Expand;
+% //.Flatten[Solve[PrintWell[TimeDer[EQalphaC]]==0,primeL14[]]] // Expand;
+% //.Flatten[Solve[PrintWell[TimeDer[EQalphaA]]==0,primeL101[]]] // Expand;
+% //.Flatten[Solve[EQmass2==0, L34[]]] // Expand;
+% //.Flatten[Solve[EQalphaT==0, L95[]]] // Expand;
+% //.Flatten[Solve[EQalphaK0==0, L85[]]] // Expand;
+% //.Flatten[Solve[EQalphaB0==0, L106[]]] // Expand;
+% //.Flatten[Solve[EQalphaK==0, L46[]]] // Expand;
+% //.Flatten[Solve[EQalphaS==0, L51[]]] // Expand;
+% //.Flatten[Solve[EQalphaC==0, L14[]]] // Expand;
+% //.Flatten[Solve[EQalphaV==0, L99[]]] // Expand;
+% //.Flatten[Solve[EQalphaD==0, L80[]]] // Expand;
+% //.Flatten[Solve[EQalphaA==0, L101[]]] // Expand;
+Lsec4=% // ToCanonical // NoScalar;
+CollectPerts[%,{kscal[]},Factor]
+%% // Length
 
 
 (* ::Subsection::Closed:: *)
 (*Lagrangian*)
 
 
-Lsec7;
+Lsec4;
 CollectPerts[%,{kscal[]},Factor]
-Export[$OutputDirectory<>"L2VT.m",Lsec7]
+Export[$OutputDirectory<>"L2VT.m",Lsec4]
 
 
 (* ::Subsection::Closed:: *)
@@ -321,63 +362,70 @@ Export[$OutputDirectory<>"EQback4Vs.m",%]
 (*Equations of motion (with scalar field)*)
 
 
-VarD[pertpsi[LI[1]],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
-EQfirst1=-%/scale[]^4/mass2V[] // Expand;
+VarD[pertpsi[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+-%/scale[]^4/mass2V[] // Expand;
+EQfirst1=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst1Vs.m",%%]
 
 
-VarD[pertB[LI[1]],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
-EQfirst2=%/kscal[]^2/scale[]^3/mass2V[] // Expand;
+VarD[pertB[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+%/kscal[]^2/scale[]^3/mass2V[] // Expand;
+EQfirst2=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst2Vs.m",%%]
 
 
-VarD[pertE[LI[1]],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
-EQfirst3=-%/kscal[]^2/scale[]^4/mass2V[] // Expand;
+VarD[pertE[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+-%/kscal[]^2/scale[]^4/mass2V[] // Expand;
+EQfirst3=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst3Vs.m",%%]
 
 
-VarD[pertphi[LI[1]],PD][Lsec7]-3 VarD[pertE[LI[1]],PD][Lsec7]/kscal[]^2 //.delta[-LI[1],LI[1]]:>1;
-EQfirst4=%/scale[]^2/2/mass2V[]/kscal[]^2 // Expand;
+VarD[pertphi[LI[1]],PD][Lsec4]-3 VarD[pertE[LI[1]],PD][Lsec4]/kscal[]^2 //.delta[-LI[1],LI[1]]:>1;
+%/scale[]^2/2/mass2V[]/kscal[]^2 // Expand;
+EQfirst4=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst4Vs.m",%%]
 
 
-VarD[pertS[LI[1],i],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
-EQfirst5=2 %/mass2V[]/scale[]^2/kscal[]^2 // Expand;
+VarD[pertS[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+2 %/mass2V[]/scale[]^2/kscal[]^2 // Expand;
+EQfirst5=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst5Vs.m",%%]
 
 
-VarD[pertF[LI[1],i],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
-EQfirst6=-2 %/mass2V[]/scale[]^2/kscal[]^2 // Expand;
+VarD[pertF[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+-2 %/mass2V[]/scale[]^2/kscal[]^2 // Expand;
+EQfirst6=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst6Vs.m",%%]
 
 
-VarD[perth[LI[1],i,j],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
-EQfirst7=-4 %/mass2V[]/scale[]^2 // Expand;
+VarD[perth[LI[1],i,j],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
+-4 %/mass2V[]/scale[]^2 // Expand;
+EQfirst7=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst7Vs.m",%%]
 
 
-VarD[pertvector0[LI[1]],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertvector0[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 %/mass2V[]/scale[]^4 // Expand;
 EQfirst8=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Vs.m",%%]
 
 
-VarD[pertvector1[LI[1]],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertvector1[LI[1]],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 %/mass2V[]/scale[]^4 // Expand;
 EQfirst9=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst9Vs.m",%%]
 
 
-VarD[pertvector2[LI[1],i],PD][Lsec7] //.delta[-LI[1],LI[1]]:>1;
+VarD[pertvector2[LI[1],i],PD][Lsec4] //.delta[-LI[1],LI[1]]:>1;
 %/mass2V[]/scale[]^4 // Expand;
 EQfirst10=% //.Flatten[Solve[EQback3==0,pprimematter[]]] // Expand;
 CollectPerts[%,{kscal[]},Factor]
@@ -409,67 +457,64 @@ Export[$OutputDirectory<>"EQback4Vm.m",%]
 
 
 EQfirst1-T00 // Expand;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst1Vm.m",%%]
 
 
 EQfirst2-T0i // Expand;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst2Vm.m",%%]
 
 
 EQfirst3-Tij // Expand;
 % //.subback // Expand;
-% //.Flatten[Solve[EQback3==0,primedensity[]]] // Expand;
+% //.Flatten[Solve[EQback3==0,primedensity[]]] // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst3Vm.m",%%]
 
 
 EQfirst4+3/2 scale[]^2 Tii/kscal[]^2-3/2 scale[]^2 Tij/kscal[]^2 // Expand;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst4Vm.m",%%]
 
 
 EQfirst5-T0iV // Expand;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst5Vm.m",%%]
 
 
 EQfirst6-TiiV // Expand;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst6Vm.m",%%]
 
 
 EQfirst7-TijT;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst7Vm.m",%%]
 
 
 EQfirst8;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Vm.m",%%]
 
 
 EQfirst9;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst9Vm.m",%%]
 
 
 EQfirst10;
-% //.subback // Expand;
+% //.subback // SVTExpand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst10Vm.m",%%]
-
-
-
 
 
 

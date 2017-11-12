@@ -19,6 +19,7 @@ If[$Tensor==0, AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ, j_?TangentM3`p
 AutomaticRules[metricg, {metricg[a_?TangentM1`pmQ, i_?TangentM3`pmQ] :> 0,
 	metricg[i_?TangentM3`pmQ, a_?TangentM1`pmQ] :> 0}]
 AutomaticRules[vectorcov, {vectorcov[i_?TangentM3`pmQ] :> 0}]
+AutomaticRules[eacov, {eacov[i_?TangentM3`pmQ] :> 0}]
 AutomaticRules[tensorcov, {tensorcov[a_?TangentM1`pmQ, i_?TangentM3`pmQ] :> 0,
 	tensorcov[i_?TangentM3`pmQ, a_?TangentM1`pmQ] :> 0}]
 
@@ -142,3 +143,15 @@ AutomaticRules[primemass2V, {primemass2V[] :> hubbleC[] mass2V[] alphaMV[]}]
 
 
 AutomaticRules[dotmass2V, {dotmass2V[] :> hubbleP[] mass2V[] alphaMV[]}]
+
+
+AutomaticRules[primemass2A, {primemass2A[] :> hubbleC[] mass2A[] alphaMA[]}]
+
+
+AutomaticRules[dotmass2A, {dotmass2A[] :> hubbleP[] mass2A[] alphaMA[]}]
+
+
+AutomaticRules[primemass2T, {primemass2T[] :> hubbleC[] mass2T[] alphaMT[]}]
+
+
+AutomaticRules[dotmass2T, {dotmass2T[] :> hubbleP[] mass2T[] alphaMT[]}]

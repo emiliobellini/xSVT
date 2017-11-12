@@ -19,7 +19,7 @@ $Tensor=1;
 << "~/Dropbox/SVT/xSVT/SVT.m"
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Gauge Transformations*)
 
 
@@ -254,7 +254,7 @@ Export[$OutputDirectory<>"EQback4Ss.m",%]
 
 Lsec4;
 Lsec5 = % //.Flatten[Solve[EQback3==0,pprimematter[]]] // ToCanonical // NoScalar;
-test=CollectPerts[%,{kscal[]},Factor]
+CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"L2ST.m",Lsec5]
 
 
@@ -389,12 +389,6 @@ EQfirst8;
 % //.subback // Expand;
 CollectPerts[%,{kscal[]},Factor]
 Export[$OutputDirectory<>"EQfirst8Sm.m",%%]
-
-
-
-
-
-
 
 
 
