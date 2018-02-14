@@ -64,4 +64,7 @@ Import[$CodeDirectory <> "ExpandRules.m"]
 Import[$CodeDirectory<>"Commands.m"]
 
 
+Import[$CodeDirectory<>"XtoScalar.m"]
+
+
 SetOptions[ToCanonical, UseMetricOnVBundle -> None];

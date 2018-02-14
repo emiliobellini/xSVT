@@ -22,7 +22,8 @@ Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 (****   Scalar Field   ****)
 
 
-scalarrules = {scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> -primescalar[]/scale[] pertscalar[LI[order]]};
+scalarrules = {scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> -primescalar[]/scale[] pertscalar[LI[order]],
+	Xcov[]:>X[], pertXcov[LI[order_]]:>pertX[LI[order]]};
 
 
 Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[scalarrules]}]]

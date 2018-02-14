@@ -81,7 +81,13 @@ DefTensor[pertscalar[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(X\)
 	DefInfo -> {"tensor", "perturbation"}]
 
 
+DefTensor[Xcov[], M4]
+DefTensorPerturbation[pertXcov[LI[order]], Xcov[], M4, PrintAs -> "\[Delta]X"]
+
+
 DefTensor[X[], M4, DefInfo -> {"tensor", "background"}]
+DefTensor[pertX[LI[order]], M4, PrintAs -> "\[Delta]X",
+	DefInfo -> {"tensor", "perturbation"}]
 
 
 (****   Matter Field   ****)
