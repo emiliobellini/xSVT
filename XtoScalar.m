@@ -25,6 +25,8 @@ XtoScalar[expr_] := Module[{tmp}, tmp=expr;
 	tmp = tmp //.fun_[scalarcov[],Scalar[fvar]]:>fun[scalarcov[],Xcov[]];
 	tmp = tmp //.fun_[scalar[],X0]:>fun[scalar[],X[]];
 	tmp = tmp //.MakeRule[{CD[\[Alpha]]@Xcov[],Evaluate[CD[\[Alpha]]@X0cov[]]}];
+	tmp = tmp //.primeX[]:>Evaluate[TimeDer[X0]];
+	tmp = tmp //.pprimeX[]:>Evaluate[TimeDer[TimeDer[X0]]];
 	tmp = tmp // ToCanonical // ReplaceDummies;
 	tmp]
 
