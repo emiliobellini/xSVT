@@ -19,19 +19,12 @@ XtoScalarrules = Flatten[{MakeRule[{X[],Evaluate[X0]}],
 	MakeRule[{pertXcov[LI[1]],Evaluate[X1cov]}],MakeRule[{pertXcov[LI[2]],Evaluate[X2cov]}]}];
 
 
-(*XtoScalar[expr_] := Module[{tmp}, tmp=expr;
-	tmp = tmp //.XtoScalarrules;
-	tmp = tmp //.fun_[scalar[],X0]\[RuleDelayed]fun[scalar[],X[]];
-	tmp = tmp //.fun_[scalar[],X0cov]\[RuleDelayed]fun[scalar[],Xcov[]];
-	tmp = tmp // ToCanonical // ReplaceDummies;
-	tmp]*)
-
-
 XtoScalar[expr_] := Module[{tmp}, tmp=expr;
 	tmp = tmp //.fun_[scalarcov[],Xcov[]]:>fun[scalarcov[],Scalar[fvar]];
 	tmp = tmp //.XtoScalarrules;
 	tmp = tmp //.fun_[scalarcov[],Scalar[fvar]]:>fun[scalarcov[],Xcov[]];
 	tmp = tmp //.fun_[scalar[],X0]:>fun[scalar[],X[]];
+	tmp = tmp //.MakeRule[{CD[\[Alpha]]@Xcov[],Evaluate[CD[\[Alpha]]@X0cov[]]}];
 	tmp = tmp // ToCanonical // ReplaceDummies;
 	tmp]
 
