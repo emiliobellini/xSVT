@@ -8,16 +8,32 @@ X1=Xcov[] //.XtoScalarrules // Decomposition[1];
 X2=Xcov[] //.XtoScalarrules // Decomposition[2];
 
 
+X0cov = Xcov[] //.XtoScalarrules
 X1cov = Perturbation[Xcov[] //.XtoScalarrules,1] // ExpandPerturbation
 X2cov = Perturbation[Xcov[] //.XtoScalarrules,2] // ExpandPerturbation
 
 
 XtoScalarrules = Flatten[{MakeRule[{X[],Evaluate[X0]}],
 	MakeRule[{pertX[LI[1]],Evaluate[X1]}],MakeRule[{pertX[LI[2]],Evaluate[X2]}],
+	MakeRule[{Xcov[],Evaluate[X0cov]}],
 	MakeRule[{pertXcov[LI[1]],Evaluate[X1cov]}],MakeRule[{pertXcov[LI[2]],Evaluate[X2cov]}]}];
 
 
-XtoScalar[expr_] := expr //.XtoScalarrules //.fun_[scalar[],X0]:>fun[scalar[],X[]] // ToCanonical // ReplaceDummies
+(*XtoScalar[expr_] := Module[{tmp}, tmp=expr;
+	tmp = tmp //.XtoScalarrules;
+	tmp = tmp //.fun_[scalar[],X0]\[RuleDelayed]fun[scalar[],X[]];
+	tmp = tmp //.fun_[scalar[],X0cov]\[RuleDelayed]fun[scalar[],Xcov[]];
+	tmp = tmp // ToCanonical // ReplaceDummies;
+	tmp]*)
+
+
+XtoScalar[expr_] := Module[{tmp}, tmp=expr;
+	tmp = tmp //.fun_[scalarcov[],Xcov[]]:>fun[scalarcov[],Scalar[fvar]];
+	tmp = tmp //.XtoScalarrules;
+	tmp = tmp //.fun_[scalarcov[],Scalar[fvar]]:>fun[scalarcov[],Xcov[]];
+	tmp = tmp //.fun_[scalar[],X0]:>fun[scalar[],X[]];
+	tmp = tmp // ToCanonical // ReplaceDummies;
+	tmp]
 
 
 Clear[X1,X2]
