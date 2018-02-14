@@ -3,7 +3,7 @@
 (****  Settings ****)
 
 
-$CodeDirectory="~/Dropbox/SVT/xSVT/";
+$CodeDirectory="~/Codes/xSVT/";
 
 
 $RecursionLimit = 32768;

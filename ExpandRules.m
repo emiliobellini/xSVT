@@ -34,8 +34,7 @@ Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[scalarrules]}]]
 (* I am using the fact that velocitycov[\[Mu]] velocitycov[-\[Mu]] \[Equal] -1. If the metric is not conformal some of this should be changed *)
 
 
-matterrules = Flatten[{mattercov[] :> matter[], pertmattercov[LI[order_]] :> pertmatter[LI[order]],
-	densitycov[] :> density[],
+matterrules = Flatten[{densitycov[] :> density[],
 	pressurecov[] :> pressure[],
 	velocitycov[a_?TangentM1`Q] :> timevec[a] scale[]^-1,
 	pertdensitycov[LI[order_]] :> density[] pertdensity[LI[order]],
@@ -54,89 +53,6 @@ Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[DownValu
 Print[Column[{"Matter field Decomposition", ScreenDollarIndices[matterrules]}]]
 
 
-(****   Vector Field   ****)
-
-
-(* Vector Tensor Case*)
-vectorrules = {vectorcov[a_?TangentM1`Q] :> timevec[a] vector0[]/scale[], 
-	pertvectorcov[LI[order_], a_?TangentM1`Q] :> -timevec[a] (primevector0[]/scale[] pertvector0[LI[order]] + vector0[] pertpsi[LI[order]])/scale[],
-	pertvectorcov[LI[order_], i_?TangentM3`Q] :> vector0[] (PD[i]@(pertvector1[LI[order]]/scale[] - pertB[LI[order]]) + pertvector2[LI[order], i]/scale[] + pertS[LI[order], i])/scale[]};
-
-
-(* Einstein Aether Case*)
-earules = {eacov[a_?TangentM1`Q] :> timevec[a] ea0[]/scale[], 
-	perteacov[LI[order_], a_?TangentM1`Q] :> -timevec[a] pertea0[LI[order]]/scale[],
-	perteacov[LI[order_], i_?TangentM3`Q] :> ea0[] (PD[i]@(pertea1[LI[order]]/scale[] - pertB[LI[order]]) + pertea2[LI[order], i]/scale[] + pertS[LI[order], i])/scale[]};
-
-
-Print[Column[{"Vector field Decomposition", ScreenDollarIndices[vectorrules]}]]
-
-
-Print[Column[{"Einstein Aether Decomposition", ScreenDollarIndices[earules]}]]
-
-
-(****   Tensor Field   ****)
-
-
-(*tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale2[]^2 lapse2[]^2, 
-	tensorcov[-i_?TangentM3`Q, -j_?TangentM3`Q] :> scale2[]^2 metric\[Delta][-i, -j], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> -2 scale2[]^2 lapse2[]^2 (pertpsi2[LI[order]] - (hubbleC2[]+primelapse2[]/lapse2[])/hubbleC[] pertphi[LI[1]]) timevec[-a] timevec[-b], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale2[]^2 (PD[-i]@(pertB2[LI[order]] + lapse2[]^2/hubbleC[] pertphi[LI[1]]) - pertS2[LI[order], -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale2[]^2 (PD[-i]@(pertB2[LI[order]] + lapse2[]^2/hubbleC[] pertphi[LI[1]]) - pertS2[LI[order], -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, scale2[]^2 (-2 hubbleC2[]/scale[] pertphi2[LI[order]] metric\[Delta][-i, -j] + perth2[LI[order], -i, -j] + PD[-i]@pertF2[LI[order], -j]
-			+ PD[-j]@pertF2[LI[order], -i] + 2 PD[-i]@PD[-j]@pertE2[LI[order]])]};*)
-
-
-(*tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale2[]^2 lapse2[]^2, 
-	tensorcov[-i_?TangentM3`Q, -j_?TangentM3`Q] :> scale2[]^2 metric\[Delta][-i, -j], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> -2 scale2[]^2 lapse2[]^2 ((hubbleC[] - hubbleC2[] - primelapse2[]/lapse2[])/scale[] pertpsi2[LI[order]] + pertpsi[LI[order]]) timevec[-a] timevec[-b], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] scale2[]^2 (PD[-i]@((lapse2[]^2 - 1)/scale[] pertB2[LI[order]] + pertB[LI[order]]) - pertS2[LI[order], -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] scale2[]^2 (PD[-i]@((lapse2[]^2 - 1)/scale[] pertB2[LI[order]] + pertB[LI[order]]) - pertS2[LI[order], -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, scale2[]^2 (-2 hubbleC2[]/scale[] pertphi2[LI[order]] metric\[Delta][-i, -j] + perth2[LI[order], -i, -j] + PD[-i]@pertF2[LI[order], -j]
-			+ PD[-j]@pertF2[LI[order], -i] + 2 PD[-i]@PD[-j]@pertE2[LI[order]])]};*)
-
-
-(*tensorhatrules = {perttensorhatcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> pertpsi2[LI[order]] timevec[-a] timevec[-b], 
-	perttensorhatcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> timevec[-a] (PD[-i]@pertB2[LI[order]] - pertS2[LI[order], -i]), 
-	perttensorhatcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> timevec[-a] (PD[-i]@pertB2[LI[order]] - pertS2[LI[order], -i]), 
-	perttensorhatcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, -2 pertphi2[LI[order]] metric\[Delta][-i, -j] + perth2[LI[order], -i, -j] + PD[-i]@pertF2[LI[order], -j]
-			+ PD[-j]@pertF2[LI[order], -i] + 2 PD[-i]@PD[-j]@pertE2[LI[order]]]};*)
-
-
-(*tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale2[]^2 lapse2[]^2, 
-	tensorcov[-i_?TangentM3`Q, -j_?TangentM3`Q] :> scale2[]^2 metric\[Delta][-i, -j], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> scale2[]^2 lapse2[]^2/scale[]^2 (-2 scale[] (primelapse2[]/lapse2[]+hubbleC2[]-hubbleC[]) perttensorhatcov[LI[order], -a, -b] + pertmetricg[LI[order], -a, -b]), 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> scale2[]^2/scale[]^2 ((1-lapse2[]^2) scale[] perttensorhatcov[LI[order], -a, -i] + pertmetricg[LI[order], -a, -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> scale2[]^2/scale[]^2 ((1-lapse2[]^2) scale[] perttensorhatcov[LI[order], -a, -i] + pertmetricg[LI[order], -a, -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, scale2[]^2 hubbleC2[]/scale[]^2/hubbleC[] (scale[]^2 (hubbleC[]-hubbleC2[])/hubbleC2[] perttensorhatcov[LI[order], -i, -j] + pertmetricg[LI[order], -i, -j])]};*)
-
-
-(*tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale2[]^2 lapse2[]^2, 
-	tensorcov[-i_?TangentM3`Q, -j_?TangentM3`Q] :> scale2[]^2 metric\[Delta][-i, -j], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> scale2[]^2 lapse2[]^2 perttensorhatcov[LI[order], -a, -b], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> scale2[]^2 perttensorhatcov[LI[order], -a, -i], 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> scale2[]^2 perttensorhatcov[LI[order], -a, -i], 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, scale2[]^2 perttensorhatcov[LI[order], -i, -j]]};*)
-
-
-tensorrules = {tensorcov[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale2[]^2 lapse2[]^2, 
-	tensorcov[-i_?TangentM3`Q, -j_?TangentM3`Q] :> scale2[]^2 metric\[Delta][-i, -j], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> -2 scale2[]^2 lapse2[]^2 pertpsi2[LI[order]] timevec[-a] timevec[-b], 
-	perttensorcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> scale2[]^2 timevec[-a] (PD[-i]@pertB2[LI[order]] - pertS2[LI[order], -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> scale2[]^2 timevec[-a] (PD[-i]@pertB2[LI[order]] - pertS2[LI[order], -i]), 
-	perttensorcov[LI[order_], -i_?TangentM3`Q, -j_?TangentM3`Q] :>
-		Module[{k, l}, scale2[]^2 (-2 pertphi2[LI[order]] metric\[Delta][-i, -j] + perth2[LI[order], -i, -j] + PD[-i]@pertF2[LI[order], -j]
-			+ PD[-j]@pertF2[LI[order], -i] + 2 PD[-i]@PD[-j]@pertE2[LI[order]])]};
-
-
-Print[Column[{"Tensor field Decomposition", ScreenDollarIndices[tensorrules]}]]
-
-
 (****   Gauge Fields   ****)
 
 
@@ -150,7 +66,7 @@ Print[Column[{"Gauge Decomposition", ScreenDollarIndices[gaugerules]}]]
 (****   Total   ****)
 
 
-expandrules = Flatten[{metricrules, scalarrules, matterrules, vectorrules, tensorrules, gaugerules, earules}];
+expandrules = Flatten[{metricrules, scalarrules, matterrules, gaugerules}];
 
 
-Clear[metricrules, scalarrules, matterrules, vectorrules, tensorrules, gaugerules, earules]
+Clear[metricrules, scalarrules, matterrules, gaugerules]
