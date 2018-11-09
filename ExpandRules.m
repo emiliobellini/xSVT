@@ -23,7 +23,7 @@ Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 
 
 scalarrules = {scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> -primescalar[]/scale[] pertscalar[LI[order]],
-	Xcov[]:>X[], pertXcov[LI[order_]]:>pertX[LI[order]]};
+	Xcov[]:>X[], pertXcov[LI[order_]]:>pertX[LI[order]], currentcov[-a_?TangentM1`Q] :> -scale[] timevec[-a] current[], shiftcov[] :> shift[]};
 
 
 Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[scalarrules]}]]

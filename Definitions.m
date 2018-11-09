@@ -81,13 +81,21 @@ DefTensor[pertscalar[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(X\)
 	DefInfo -> {"tensor", "perturbation"}]
 
 
-DefTensor[Xcov[], M4]
+DefTensor[Xcov[], M4, PrintAs -> "X"]
 DefTensorPerturbation[pertXcov[LI[order]], Xcov[], M4, PrintAs -> "\[Delta]X"]
 
 
 DefTensor[X[], M4, DefInfo -> {"tensor", "background"}]
 DefTensor[pertX[LI[order]], M4, PrintAs -> "\[Delta]X",
 	DefInfo -> {"tensor", "perturbation"}]
+
+
+DefTensor[currentcov[-\[Mu]], M4, PrintAs -> "J"]
+DefTensor[shiftcov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(\[Phi]\)]\)"]
+
+
+DefTensor[current[], M4, PrintAs -> "\[ScriptN]", DefInfo -> {"tensor", "background"}]
+DefTensor[shift[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(\[Phi]\)]\)", DefInfo -> {"tensor", "background"}]
 
 
 (****   Matter Field   ****)
