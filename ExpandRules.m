@@ -35,7 +35,8 @@ Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[scalarrules]}]]
 (* I am using the fact that velocitycov[\[Mu]] velocitycov[-\[Mu]] \[Equal] -1. If the metric is not conformal some of this should be changed *)
 
 
-matterrules = Flatten[{densitycov[] :> density[],
+matterrules = Flatten[{mattercov[] :> matter[], pertmattercov[LI[order_]] :> pertmatter[LI[order]],
+	densitycov[] :> density[],
 	pressurecov[] :> pressure[],
 	velocitycov[a_?TangentM1`Q] :> timevec[a] scale[]^-1,
 	pertdensitycov[LI[order_]] :> density[] pertdensity[LI[order]],

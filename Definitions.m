@@ -101,6 +101,17 @@ DefTensor[shift[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(\
 (****   Matter Field   ****)
 
 
+DefScalarFunction[V]
+
+
+DefTensor[mattercov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(m\)]\)"]
+DefTensorPerturbation[pertmattercov[LI[order]], mattercov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[CurlyPhi]\), \(m\)]\)"]
+
+
+DefTensor[matter[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(m\)]\)", DefInfo -> {"tensor", "background"}]
+DefTensor[pertmatter[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[CurlyPhi]\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
+
+
 DefTensor[stressenergy[-\[Mu], -\[Nu]], M4, PrintAs -> "T"]
 
 
@@ -156,26 +167,31 @@ DefTensor[pertgaugegamma[LI[order], -i], M4, PrintAs -> "\[Gamma]",
 (****   Parametrization Functions - Scalar   ****)
 
 
-DefTensor[densityS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalE]\), \(S\)]\)",
-	DefInfo -> {"tensor", "building function"}]
-DefTensor[pressureS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(S\)]\)",
-	DefInfo -> {"tensor", "building function"}]
+DefTensor[densityS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalE]\), \(S\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[pressureS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(S\)]\)", DefInfo -> {"tensor", "building function"}]
 
 
-DefTensor[mass2S[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(S\)], \(2\)]\)",
-	DefInfo -> {"tensor", "building function"}]
+DefTensor[mass2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(*\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
 
 
-DefTensor[alphaMS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(^\)]\)\), \(M\)]\)",
-	DefInfo -> {"tensor", "building function"}]
-DefTensor[alphaKS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(^\)]\)\), \(K\)]\)",
-	DefInfo -> {"tensor", "building function"}]
-DefTensor[alphaBS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(^\)]\)\), \(B\)]\)",
-	DefInfo -> {"tensor", "building function"}]
-DefTensor[alphaTS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(^\)]\)\), \(T\)]\)",
-	DefInfo -> {"tensor", "building function"}]
-DefTensor[alphaHS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\!\(\*OverscriptBox[\(\[Alpha]\), \(^\)]\)\), \(H\)]\)",
-	DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaM[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(M\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaK[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(K\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaB[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(B\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaT[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(T\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(H\)]\)", DefInfo -> {"tensor", "building function"}]
+
+
+DefTensor[alphaMM[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(MM\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaKK[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(KK\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaBB[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(BB\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaTT[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(TT\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaHH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(HH\)]\)", DefInfo -> {"tensor", "building function"}]
+
+
+DefTensor[cs2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(S\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[ct2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(T\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[Qs[], M4, PrintAs -> "\!\(\*SubscriptBox[\(Q\), \(S\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[Qt[], M4, PrintAs -> "\!\(\*SubscriptBox[\(Q\), \(T\)]\)", DefInfo -> {"tensor", "building function"}]
 
 
 (****   Scalar Functions   ****)
