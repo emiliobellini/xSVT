@@ -20,8 +20,21 @@ FirstT[expr_] := expr //. PD[a_?TangentM1`pmQ]@PD[i_?TangentM3`pmQ]@object_ :> P
 FirstS[expr_] := expr //. PD[i_?TangentM3`pmQ]@PD[a_?TangentM1`pmQ]@object_ :> PD[a]@PD[i]@object
 
 
-FirstDummies[expr_] := expr //. 
-       PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@tens_ /; (! FreeQ[tens, ChangeIndex[i]] && FreeQ[tens, ChangeIndex[j]]) :> PD[j]@PD[i]@tens;
+(*FirstDummies[expr_] := expr //. 
+       PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@tens_ /; (! FreeQ[tens, ChangeIndex[i]] && FreeQ[tens, ChangeIndex[j]]) :> PD[j]@PD[i]@tens;*)
+
+
+Clear[FirstDummies]
+FirstDummies[expr1_+expr2_] := FirstDummies[expr1] + FirstDummies[expr2]
+FirstDummies[expr1_*expr2_] := FirstDummies[expr1] * FirstDummies[expr2]
+FirstDummies[tens_] := Module[{tmp, idx, final}, final = tens;
+	tmp = final //.PD[__]@some_:>some;
+	If[IsPert[tmp],
+		idx = FindIndices[tens];
+		idx = MapThread[Rule,{idx, IndexSort[idx]}//.IndexList->List];
+		final = ReplaceIndex[tens,idx];
+		];
+	final]
 
 
 (****   SVTExpand   ****)
@@ -169,10 +182,11 @@ PrintWell[expr_] := Module[{tmp}, tmp = FirstT[expr];
 
 
 InvPrintWell[expr_]:= Module[{tmp}, tmp = expr;
-	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"pp*ime*"] :>Module[{a}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]^n];
-	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"pp*ime*"] :>Module[{a}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]];
-	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"prime*"] :>Module[{a}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]^n];
-	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"prime*"] :>Module[{a}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]];
+	tmp = tmp //.Lap[tens_]:>Module[{i},PD[-i]@PD[i]@tens] // ToCanonical // ReplaceDummies;
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"pp*ime*"] :>Scalar[Module[{a}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]^n]];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"pp*ime*"] :>Scalar[Module[{a}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]];
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"prime*"] :>Scalar[Module[{a}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]^n]];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"prime*"] :>Scalar[Module[{a}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]];
 	tmp = tmp // SeparateMetric[] // NoScalar
 ]
 
