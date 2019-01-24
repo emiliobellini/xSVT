@@ -77,6 +77,8 @@ DefTensorPerturbation[pertscalarcov[LI[order]], scalarcov[], M4, PrintAs -> "\[D
 
 
 DefTensor[scalar[], M4, PrintAs -> "\[Phi]", DefInfo -> {"tensor", "background"}]
+DefTensor[pertscalarpre[LI[order]], M4, PrintAs -> "\[Delta]\[Phi]",
+	DefInfo -> {"tensor", "perturbation"}]
 DefTensor[pertscalar[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(X\)]\)",
 	DefInfo -> {"tensor", "perturbation"}]
 
@@ -118,13 +120,13 @@ DefTensor[stressenergy[-\[Mu], -\[Nu]], M4, PrintAs -> "T"]
 DefTensor[densitycov[], M4, PrintAs -> "\[Rho]"]
 DefTensor[pressurecov[], M4, PrintAs -> "p"]
 DefTensor[velocitycov[\[Mu]], M4, PrintAs -> "u"]
-DefTensor[shearcov[-\[Mu], -\[Nu]], M4, PrintAs -> "\[Sigma]"]
+DefTensor[shearcov[-\[Mu], -\[Nu]], M4, Symmetric[{-\[Mu], -\[Nu]}], PrintAs -> "\[Sigma]"]
 
 
 DefTensorPerturbation[pertdensitycov[LI[order]], densitycov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Rho]\), \(m\)]\)"]
 DefTensorPerturbation[pertpressurecov[LI[order]], pressurecov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]p\), \(m\)]\)"]
 DefTensorPerturbation[pertvelocitycov[LI[order], \[Mu]], velocitycov[\[Mu]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]u\), \(m\)]\)"]
-DefTensorPerturbation[pertshearcov[LI[order], -\[Mu], -\[Nu]], shearcov[-\[Mu], -\[Nu]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Sigma]\), \(m\)]\)"]
+DefTensorPerturbation[pertshearcov[LI[order], -\[Mu], -\[Nu]], shearcov[-\[Mu], -\[Nu]], M4, Symmetric[{-\[Mu], -\[Nu]}], PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Sigma]\), \(m\)]\)"]
 
 
 DefTensor[density[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(m\)]\)", DefInfo -> {"tensor", "background"}]
@@ -139,7 +141,7 @@ DefTensor[pertshear[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Sigma]\),
 
 DefTensor[pertvelocityvec[LI[order], i], M3, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
 DefTensor[pertshearvec[LI[order], -i], M3, PrintAs -> "\!\(\*SubscriptBox[\(\[Sigma]\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertshearten[LI[order], -i, -j], M3, PrintAs -> "\!\(\*SubscriptBox[\(\[Sigma]\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertshearten[LI[order], -i, -j], M3, Symmetric[{-i, -j}], PrintAs -> "\!\(\*SubscriptBox[\(\[Sigma]\), \(m\)]\)", DefInfo -> {"tensor", "perturbation"}]
 
 
 (****   k vectors   ****)
@@ -186,6 +188,7 @@ DefTensor[alphaKK[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(KK\)]\)"
 DefTensor[alphaBB[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(BB\)]\)", DefInfo -> {"tensor", "building function"}]
 DefTensor[alphaTT[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(TT\)]\)", DefInfo -> {"tensor", "building function"}]
 DefTensor[alphaHH[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(HH\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[alphaDEG[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(DEG\)]\)", DefInfo -> {"tensor", "building function"}]
 
 
 DefTensor[cs2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(S\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
@@ -203,8 +206,28 @@ DefScalarFunction[G4fun, PrintAs -> "\!\(\*SubscriptBox[\(G\), \(4\)]\)"]
 DefScalarFunction[G5fun, PrintAs -> "\!\(\*SubscriptBox[\(G\), \(5\)]\)"]
 
 
-DefScalarFunction[G4funtilde, PrintAs -> "\!\(\*SubscriptBox[OverscriptBox[\(G\), \(\[Tilde]\)], \(4\)]\)"]
-DefScalarFunction[G5funtilde, PrintAs -> "\!\(\*SubscriptBox[OverscriptBox[\(G\), \(\[Tilde]\)], \(5\)]\)"]
+DefScalarFunction[F4fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(4\)]\)"]
+DefScalarFunction[F5fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(5\)]\)"]
+
+
+(****   Sources   ****)
+
+
+DefTensor[source1[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(1\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source2[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(2\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source3[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(3\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source4[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(4\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source5[LI[order],-i], M3, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(5\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source6[LI[order],-i], M3, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(6\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source7[LI[order],-i,-j], M3, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(7\)]\)", DefInfo -> {"tensor", "source"}]
+
+
+DefTensor[source8[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(8\)]\)", DefInfo -> {"tensor", "source"}]
+
+
+DefTensor[source9[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(9\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source10[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(10\)]\)", DefInfo -> {"tensor", "source"}]
+DefTensor[source11[LI[order],-i], M4, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(11\)]\)", DefInfo -> {"tensor", "source"}]
 
 
 (****   Tex Correction   ****)

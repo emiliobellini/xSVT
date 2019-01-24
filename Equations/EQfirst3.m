@@ -1,39 +1,76 @@
 (* Created with the Wolfram Language : www.wolfram.com *)
--((hubbleC[]^3*pertscalar[LI[1]])/scale[]^3) - 
- (alphaM[]*hubbleC[]^3*pertscalar[LI[1]])/scale[]^3 + 
- (pertscalar[LI[1]]*pprimehubbleC[])/scale[]^3 - 
- (hubbleC[]*pertscalar[LI[1]]*primehubbleC[])/scale[]^3 + 
- (alphaM[]*hubbleC[]*pertscalar[LI[1]]*primehubbleC[])/scale[]^3 - 
- (3*hubbleC[]*pertscalar[LI[1]]*primematter[]^2)/(2*mass2[]*scale[]^3) - 
- (2*hubbleC[]^2*pertpsi[LI[1]])/scale[]^2 + 
- (alphaB[]*hubbleC[]^2*pertpsi[LI[1]])/scale[]^2 - 
- (alphaM[]*hubbleC[]^2*pertpsi[LI[1]])/scale[]^2 + 
- (alphaB[]*alphaM[]*hubbleC[]^2*pertpsi[LI[1]])/(2*scale[]^2) + 
- (hubbleC[]*pertpsi[LI[1]]*primealphaB[])/(2*scale[]^2) - 
- (pertpsi[LI[1]]*primehubbleC[])/scale[]^2 + 
- (alphaB[]*pertpsi[LI[1]]*primehubbleC[])/(2*scale[]^2) + 
- (primematter[]*timevec[h$1364200]*PD[-h$1364200][pertmatter[LI[1]]])/
-  (2*mass2[]*scale[]^2) - (2*hubbleC[]*timevec[h$1364200]*
-   PD[-h$1364200][pertphi[LI[1]]])/scale[]^2 - 
- (alphaM[]*hubbleC[]*timevec[h$1364200]*PD[-h$1364200][pertphi[LI[1]]])/
-  scale[]^2 - (hubbleC[]*timevec[h$1364200]*PD[-h$1364200][pertpsi[LI[1]]])/
-  scale[]^2 + (alphaB[]*hubbleC[]*timevec[h$1364200]*
-   PD[-h$1364200][pertpsi[LI[1]]])/(2*scale[]^2) - 
- (hubbleC[]^2*timevec[h$1364200]*PD[-h$1364200][pertscalar[LI[1]]])/
-  scale[]^3 + (alphaB[]*hubbleC[]^2*timevec[h$1364200]*
-   PD[-h$1364200][pertscalar[LI[1]]])/(2*scale[]^3) + 
- (alphaB[]*alphaM[]*hubbleC[]^2*timevec[h$1364200]*
-   PD[-h$1364200][pertscalar[LI[1]]])/(2*scale[]^3) + 
- (hubbleC[]*primealphaB[]*timevec[h$1364200]*
-   PD[-h$1364200][pertscalar[LI[1]]])/(2*scale[]^3) + 
- (primehubbleC[]*timevec[h$1364200]*PD[-h$1364200][pertscalar[LI[1]]])/
-  scale[]^3 + (alphaB[]*primehubbleC[]*timevec[h$1364200]*
-   PD[-h$1364200][pertscalar[LI[1]]])/(2*scale[]^3) + 
- (primematter[]^2*timevec[h$1364200]*PD[-h$1364200][pertscalar[LI[1]]])/
-  (2*mass2[]*scale[]^3) - (timevec[h$1364200]*timevec[h$1364205]*
-   PD[-h$1364205][PD[-h$1364200][pertphi[LI[1]]]])/scale[]^2 + 
- (alphaB[]*hubbleC[]*timevec[h$1364200]*timevec[h$1364205]*
-   PD[-h$1364205][PD[-h$1364200][pertscalar[LI[1]]]])/(2*scale[]^3) - 
- (pertmatter[LI[1]]*Derivative[1][V][matter[]])/(2*mass2[]) - 
- (pertscalar[LI[1]]*primematter[]*Derivative[1][V][matter[]])/
-  (mass2[]*scale[])
+-((metric\[Delta][p$1571090, p$1571091]*PD[-p$1571090][
+     PD[-p$1571091][pertpressure[LI[1]]]])/mass2[]) - 
+ (density[]*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/mass2[] - 
+ (metric\[Delta][p$1571090, p$1571091]*pressure[]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/mass2[] + 
+ (4*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 - 
+ (2*alphaB[]*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 + 
+ (2*alphaM[]*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 - 
+ (alphaB[]*alphaM[]*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 - 
+ (hubbleC[]*metric\[Delta][p$1571090, p$1571091]*primealphaB[]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 + 
+ (2*metric\[Delta][p$1571090, p$1571091]*primehubbleC[]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 - 
+ (alphaB[]*metric\[Delta][p$1571090, p$1571091]*primehubbleC[]*
+   PD[-p$1571090][PD[-p$1571091][pertpsi[LI[1]]]])/scale[]^2 + 
+ (2*hubbleC[]^3*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertscalar[LI[1]]]])/scale[]^3 + 
+ (2*alphaM[]*hubbleC[]^3*metric\[Delta][p$1571090, p$1571091]*
+   PD[-p$1571090][PD[-p$1571091][pertscalar[LI[1]]]])/scale[]^3 - 
+ (2*metric\[Delta][p$1571090, p$1571091]*pprimehubbleC[]*
+   PD[-p$1571090][PD[-p$1571091][pertscalar[LI[1]]]])/scale[]^3 + 
+ (2*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*primehubbleC[]*
+   PD[-p$1571090][PD[-p$1571091][pertscalar[LI[1]]]])/scale[]^3 - 
+ (2*alphaM[]*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*primehubbleC[]*
+   PD[-p$1571090][PD[-p$1571091][pertscalar[LI[1]]]])/scale[]^3 - 
+ (metric\[Delta][p$1571090, p$1571091]*primepressure[]*
+   PD[-p$1571090][PD[-p$1571091][pertscalar[LI[1]]]])/(mass2[]*scale[]) + 
+ (4*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*timevec[h$1571123]*
+   PD[-p$1571090][PD[-p$1571091][PD[-h$1571123][pertphi[LI[1]]]]])/
+  scale[]^2 + (2*alphaM[]*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertphi[LI[1]]]]])/scale[]^2 + 
+ (2*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*timevec[h$1571123]*
+   PD[-p$1571090][PD[-p$1571091][PD[-h$1571123][pertpsi[LI[1]]]]])/
+  scale[]^2 - (alphaB[]*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertpsi[LI[1]]]]])/scale[]^2 + 
+ (2*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*timevec[h$1571123]*
+   PD[-p$1571090][PD[-p$1571091][PD[-h$1571123][pertscalar[LI[1]]]]])/
+  scale[]^3 - (alphaB[]*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertscalar[LI[1]]]]])/scale[]^3 - 
+ (alphaB[]*alphaM[]*hubbleC[]^2*metric\[Delta][p$1571090, p$1571091]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertscalar[LI[1]]]]])/scale[]^3 - 
+ (hubbleC[]*metric\[Delta][p$1571090, p$1571091]*primealphaB[]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertscalar[LI[1]]]]])/scale[]^3 - 
+ (2*metric\[Delta][p$1571090, p$1571091]*primehubbleC[]*timevec[h$1571123]*
+   PD[-p$1571090][PD[-p$1571091][PD[-h$1571123][pertscalar[LI[1]]]]])/
+  scale[]^3 - (alphaB[]*metric\[Delta][p$1571090, p$1571091]*primehubbleC[]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertscalar[LI[1]]]]])/scale[]^3 - 
+ (density[]*metric\[Delta][p$1571090, p$1571091]*timevec[h$1571123]*
+   PD[-p$1571090][PD[-p$1571091][PD[-h$1571123][pertscalar[LI[1]]]]])/
+  (mass2[]*scale[]) - (metric\[Delta][p$1571090, p$1571091]*pressure[]*
+   timevec[h$1571123]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571123][pertscalar[LI[1]]]]])/(mass2[]*scale[]) + 
+ (2*metric\[Delta][p$1571090, p$1571091]*timevec[h$1571123]*
+   timevec[h$1571139]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571139][PD[-h$1571123][pertphi[LI[1]]]]]])/scale[]^2 - 
+ (alphaB[]*hubbleC[]*metric\[Delta][p$1571090, p$1571091]*timevec[h$1571123]*
+   timevec[h$1571139]*PD[-p$1571090][PD[-p$1571091][
+     PD[-h$1571139][PD[-h$1571123][pertscalar[LI[1]]]]]])/scale[]^3 - 
+ (density[]*metric\[Delta][p$1571090, p$1571092]*metric\[Delta][p$1571091, 
+    p$1571093]*PD[-p$1571091][PD[-p$1571093][PD[-p$1571090][
+      PD[-p$1571092][pertshear[LI[1]]]]]])/(mass2[]*scale[]^2) - 
+ (metric\[Delta][p$1571090, p$1571092]*metric\[Delta][p$1571091, p$1571093]*
+   pressure[]*PD[-p$1571091][PD[-p$1571093][PD[-p$1571090][
+      PD[-p$1571092][pertshear[LI[1]]]]]])/(mass2[]*scale[]^2)

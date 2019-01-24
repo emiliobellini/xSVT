@@ -11,7 +11,7 @@
 $HistoryLength = 0;
 
 
-$CodeDirectory = "/home/emilio/Codes/xSVT/"
+$CodeDirectory = "/local/home/bellini/Codes/xSVT/"
 $OutputDirectory = $CodeDirectory<>"Equations/"
 
 
@@ -58,6 +58,26 @@ NSpaceDer[n_][expr_] := Module[{tmp, idx},
 	idx = Length[IndicesOf[TangentM3,PD][#]]&/@tmp;
 	idx = Map[#==n &,idx];
 	Boole[idx] tmp //.List->Plus]
+
+
+Clear[IsSamePert]
+IsSamePert[pert1_,pert2_]:=Module[{tmp1,tmp2},
+	tmp1 = pert1 //.PD[i_]@pert_:>pert;
+	tmp2 = pert2 //.PD[i_]@pert_:>pert;
+	tmp1===tmp2]
+
+
+Clear[NPerts]
+NPerts[expr_]:=Module[{perts,ispert},
+	perts = expr //.Plus->List;
+	If[Head[perts]==List,perts=perts[[1]]];
+	perts = perts //.PD[a_]@tens_:>tens //.Times->List;
+	perts = Map[# //.Power[x_,n_]:>x &, perts];
+	ispert = Map[IsPert[#]&,perts];
+	perts = Pick[perts,ispert];
+	perts = DeleteDuplicates[perts];
+	Length[perts]
+]
 
 
 (* ::Section::Closed:: *)
@@ -1102,7 +1122,7 @@ TTrules[expr_] := Module[{tmp}, tmp = expr;
 EQLTT[[1]] = EQLTT[[1]] // TTrules;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Introduce Alphas*)
 
 
@@ -1122,7 +1142,7 @@ CollectPerts[EQL2,{mass2[]},Factor]
 Export[$OutputDirectory<>"EQL2.m", EQL2];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Equations of motion*)
 
 
@@ -1176,7 +1196,7 @@ Export[$OutputDirectory<>"EQfirst7.m", EQfirst7];
 (*Third-Order Lagrangian*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Calculation*)
 
 
@@ -1558,6 +1578,9 @@ Evaluate[EQLSS //.List->Plus]+Evaluate[EQLSV //.List->Plus]+Evaluate[EQLST //.Li
 Evaluate[EQLSSS //.List->Plus]+Evaluate[EQLSSV //.List->Plus]+Evaluate[EQLSST //.List->Plus]+Evaluate[EQLSVV //.List->Plus]+Evaluate[EQLSVT //.List->Plus]+Evaluate[EQLSTT //.List->Plus]+Evaluate[EQLVVV //.List->Plus]+Evaluate[EQLVVT //.List->Plus]+Evaluate[EQLVTT //.List->Plus]+Evaluate[EQLTTT //.List->Plus]-EQL31
 
 
+(*** Export ***)
+
+
 Export[$OutputDirectory<>"EQLSS.m", EQLSS];
 Export[$OutputDirectory<>"EQLSV.m", EQLSV];
 Export[$OutputDirectory<>"EQLST.m", EQLST];
@@ -1580,6 +1603,9 @@ Export[$OutputDirectory<>"EQLTTT.m", EQLTTT];
 
 (* ::Subsubsection::Closed:: *)
 (*Scalar-Scalar*)
+
+
+EQLSS = Import[$OutputDirectory<>"EQLSS.m"];
 
 
 EQLSS // Length
@@ -1637,71 +1663,21 @@ SSrules[expr_] := Module[{tmp, tmp6, tmp4, tmp2, tmp0}, tmp = expr;
 	tmp0+tmp2+tmp4+tmp6 //.restoreXinG // SVTExpand]
 
 
-EQLSS[[1]] = EQLSS[[1]] // SSrules;
+For[count=1,count<=Length[EQLSS],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLSS]]<>")"];
+	tmp = EQLSS[[count]] // SSrules;
+	EQLSS[[count]] = tmp;
+	]
 
 
-EQLSS[[2]] = EQLSS[[2]] // SSrules;
-
-
-EQLSS[[3]] = EQLSS[[3]] // SSrules;
-
-
-EQLSS[[4]] = EQLSS[[4]] // SSrules;
-
-
-EQLSS[[5]] = EQLSS[[5]] // SSrules;
-
-
-EQLSS[[6]] = EQLSS[[6]] // SSrules;
-
-
-EQLSS[[7]] = EQLSS[[7]] // SSrules;
-
-
-EQLSS[[8]] = EQLSS[[8]] // SSrules;
-
-
-EQLSS[[9]] = EQLSS[[9]] // SSrules;
-
-
-EQLSS[[10]] = EQLSS[[10]] // SSrules;
-
-
-EQLSS[[11]] = EQLSS[[11]] // SSrules;
-
-
-EQLSS[[12]] = EQLSS[[12]] // SSrules;
-
-
-EQLSS[[13]] = EQLSS[[13]] // SSrules;
-
-
-EQLSS[[14]] = EQLSS[[14]] // SSrules;
-
-
-EQLSS[[15]] = EQLSS[[15]] // SSrules;
-
-
-EQLSS[[16]] = EQLSS[[16]] // SSrules;
-
-
-EQLSS[[17]] = EQLSS[[17]] // SSrules;
-
-
-EQLSS[[18]] = EQLSS[[18]] // SSrules;
-
-
-EQLSS[[19]] = EQLSS[[19]] // SSrules;
-
-
-EQLSS[[20]] = EQLSS[[20]] // SSrules;
-
-
-EQLSS[[21]] = EQLSS[[21]] // SSrules;
+Export[$OutputDirectory<>"EQLSS.m", EQLSS];
 
 
 (* ::Subsubsection::Closed:: *)
 (*Scalar-Vector*)
+
+
+EQLSV = Import[$OutputDirectory<>"EQLSV.m"];
 
 
 EQLSV // Length
@@ -1709,9 +1685,9 @@ EQLSV // Length
 
 Clear[SVrules]
 SVrules[expr_] := Module[{tmp}, tmp = expr;
-	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] PD[-a]@PD[-b]@PD[-j]@pert1[LI[ord]] PD[-i]@pert2;
+(*	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] PD[-a]@PD[-b]@PD[-j]@pert1[LI[ord]] PD[-i]@pert2 // Expand;*)
 	tmp = tmp //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@PD[-i_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] PD[-a]@PD[-b]@pert1[LI[ord]] PD[-i]@pert2;
+(*	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@PD[-i_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] PD[-a]@PD[-b]@pert1[LI[ord]] PD[-i]@pert2;
 	tmp = tmp //.Coeff[coeff_]:>coeff // SVTExpand;
 	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] PD[-a]@PD[-j]@pert1[LI[ord]] PD[-i]@pert2;
 	tmp = tmp //.Coeff[coeff_]:>coeff // SVTExpand;
@@ -1722,22 +1698,18 @@ SVrules[expr_] := Module[{tmp}, tmp = expr;
 	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] PD[-j]@pert1[LI[ord]] PD[-i]@pert2;
 	tmp = tmp //.Coeff[coeff_]:>coeff // SVTExpand;
 	tmp = FirstS[Coeff[tmp]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_[LI[ord_]] pert2_:>-Coeff[coeff] pert1[LI[ord]] PD[-i]@pert2;
-	tmp = tmp //.Coeff[coeff_]:>coeff // SVTExpand;
+	tmp = tmp //.Coeff[coeff_]:>coeff // SVTExpand;*)
 	tmp]
 
 
-EQLSV[[1]] = EQLSV[[1]] // SVrules;
-EQLSV[[2]] = EQLSV[[2]] // SVrules;
-EQLSV[[3]] = EQLSV[[3]] // SVrules;
-EQLSV[[4]] = EQLSV[[4]] // SVrules;
-EQLSV[[5]] = EQLSV[[5]] // SVrules;
-EQLSV[[6]] = EQLSV[[6]] // SVrules;
-EQLSV[[7]] = EQLSV[[7]] // SVrules;
-EQLSV[[8]] = EQLSV[[8]] // SVrules;
-EQLSV[[9]] = EQLSV[[9]] // SVrules;
-EQLSV[[10]] = EQLSV[[10]] // SVrules;
-EQLSV[[11]] = EQLSV[[11]] // SVrules;
-EQLSV[[12]] = EQLSV[[12]] // SVrules;
+For[count=1,count<=Length[EQLSV],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLSV]]<>")"];
+	tmp = EQLSV[[count]] // SVrules;
+	EQLSV[[count]] = tmp;
+	]
+
+
+Export[$OutputDirectory<>"EQLSV.m", EQLSV];
 
 
 EQLSV
@@ -1745,6 +1717,9 @@ EQLSV
 
 (* ::Subsubsection::Closed:: *)
 (*Scalar-Tensor*)
+
+
+EQLST = Import[$OutputDirectory<>"EQLST.m"];
 
 
 EQLST // Length
@@ -1769,12 +1744,14 @@ STrules[expr_] := Module[{tmp}, tmp = expr;
 	tmp]
 
 
-EQLST[[1]] = EQLST[[1]] // STrules;
-EQLST[[2]] = EQLST[[2]] // STrules;
-EQLST[[3]] = EQLST[[3]] // STrules;
-EQLST[[4]] = EQLST[[4]] // STrules;
-EQLST[[5]] = EQLST[[5]] // STrules;
-EQLST[[6]] = EQLST[[6]] // STrules;
+For[count=1,count<=Length[EQLST],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLST]]<>")"];
+	tmp = EQLST[[count]] // STrules;
+	EQLST[[count]] = tmp;
+	]
+
+
+Export[$OutputDirectory<>"EQLST.m", EQLST];
 
 
 EQLST
@@ -1782,6 +1759,9 @@ EQLST
 
 (* ::Subsubsection::Closed:: *)
 (*Vector-Vector*)
+
+
+EQLVV = Import[$OutputDirectory<>"EQLVV.m"];
 
 
 EQLVV // Length
@@ -1809,17 +1789,21 @@ VVrules[expr_] := Module[{tmp}, tmp = expr;
 	tmp //.restoreXinG // SVTExpand]
 
 
-EQLVV[[1]] = EQLVV[[1]] // VVrules;
+For[count=1,count<=Length[EQLVV],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLVV]]<>")"];
+	tmp = EQLVV[[count]] // VVrules;
+	EQLVV[[count]] = tmp;
+	]
 
 
-EQLVV[[2]] = EQLVV[[2]] // VVrules;
-
-
-EQLVV[[3]] = EQLVV[[3]] // VVrules;
+Export[$OutputDirectory<>"EQLVV.m", EQLVV];
 
 
 (* ::Subsubsection::Closed:: *)
 (*Vector-Tensor*)
+
+
+EQLVT = Import[$OutputDirectory<>"EQLVT.m"];
 
 
 EQLVT // Length
@@ -1842,8 +1826,14 @@ VTrules[expr_] := Module[{tmp}, tmp = expr;
 	tmp]
 
 
-EQLVT[[1]] = EQLVT[[1]] // VTrules;
-EQLVT[[2]] = EQLVT[[2]] // VTrules;
+For[count=1,count<=Length[EQLVT],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLVT]]<>")"];
+	tmp = EQLVT[[count]] // VTrules;
+	EQLVT[[count]] = tmp;
+	]
+
+
+Export[$OutputDirectory<>"EQLVT.m", EQLVT];
 
 
 EQLVT
@@ -1851,6 +1841,9 @@ EQLVT
 
 (* ::Subsubsection::Closed:: *)
 (*Tensor-Tensor*)
+
+
+EQLTT = Import[$OutputDirectory<>"EQLTT.m"];
 
 
 EQLTT // Length
@@ -1870,11 +1863,18 @@ TTrules[expr_] := Module[{tmp}, tmp = expr;
 	tmp //.restoreXinG // Expand]
 
 
-EQLTT[[1]] = EQLTT[[1]] // TTrules;
+For[count=1,count<=Length[EQLTT],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLTT]]<>")"];
+	tmp = EQLTT[[count]] // TTrules;
+	EQLTT[[count]] = tmp;
+	]
 
 
-(* ::Subsubsection:: *)
-(*Scalar-Scalar-Scalar (TODO)*)
+Export[$OutputDirectory<>"EQLTT.m", EQLTT];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Scalar-Scalar-Scalar*)
 
 
 EQLSSS = Import[$OutputDirectory<>"EQLSSS.m"];
@@ -1884,7 +1884,9 @@ EQLSSS // Length
 
 
 Clear[SSSrules]
-SSSrules[expr_] := Module[{tmp, tmp8, tmp6, tmp4, tmp2, tmp0}, tmp = expr;
+SSSrules[expr_] := Module[{nperts, tmp, tmp8, tmp6, tmp4, tmp2, tmp0},
+	nperts = NPerts[expr];
+	tmp = expr;
 	tmp = tmp //.SubX0;
 	tmp8 = tmp // NSpaceDer[8];
 	tmp6 = tmp // NSpaceDer[6];
@@ -1893,71 +1895,253 @@ SSSrules[expr_] := Module[{tmp, tmp8, tmp6, tmp4, tmp2, tmp0}, tmp = expr;
 	tmp0 = tmp // NSpaceDer[0];
 	If[tmp=!=tmp8+tmp6+tmp4+tmp2+tmp0,Abort[]];
 
-(*	Print["Doing 8 derivatives"];
-	tmp8 = Coeff[tmp8] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pertB[LI[1]] pert2_ pert3_:> -Coeff[coeff] PD[-j]@pertB[LI[1]] PD[-i]@pert2 pert3 -Coeff[coeff] PD[-j]@pertB[LI[1]] pert2 PD[-i]@pert3;
-	tmp8 = tmp8 //.Coeff[coeff_]:>coeff // Expand;
-	tmp8 = Coeff[tmp8] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pertscalar[LI[1]] pert2_ pert3_:> -Coeff[coeff] PD[-j]@pertscalar[LI[1]] PD[-i]@pert2 pert3 -Coeff[coeff] PD[-j]@pertscalar[LI[1]] pert2 PD[-i]@pert3;
-	tmp8 = tmp8 //.Coeff[coeff_]:>coeff // Expand;
-	tmp8 = Coeff[tmp8] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pertE[LI[1]] pert2_ pert3_:> -Coeff[coeff] PD[-j]@PD[-a]@pertE[LI[1]] PD[-i]@pert2 pert3 -Coeff[coeff] PD[-j]@PD[-a]@pertE[LI[1]] pert2 PD[-i]@pert3;
-	tmp8 = tmp8 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp8 = Coeff[FirstDummies[ContractMetric[tmp8]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[-l_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pertE[LI[1]] PD[l_?TangentM3`Q]@PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@pertE[LI[1]] \[RuleDelayed]+1/2 Coeff[coeff] (PD[-j]@PD[i]@PD[k]@pertE[LI[1]] PD[l]@PD[-l]@PD[-i]@pertE[LI[1]] PD[-k]@PD[j]@pertE[LI[1]] +PD[-j]@PD[i]@pertE[LI[1]] PD[l]@PD[-l]@PD[-i]@pertE[LI[1]] PD[k]@PD[-k]@PD[j]@pertE[LI[1]]);
-	tmp8 = tmp8 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp8 = Coeff[FirstDummies[ContractMetric[tmp8]]] //.Coeff[coeff_] PD[-l_?TangentM3`Q]@PD[l_?TangentM3`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[k_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pertE[LI[1]] \[RuleDelayed] Coeff[coeff] (PD[k]@PD[-l]@PD[l]@pertE[LI[1]] PD[-k]@PD[i]@pertE[LI[1]] PD[-i]@PD[j]@PD[-j]@pertE[LI[1]]+PD[-l]@PD[l]@pertE[LI[1]] PD[k]@PD[-k]@PD[i]@pertE[LI[1]] PD[-i]@PD[j]@PD[-j]@pertE[LI[1]]-PD[j]@PD[-l]@PD[l]@pertE[LI[1]] PD[-k]@PD[i]@pertE[LI[1]] PD[k]@PD[-j]@PD[-i]@pertE[LI[1]]);;
-	tmp8 = tmp8 //.Coeff[coeff_]:>coeff // SVTExpand;*)
+	Print["Doing 8 space derivatives"];
+	If[nperts==1,
+		tmp8 = Coeff[tmp8] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pertE[LI[1]] pert2_ pert3_:> -Coeff[coeff] PD[-j]@PD[-a]@pertE[LI[1]] PD[-i]@pert2 pert3 -Coeff[coeff] PD[-j]@PD[-a]@pertE[LI[1]] pert2 PD[-i]@pert3 // Expand;
+		tmp8 = tmp8 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp8 = Coeff[FirstDummies[ContractMetric[tmp8]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[-l_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pertE[LI[1]] PD[l_?TangentM3`Q]@PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@pertE[LI[1]] :>+1/2 Coeff[coeff] (PD[-j]@PD[i]@PD[k]@pertE[LI[1]] PD[l]@PD[-l]@PD[-i]@pertE[LI[1]] PD[-k]@PD[j]@pertE[LI[1]] +PD[-j]@PD[i]@pertE[LI[1]] PD[l]@PD[-l]@PD[-i]@pertE[LI[1]] PD[k]@PD[-k]@PD[j]@pertE[LI[1]]) // Expand;
+		tmp8 = tmp8 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp8 = Coeff[FirstDummies[ContractMetric[tmp8]]] //.Coeff[coeff_] PD[-l_?TangentM3`Q]@PD[l_?TangentM3`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[k_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pertE[LI[1]] :> Coeff[coeff] (PD[k]@PD[-l]@PD[l]@pertE[LI[1]] PD[-k]@PD[i]@pertE[LI[1]] PD[-i]@PD[j]@PD[-j]@pertE[LI[1]]+PD[-l]@PD[l]@pertE[LI[1]] PD[k]@PD[-k]@PD[i]@pertE[LI[1]] PD[-i]@PD[j]@PD[-j]@pertE[LI[1]]-PD[j]@PD[-l]@PD[l]@pertE[LI[1]] PD[-k]@PD[i]@pertE[LI[1]] PD[k]@PD[-j]@PD[-i]@pertE[LI[1]]) // Expand;
+		tmp8 = tmp8 //.Coeff[coeff_]:>coeff // SVTExpand;
+	];
+	If[nperts==2,
+		tmp8 = Coeff[tmp8] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pertB[LI[1]] pert2_ pert3_:> -Coeff[coeff] PD[-j]@pertB[LI[1]] PD[-i]@pert2 pert3 -Coeff[coeff] PD[-j]@pertB[LI[1]] pert2 PD[-i]@pert3;
+		tmp8 = tmp8 //.Coeff[coeff_]:>coeff // Expand;
+		tmp8 = Coeff[tmp8] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pertscalar[LI[1]] pert2_ pert3_:> -Coeff[coeff] PD[-j]@pertscalar[LI[1]] PD[-i]@pert2 pert3 -Coeff[coeff] PD[-j]@pertscalar[LI[1]] pert2 PD[-i]@pert3;
+		tmp8 = tmp8 //.Coeff[coeff_]:>coeff // Expand;
+	];
 
-	Print["Doing 6 derivatives"];
-	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pertE[LI[1]] PD[k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-b_?TangentM1`Q]@PD[-a_?TangentM1`Q]@pertE[LI[1]]:>-1/2 (Coeff[coeff] PD[-j]@PD[i]@PD[-a]@pertE[LI[1]] PD[-k]@PD[-i]@PD[-c]@pertE[LI[1]] PD[k]@PD[j]@PD[-b]@pertE[LI[1]]+Coeff[timevec[-a] TimeDer[coeff]] PD[-j]@PD[i]@pertE[LI[1]] PD[-k]@PD[-i]@PD[-c]@pertE[LI[1]] PD[k]@PD[j]@PD[-b]@pertE[LI[1]]);
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[-j_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-b_?TangentM1`Q]@PD[-a_?TangentM1`Q]@pertE[LI[1]]:>-1/2 (Coeff[coeff] PD[-i]@PD[i]@PD[-a]@pertE[LI[1]] PD[-j]@PD[j]@PD[-c]@pertE[LI[1]] PD[-k]@PD[k]@PD[-b]@pertE[LI[1]]+Coeff[timevec[-a] TimeDer[coeff]] PD[-i]@PD[i]@pertE[LI[1]] PD[-j]@PD[j]@PD[-c]@pertE[LI[1]] PD[-k]@PD[k]@PD[-b]@pertE[LI[1]]);
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pertE[LI[1]] PD[k_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pertE[LI[1]]:>-1/2 (Coeff[coeff] PD[-i]@PD[i]@PD[-a]@pertE[LI[1]] PD[-k]@PD[j]@PD[-c]@pertE[LI[1]] PD[k]@PD[-j]@PD[-b]@pertE[LI[1]]+Coeff[timevec[-a] TimeDer[coeff]] PD[-i]@PD[i]@pertE[LI[1]] PD[-k]@PD[j]@PD[-c]@pertE[LI[1]] PD[k]@PD[-j]@PD[-b]@pertE[LI[1]]);
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[j_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pertE[LI[1]]:>-Coeff[coeff] PD[-j]@PD[i]@pertE[LI[1]] PD[j]@PD[-i]@PD[-a]@PD[-c]@pertE[LI[1]] PD[-k]@PD[k]@PD[-b]@pertE[LI[1]]-Coeff[coeff] PD[-j]@PD[i]@PD[-a]@pertE[LI[1]] PD[j]@PD[-i]@PD[-c]@pertE[LI[1]] PD[-k]@PD[k]@PD[-b]@pertE[LI[1]]-Coeff[timevec[-a] TimeDer[coeff]] PD[-j]@PD[i]@pertE[LI[1]] PD[j]@PD[-i]@PD[-c]@pertE[LI[1]] PD[-k]@PD[k]@PD[-b]@pertE[LI[1]];
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_ PD[k_?TangentM3`pmQ]@PD[l_?TangentM3`pmQ]@pert_ PD[m_?TangentM3`pmQ]@PD[n_?TangentM3`pmQ]@pert_:>-Coeff[timevec[-a] TimeDer[coeff]] PD[i]@PD[j]@PD[-b]@pert PD[k]@PD[l]@pert PD[m]@PD[n]@pert-Coeff[coeff] PD[i]@PD[j]@PD[-b]@pert PD[k]@PD[l]@PD[-a]@pert PD[m]@PD[n]@pert-Coeff[coeff] PD[i]@PD[j]@PD[-b]@pert PD[k]@PD[l]@pert PD[m]@PD[n]@PD[-a]@pert;
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
-	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_ PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-b_?TangentM1`Q]@pert_ PD[k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert_ :>Coeff[coeff] (+1/2 PD[j]@PD[-k]@PD[-a]@pert PD[-j]@PD[k]@PD[-b]@pert PD[-i]@PD[i]@PD[-c]@pert+PD[-i]@PD[j]@PD[-a]@pert PD[-k]@PD[k]@PD[-b]@pert PD[-j]@PD[i]@PD[-c]@pert-1/2 PD[-j]@PD[j]@PD[-a]@pert PD[-k]@PD[k]@PD[-b]@pert PD[-i]@PD[i]@PD[-c]@pert);
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
-(*	tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pert_ PD[k_?TangentM3`Q]@PD[j_?TangentM3`Q]@pert_ \[RuleDelayed] Coeff[coeff] (-1/2 PD[-j]@PD[j]@pert PD[-k]@PD[k]@pert PD[-i]@PD[i]@pert+3/2 PD[j]@PD[-k]@pert PD[-j]@PD[k]@pert PD[-i]@PD[i]@pert);
-	tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;*)
+	Print["Doing 6 space derivatives"];
+	If[nperts==1,
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert_ PD[k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-b_?TangentM1`Q]@PD[-a_?TangentM1`Q]@pert_:>-1/2 (Coeff[coeff] PD[-j]@PD[i]@PD[-a]@pert PD[-k]@PD[-i]@PD[-c]@pert PD[k]@PD[j]@PD[-b]@pert+Coeff[timevec[-a] TimeDer[coeff]] PD[-j]@PD[i]@pert PD[-k]@PD[-i]@PD[-c]@pert PD[k]@PD[j]@PD[-b]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert_ PD[-k_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-b_?TangentM1`Q]@PD[-a_?TangentM1`Q]@pert_:>-1/2 (Coeff[coeff] PD[-i]@PD[i]@PD[-a]@pert PD[-j]@PD[j]@PD[-c]@pert PD[-k]@PD[k]@PD[-b]@pert+Coeff[timevec[-a] TimeDer[coeff]] PD[-i]@PD[i]@pert PD[-j]@PD[j]@PD[-c]@pert PD[-k]@PD[k]@PD[-b]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert_ PD[k_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-1/2 (Coeff[coeff] PD[-i]@PD[i]@PD[-a]@pert PD[-k]@PD[j]@PD[-c]@pert PD[k]@PD[-j]@PD[-b]@pert+Coeff[timevec[-a] TimeDer[coeff]] PD[-i]@PD[i]@pert PD[-k]@PD[j]@PD[-c]@pert PD[k]@PD[-j]@PD[-b]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[j_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert_ PD[-k_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-Coeff[coeff] PD[-j]@PD[i]@pert PD[j]@PD[-i]@PD[-a]@PD[-c]@pert PD[-k]@PD[k]@PD[-b]@pert-Coeff[coeff] PD[-j]@PD[i]@PD[-a]@pert PD[j]@PD[-i]@PD[-c]@pert PD[-k]@PD[k]@PD[-b]@pert-Coeff[timevec[-a] TimeDer[coeff]] PD[-j]@PD[i]@pert PD[j]@PD[-i]@PD[-c]@pert PD[-k]@PD[k]@PD[-b]@pert;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_ PD[k_?TangentM3`pmQ]@PD[l_?TangentM3`pmQ]@pert_ PD[m_?TangentM3`pmQ]@PD[n_?TangentM3`pmQ]@pert_:>-Coeff[timevec[-a] TimeDer[coeff]] PD[i]@PD[j]@PD[-b]@pert PD[k]@PD[l]@pert PD[m]@PD[n]@pert-Coeff[coeff] PD[i]@PD[j]@PD[-b]@pert PD[k]@PD[l]@PD[-a]@pert PD[m]@PD[n]@pert-Coeff[coeff] PD[i]@PD[j]@PD[-b]@pert PD[k]@PD[l]@pert PD[m]@PD[n]@PD[-a]@pert;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_ PD[-k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-b_?TangentM1`Q]@pert_ PD[k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert_ :>Coeff[coeff] (3/2 PD[j]@PD[-k]@PD[-a]@pert PD[-j]@PD[k]@PD[-b]@pert PD[-i]@PD[i]@PD[-c]@pert-1/2 PD[-j]@PD[j]@PD[-a]@pert PD[-k]@PD[k]@PD[-b]@pert PD[-i]@PD[i]@PD[-c]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_ PD[k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-b_?TangentM1`Q]@pert_:>Coeff[coeff] (+1/2 PD[-i]@PD[i]@pert PD[-j]@PD[-k]@PD[-a]@pert PD[k]@PD[j]@PD[-b]@pert+PD[k]@PD[i]@pert PD[-k]@PD[-i]@PD[-a]@pert PD[-j]@PD[j]@PD[-b]@pert-1/2 PD[-i]@PD[i]@pert PD[-k]@PD[k]@PD[-a]@pert PD[-j]@PD[j]@PD[-b]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pert_ PD[k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_:>Coeff[coeff] (+1/2 PD[i]@PD[k]@pert PD[-k]@PD[-i]@pert PD[-j]@PD[j]@PD[-a]@pert+PD[-j]@PD[i]@pert PD[-k]@PD[k]@pert PD[-i]@PD[j]@PD[-a]@pert-1/2 PD[-i]@PD[i]@pert PD[-k]@PD[k]@pert PD[-j]@PD[j]@PD[-a]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-k_?TangentM3`Q]@PD[k_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[j_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_:>-1/2 (Coeff[timevec[-a] TimeDer[coeff] // Expand] PD[-k]@PD[k]@pert PD[-j]@PD[i]@pert PD[j]@PD[-i]@pert+Coeff[coeff] PD[-k]@PD[k]@PD[-a]@pert PD[-j]@PD[i]@pert PD[j]@PD[-i]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@PD[j_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[k_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_:>-1/3 Coeff[timevec[-a] TimeDer[coeff] // Expand] PD[-i]@PD[i]@pert PD[-j]@PD[j]@pert PD[-k]@PD[k]@pert;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[j_?TangentM3`Q]@PD[-i_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_ PD[k_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert_:>Coeff[coeff] (-1/2 PD[-k]@PD[k]@pert PD[-i]@PD[i]@pert PD[-j]@PD[j]@pert+3/2 PD[-i]@PD[k]@pert PD[i]@PD[-k]@pert PD[-j]@PD[j]@pert);
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+	If[nperts==2,
+		tmp6 = Coeff[FirstT[tmp6]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstT[tmp6]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstT[tmp6]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+	If[nperts==3,
+		tmp6 = Coeff[FirstT[tmp6]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertB[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstT[tmp6]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp6 = Coeff[FirstT[tmp6]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
 
+
+	Print["Doing 4 space derivatives"];
+	If[nperts==1,
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert_ PD[-k_?TangentM3`Q]@PD[-l_?TangentM3`Q]@pert_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-2 Coeff[coeff] PD[-i]@PD[-j]@PD[-a]@pert PD[-k]@PD[-l]@pert PD[-b]@pert-timevec[-a] TimeDer[coeff] PD[-i]@PD[-j]@pert PD[-k]@PD[-l]@pert PD[-b]@pert;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3] && Length[IndicesOf[TangentM1][pert1]]==0 && Length[IndicesOf[TangentM1][pert2]]==1 && Length[IndicesOf[TangentM1][pert3]]==1):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3] && Length[IndicesOf[TangentM1][pert1]]==1 && Length[IndicesOf[TangentM1][pert2]]==0 && Length[IndicesOf[TangentM1][pert3]]==0):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp4 = Coeff[FirstDummies[ContractMetric[tmp4]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@pert_ PD[j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert_:>-1/2 Coeff[coeff] PD[-i]@PD[i]@pert PD[-j]@pert PD[j]@pert;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstDummies[ContractMetric[tmp4]]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert_ PD[i_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@PD[j_?TangentM3`Q]@pert_:>2/3 Coeff[coeff] (-pert PD[-i]@PD[i]@pert PD[-j]@PD[j]@pert+pert PD[i]@PD[j]@pert PD[-i]@PD[-j]@pert);
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+	If[nperts==2,
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstDummies[ContractMetric[tmp4]]] //.Coeff[coeff_] pert1_ PD[-i_?TangentM3`Q]@pert2_ PD[-j_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pert2_:>-Coeff[coeff] pert1 PD[-i]@PD[-j]@pert2 PD[j]@PD[i]@pert2+1/2 Coeff[coeff] PD[-j]@PD[j]@pert1 PD[-i]@pert2 PD[i]@pert2;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] pert1_ PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@PD[-c_?TangentM1`Q]@pert2_ PD[-k_?TangentM3`Q]@PD[-l_?TangentM3`Q]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert2_:>-1/2 (timevec[-a] TimeDer[coeff] pert1 PD[-i]@PD[-j]@PD[-c]@pert2 PD[-k]@PD[-l]@PD[-b]@pert2+Coeff[coeff] PD[-a]@pert1 PD[-i]@PD[-j]@PD[-c]@pert2 PD[-k]@PD[-l]@PD[-b]@pert2) // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] pert1_ PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert2_ PD[-k_?TangentM3`Q]@PD[-l_?TangentM3`Q]@PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert2_:>-timevec[-a] TimeDer[coeff] pert1 PD[-i]@PD[-j]@pert2 PD[-k]@PD[-l]@PD[-b]@pert2-Coeff[coeff] PD[-a]@pert1 PD[-i]@PD[-j]@pert2 PD[-k]@PD[-l]@PD[-b]@pert2-Coeff[coeff] pert1 PD[-i]@PD[-j]@PD[-a]@pert2 PD[-k]@PD[-l]@PD[-b]@pert2 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] pert1_ PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert2_ PD[-k_?TangentM3`Q]@PD[-l_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert2_:>-1/2 (timevec[-a] TimeDer[coeff] pert1 PD[-i]@PD[-j]@pert2 PD[-k]@PD[-l]@pert2+Coeff[coeff] PD[-a]@pert1 PD[-i]@PD[-j]@pert2 PD[-k]@PD[-l]@pert2) // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+	If[nperts==3,
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertB[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertB[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp4 = Coeff[FirstT[tmp4]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp4 = tmp4 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+
+
+	Print["Doing 2 space derivatives"];
+	If[nperts==1,
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert_ PD[-c_?TangentM1`Q]@pert_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-1/2 timevec[-a] TimeDer[coeff] PD[-i]@PD[-j]@pert PD[-c]@pert PD[-b]@pert-1/2 Coeff[coeff] PD[-i]@PD[-j]@PD[-a]@pert PD[-c]@pert PD[-b]@pert // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@pert_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-timevec[-a] TimeDer[coeff] PD[-i]@pert PD[-j]@pert PD[-b]@pert-2 Coeff[coeff] PD[-i]@PD[-a]@pert PD[-j]@pert PD[-b]@pert // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@PD[-j_?TangentM3`Q]@pert_ pert_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-timevec[-a] TimeDer[coeff] PD[-i]@PD[-j]@pert pert PD[-b]@pert-Coeff[coeff] PD[-i]@PD[-j]@PD[-a]@pert pert PD[-b]@pert-Coeff[coeff] PD[-i]@PD[-j]@pert PD[-a]@pert PD[-b]@pert // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_^2/;(Length[IndicesOf[PD,TangentM3][pert1]]==1 && IsSamePert[pert1,pert2]):>-2 Coeff[coeff] pert1 PD[-i]@pert2 pert2;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(Length[IndicesOf[PD,TangentM3][pert1]]==1 && IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] pert_ PD[-i_?TangentM3`Q]@pert_ PD[-j_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_:>-1/2 timevec[-a] TimeDer[coeff] pert PD[-i]@pert PD[-j]@pert-1/2 Coeff[coeff] PD[-a]@pert PD[-i]@pert PD[-j]@pert // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SVTExpand;
+	];
+	If[nperts==2,
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_^2/;(!IsSamePert[pert1,pert2]):>-2 Coeff[coeff] pert1 PD[-i]@pert2 pert2;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+	If[nperts==3,
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertB[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertB[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-i_?TangentM3`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-Coeff[coeff] pert1 PD[-i]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-i]@pert3;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp2 = Coeff[FirstT[tmp2]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp2 = tmp2 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+
+
+	Print["Doing 0 space derivatives"];
+	If[nperts==1,
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-c_?TangentM1`Q]@pert_ PD[-d_?TangentM1`Q]@pert_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-1/3 timevec[-a] TimeDer[coeff] PD[-c]@pert PD[-d]@pert PD[-b]@pert // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] pert_ PD[-c_?TangentM1`Q]@pert_ PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-1/2 timevec[-a] TimeDer[coeff] pert PD[-c]@pert PD[-b]@pert-1/2 Coeff[coeff] PD[-a]@pert PD[-c]@pert PD[-b]@pert // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] pert_^2 PD[-a_?TangentM1`Q]@PD[-b_?TangentM1`Q]@pert_:>-timevec[-a] TimeDer[coeff] pert^2 PD[-b]@pert-2 Coeff[coeff] PD[-a]@pert pert PD[-b]@pert // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] pert_^2 PD[-a_?TangentM1`Q]@pert_:>-1/3 timevec[-a] TimeDer[coeff] pert^3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SVTExpand;
+	];
+	If[nperts==2,
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_^2/;(!IsSamePert[pert1,pert2]):> -2 Coeff[coeff] pert1 PD[-a]@pert2 pert2 - timevec[-a] TimeDer[coeff] pert1 pert2^2 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_^2/;(!IsSamePert[pert1,pert2]):> -2 Coeff[coeff] pert1 PD[-a]@pert2 pert2 - timevec[-a] TimeDer[coeff] pert1 pert2^2 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(!IsSamePert[pert1,pert2] && IsSamePert[pert2,pert3]):> -Coeff[coeff] pert1 PD[-a]@pert2 pert3 -Coeff[coeff] pert1 pert2 PD[-a]@pert3 - timevec[-a] TimeDer[coeff] pert1 pert2 pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+	If[nperts==3,
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertB[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertE[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+		tmp0 = Coeff[FirstT[tmp0]] //.Coeff[coeff_] PD[-a_?TangentM1`Q]@pert1_ pert2_ pert3_/;(IsSamePert[pert1,pertpsi[LI[1]]] && !IsSamePert[pert1,pert2] && !IsSamePert[pert2,pert3]):>-timevec[-a] TimeDer[coeff] pert1 pert2 pert3-Coeff[coeff] pert1 PD[-a]@pert2 pert3-Coeff[coeff] pert1 pert2 PD[-a]@pert3 // Expand;
+		tmp0 = tmp0 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
+	];
+
+
+	Print["Finishing!"];
 	tmp0+tmp2+tmp4+tmp6+tmp8 //.restoreXinG // SVTExpand]
 
 
-	Print[FirstDummies[ContractMetric[tmp6]] // ScreenDollarIndices];
+For[count=1,count<=Length[EQLSSS],count++,
+	Print["Integrating term "<>ToString[count]<>" (TOT="<>ToString[Length[EQLSSS]]<>")"];
+	tmp = EQLSSS[[count]] // SSSrules;
+	EQLSSS[[count]] = tmp;
+	]
 
 
-tmp = EQLSSS[[47]] // NSpaceDer[6] // SSSrules // CollectPerts;
-tmp // Length
-
-
-PD[-i]@PD[i]@pertE[LI[1]] PD[-j]@PD[k]@primepertE[LI[1]] PD[j]@PD[-k]@primepertE[LI[1]]
-
-
--PD[-k]@PD[-i]@PD[i]@pertE[LI[1]] PD[-j]@PD[k]@primepertE[LI[1]] PD[j]@primepertE[LI[1]]
-
-+PD[-j]@PD[-i]@PD[i]@pertE[LI[1]] PD[-k]@PD[k]@primepertE[LI[1]] PD[j]@primepertE[LI[1]]
-+PD[-i]@PD[i]@pertE[LI[1]] PD[-k]@PD[k]@primepertE[LI[1]] PD[-j]@PD[j]@primepertE[LI[1]]
-
-
-tmp6 = tmp[[{4,5,6,7}]];
-tmp6 = tmp6 // InvPrintWell;
-
-tmp6 = Coeff[FirstDummies[ContractMetric[tmp6]]] //.Coeff[coeff_] PD[-j_?TangentM3`Q]@PD[i_?TangentM3`Q]@pertE[LI[1]] PD[-k_?TangentM3`Q]@PD[-i_?TangentM3`Q]@PD[-a_?TangentM1`Q]@pert_ PD[k_?TangentM3`Q]@PD[j_?TangentM3`Q]@PD[-b_?TangentM1`Q]@pert_:>Coeff[coeff] (+1/2 PD[-i]@PD[i]@pertE[LI[1]] PD[-j]@PD[-k]@PD[-a]@pert PD[k]@PD[j]@PD[-b]@pert+PD[k]@PD[i]@pertE[LI[1]] PD[-k]@PD[-i]@PD[-a]@pert PD[-j]@PD[j]@PD[-b]@pert-1/2 PD[-i]@PD[i]@pertE[LI[1]] PD[-k]@PD[k]@PD[-a]@pert PD[-j]@PD[j]@PD[-b]@pert);
-tmp6 = tmp6 //.Coeff[coeff_]:>coeff // SeparateMetric[] // SVTExpand;
-
-
-tmp6 // CollectPerts
-
-
-13,16,17,28,31,32,38,39,41,42,44,48,50
+Export[$OutputDirectory<>"EQLSSS.m", EQLSSS];
 
 
 (* ::Subsubsection:: *)
 (*Scalar-Scalar-Vector (TODO)*)
 
 
+Exit[]
+
+
+EQLSV
+
+
+EQLST
+
+
+EQLVT
+
+
+EQLSS[[1]]
+
+
+EQLVV[[1]]
+
+
+EQLTT[[1]]
+
+
+EQLSSS[[1]]
+
+
 EQLSSV // Length
+
+
+tmp = Map[NSpaceDer[0][#]&,EQLSSS];
+list = Map[NPerts[#]&, tmp]
+Position[list,1] // Flatten
+Position[list,2] // Flatten
+Position[list,3] // Flatten
+
+
+tmp6 = tmp[[11]] // SSSrules // CollectPerts;
+tmp6 // Length
+tmp6
 
 
 (* ::Subsubsection:: *)
@@ -2084,6 +2268,51 @@ Export[$OutputDirectory<>"EQfirst4.m", EQfirst4];
 Export[$OutputDirectory<>"EQfirst5.m", EQfirst5];
 Export[$OutputDirectory<>"EQfirst6.m", EQfirst6];
 Export[$OutputDirectory<>"EQfirst7.m", EQfirst7];
+
+
+(* ::Section:: *)
+(*Look at everything*)
+
+
+EQL1 = Import[$OutputDirectory<>"EQL1.m"];
+EQback1 = Import[$OutputDirectory<>"EQback1.m"];
+EQback2 = Import[$OutputDirectory<>"EQback2.m"];
+EQback3 = Import[$OutputDirectory<>"EQback3.m"];
+EQback4 = Import[$OutputDirectory<>"EQback4.m"];
+
+
+EQL2 = Import[$OutputDirectory<>"EQL2.m"];
+
+
+EQfirst1 = Import[$OutputDirectory<>"EQfirst1.m"];
+EQfirst2 = Import[$OutputDirectory<>"EQfirst2.m"];
+EQfirst3 = Import[$OutputDirectory<>"EQfirst3.m"];
+EQfirst4 = Import[$OutputDirectory<>"EQfirst4.m"];
+EQfirst5 = Import[$OutputDirectory<>"EQfirst5.m"];
+EQfirst6 = Import[$OutputDirectory<>"EQfirst6.m"];
+EQfirst7 = Import[$OutputDirectory<>"EQfirst7.m"];
+
+
+EQLSS = Import[$OutputDirectory<>"EQLSS.m"];
+EQLSV = Import[$OutputDirectory<>"EQLSV.m"];
+EQLST = Import[$OutputDirectory<>"EQLST.m"];
+EQLVV = Import[$OutputDirectory<>"EQLVV.m"];
+EQLVT = Import[$OutputDirectory<>"EQLVT.m"];
+EQLTT = Import[$OutputDirectory<>"EQLTT.m"];
+
+
+EQLSSS = Import[$OutputDirectory<>"EQLSSS.m"];
+
+
+EQLSSV = Import[$OutputDirectory<>"EQLSSV.m"];
+EQLSST = Import[$OutputDirectory<>"EQLSST.m"];
+EQLSVV = Import[$OutputDirectory<>"EQLSVV.m"];
+EQLSVT = Import[$OutputDirectory<>"EQLSVT.m"];
+EQLSTT = Import[$OutputDirectory<>"EQLSTT.m"];
+EQLVVV = Import[$OutputDirectory<>"EQLVVV.m"];
+EQLVVT = Import[$OutputDirectory<>"EQLVVT.m"];
+EQLVTT = Import[$OutputDirectory<>"EQLVTT.m"];
+EQLTTT = Import[$OutputDirectory<>"EQLTTT.m"];
 
 
 (* ::Section:: *)

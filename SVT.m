@@ -68,3 +68,6 @@ Import[$CodeDirectory<>"XtoScalar.m"]
 
 
 SetOptions[ToCanonical, UseMetricOnVBundle -> None];
+
+
+Off[VBundleOfIndex::unknown]

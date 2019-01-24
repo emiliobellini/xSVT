@@ -27,10 +27,15 @@ FirstS[expr_] := expr //. PD[i_?TangentM3`pmQ]@PD[a_?TangentM1`pmQ]@object_ :> P
 Clear[FirstDummies]
 FirstDummies[expr1_+expr2_] := FirstDummies[expr1] + FirstDummies[expr2]
 FirstDummies[expr1_*expr2_] := FirstDummies[expr1] * FirstDummies[expr2]
-FirstDummies[tens_] := Module[{tmp, idx, final}, final = tens;
+FirstDummies[tens_] := Module[{tmp, idx, pdidx, final, count}, final = tens;
 	tmp = final //.PD[__]@some_:>some;
 	If[IsPert[tmp],
 		idx = FindIndices[tens];
+		pdidx = IndicesOf[PD][tens];
+		For[count=1,count<=Length[idx],count++,
+			If[!MemberQ[pdidx,idx[[count]]],idx[[count]]=0;];
+		];
+		idx = DeleteCases[idx,0];
 		idx = MapThread[Rule,{idx, IndexSort[idx]}//.IndexList->List];
 		final = ReplaceIndex[tens,idx];
 		];
@@ -40,15 +45,77 @@ FirstDummies[tens_] := Module[{tmp, idx, final}, final = tens;
 (****   SVTExpand   ****)
 
 
-SVTExpand[expr_] := Module[{tmp, inds}, tmp = expr //.expandrules;
+Clear[IsPert]
+IsPert[expr_]:=Module[{is,hd},
+	is = False;
+	hd = Head[expr];
+	If[MemberQ[$Tensors,hd],If[DefInfo[Head[expr]][[2]] == "perturbation", is = True];];
+	is]
+
+
+Clear[DivFree]
+DivFree[expr1_+expr2_]:=DivFree[expr1]+DivFree[expr2]
+DivFree[expr1_*expr2_]:=DivFree[expr1]*DivFree[expr2]
+DivFree[expr_^n_]:=DivFree[expr]^n
+DivFree[expr_]:=Module[{tmp, pdidx, idx, ispert},
+	tmp = expr // NoScalar;
+	ispert = IsPert[tmp //.PD[__]@tens_:>tens];
+	pdidx = IndicesOf[PD,TangentM3][tmp]//.IndexList->List;
+	idx = IndicesOf[TangentM3][tmp]//.IndexList->List;
+	If[ispert && Length[Intersection[pdidx,-Complement[idx,pdidx]]]>0,0,tmp]
+]
+
+
+Clear[SVTExpand]
+SVTExpand[expr_] := Module[{tmp, inds}, tmp = NoScalar[expr] //.expandrules;
 	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
-	tmp = tmp // ContractMetric // FirstS // FirstDummies // NoScalar;
+	tmp = tmp // ContractMetric // FirstS // DivFree;
+	tmp = tmp // FirstDummies // NoScalar;
 	tmp = tmp //.$Rules // ToCanonical // NoScalar;
 	If[ToString[tmp] == ToString[0], tmp,
 		inds = IndicesOf[TangentM3][tmp];
 		inds = DeleteCases[inds, -_?TangentM3`Q];
 		tmp = SeparateMetric[metric\[Delta]][tmp, inds]];
 tmp]
+
+
+Clear[SVTExpandBits]
+SVTExpandBits[nelem_][expr_] := Module[{len, tmpexpr, nsteps, tmp, count, min, max},
+	tmpexpr = expr // Expand;
+	len = tmpexpr // Length;
+	If[Mod[len,nelem]==0,nsteps = Quotient[len,nelem];,nsteps = Quotient[len,nelem]+1;];
+	tmp = 0;
+	For[count=0,count<nsteps,count++,
+		min = nelem*count+1;
+		If[nelem*(count+1)<len,max=nelem*(count+1),max=len];
+		tmp += SVTExpand[tmpexpr[[min;;max]]];
+		If[Mod[count,1]==0,Print["Done "<>ToString[count+1]<>" steps over "<>ToString[nsteps]]];
+	];
+	tmp // Expand	
+]
+
+
+SVTExpandCollect[terms_][expr_] := Module[{tmp,tmplist,count,lengths},
+	tmp = expr;
+	tmplist = Table[0,Length[terms]+1];
+	For[count=1,count<=Length[terms],count++,
+		tmplist[[count]] = terms[[count]] Coefficient[tmp,terms[[count]]] // Expand;
+		tmp = tmp-tmplist[[count]] // Expand;
+	];
+	tmplist[[Length[terms]+1]] = tmp;
+	lengths = Map[Length[#]&,tmplist];
+	Print[lengths];
+	If[Length[expr]!=Evaluate[lengths //.List->Plus],Print["Lengths not correct!"];];
+	For[count=1,count<=Length[tmplist],count++,
+		If[Length[tmplist[[count]]]>12000, tmplist[[count]] = tmplist[[count]] // SVTExpandBits[2000];];
+		If[Length[tmplist[[count]]]>12000, tmplist[[count]] = tmplist[[count]] // SVTExpandBits[6000];];
+		tmplist[[count]] = tmplist[[count]] // SVTExpand // ReplaceDummies;
+		Print["Done "<>ToString[count]<>" steps over "<>ToString[Length[tmplist]]];
+	];
+	lengths = Map[Length[#]&,tmplist];
+	Print[lengths];
+	Return[tmplist //.List->Plus // Expand];
+]
 
 
 (****   Decomposition   ****)
@@ -85,6 +152,29 @@ Decomposition[order_, inds___][expr_] := Module[{tmp, timevecs},
 	tmp = tmp timevecs;
 	tmp  // SVTExpand // ReplaceDummies
 ]
+
+
+subfr1 = -primescalar[]/scale[] PD[-i]@pertscalar[LI[2]]+
+	2/primescalar[] timevec[a] PD[-a]@pertscalarpre[LI[1]] PD[-i]@pertscalarpre[LI[1]]-
+	2 pertpsi[LI[1]] PD[-i]@pertscalarpre[LI[1]];
+subfr2 = PD[-j]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
+subfr3 = PD[-j]@PD[-k]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
+subfr4 = PD[-j]@PD[-k]@PD[-l]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
+
+
+Clear[FieldRedefinition]
+FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
+	tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@PD[-k]@PD[-l]@pertscalarpre[LI[2]]], Evaluate[subfr4]}] // Expand;
+	(*tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@PD[-k]@pertscalarpre[LI[2]]], Evaluate[subfr3]}] // Expand;*)
+	tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@pertscalarpre[LI[2]]], Evaluate[subfr2]}] // Expand;
+	(*tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@pertscalarpre[LI[2]]], Evaluate[subfr1]}] // Expand;*)
+	tmp = tmp //.pertscalarpre[LI[1]] :> -primescalar[]/scale[] pertscalar[LI[1]] // Expand;
+	tmp
+]
+
+
+(*pertscalarpre[LI[1]] :> -primescalar[]/scale[] pertscalar[LI[1]]
+MakeRule[{PD[-i]@pertscalarpre[LI[2]], -primescalar[]/scale[] PD[-i]@pertscalar[LI[2]]+2/primescalar[] timevec[a] PD[-a]@pertscalarpre[LI[1]] PD[-i]@pertscalarpre[LI[1]]-2 pertpsi[LI[1]] PD[-i]@pertscalarpre[LI[1]]}]*)
 
 
 (****   Fourier Transformations   ****)
@@ -135,11 +225,7 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 	hubblerules = {hubbleC[] :> scale[] hubbleP[],
 		primehubbleC[] :> scale[]^2 (hubbleP[]^2 + dothubbleP[]), 
 		pprimehubbleC[] :> scale[]^3 (ddothubbleP[] + 4 hubbleP[] dothubbleP[] + 2 hubbleP[]^3),
-		ppprimehubbleC[] :> scale[]^4 (dddothubbleP[] + 4 dothubbleP[]^2 + 7 ddothubbleP[] hubbleP[] + 18 hubbleP[]^2 dothubbleP[] + 6 hubbleP[]^4),
-		hubbleC2[] :> scale[] hubbleP2[],
-		primehubbleC2[] :> scale[]^2 (hubbleP[] hubbleP2[] + dothubbleP2[]),
-		pprimehubbleC2[] :> scale[]^3 (ddothubbleP2[] + 3 hubbleP[] dothubbleP2[] + dothubbleP[] hubbleP2[] + 2 hubbleP[]^2 hubbleP2[]),
-		ppprimehubbleC2[] :> scale[]^4 (dddothubbleP2[] + 6 hubbleP[] ddothubbleP2[] + (4 dothubbleP[] + 11 hubbleP[]^2) dothubbleP2[] + (ddothubbleP[] + 6 hubbleP[]^3 + 7 hubbleP[] dothubbleP[]) hubbleP2[])};
+		ppprimehubbleC[] :> scale[]^4 (dddothubbleP[] + 4 dothubbleP[]^2 + 7 ddothubbleP[] hubbleP[] + 18 hubbleP[]^2 dothubbleP[] + 6 hubbleP[]^4)};
 	primerules = {tens_ /; match[tens, "prime*"] :> scale[] sub[tens, "prime", "dot"],
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
 		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
@@ -228,4 +314,16 @@ SelectPerts[tens__][expr_] := Module[{perts, list, newlist}, newlist = {};
 	list = expr //.Plus->List;
 	If[StringMatchQ[ToString[TypeOfPert[#]], "*"<>ToString[perts]<>"*"], AppendTo[newlist, #]]&/@list;
 	newlist //.List->Plus
+]
+
+
+(****   Utilities   ****)
+
+
+ImportEquations[dir_] := Module[{files, names},
+	files = FileNames[dir<>"*.m"];
+	names = StringReplace[files, dir->""];
+	names = StringDrop[names, -2];
+	MapThread[Set, {ToExpression[#] & /@ names, Import[#] & /@ files}];
+	names
 ]

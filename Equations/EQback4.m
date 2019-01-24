@@ -1,3 +1,2 @@
 (* Created with the Wolfram Language : www.wolfram.com *)
-pprimematter[] + 2*hubbleC[]*primematter[] + 
- scale[]^2*Derivative[1][V][matter[]]
+3*density[]*hubbleC[] + 3*hubbleC[]*pressure[] + primedensity[]
