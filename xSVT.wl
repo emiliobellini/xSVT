@@ -70,14 +70,14 @@ Import[$CodeDirectory<>"Core/Commands.wl"]
 (****   Import Basic Quantities   ****)
 
 
-(*Import[$CodeDirectory<>"Core/Lagrangian.wl"]*)
+Import[$CodeDirectory<>"Core/Lagrangian.wl"]
 
 
-(*Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]*)
+Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]
 
 
 (****   Import Additional Functions   ****)
 
 
-(*If[$ExtraFunctions==1,
-	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]*)
+If[$ExtraFunctions==1,
+	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]
