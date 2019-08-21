@@ -64,7 +64,7 @@ Import[$CodeDirectory <> "Core/ExpandRules.wl"]
 (****   Commands   ****)
 
 
-(*Import[$CodeDirectory<>"Core/Commands.wl"]*)
+Import[$CodeDirectory<>"Core/Commands.wl"]
 
 
 (****   Import Basic Quantities   ****)
