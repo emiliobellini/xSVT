@@ -3,9 +3,6 @@
 (****  Settings ****)
 
 
-$CodeDirectory = $HomeDirectory<>"/.Mathematica/Applications/xSVT/Core/";
-
-
 $RecursionLimit = 32768;
 $IterationLimit = 32768;
 
@@ -34,10 +31,10 @@ Protect[IndexForm];
 (****   Definitions   ****)
 
 
-Import[$CodeDirectory<>"Definitions.wl"]
+Import[$CodeDirectory<>"Core/Definitions.wl"]
 
 
-(*Import[$CodeDirectory<>"DerivedTensors.wl"]*)
+Import[$CodeDirectory<>"Core/DerivedTensors.wl"]
 
 
 (*SetOptions[ToCanonical, UseMetricOnVBundle->{TangentM4}];*)
@@ -49,7 +46,7 @@ Import[$CodeDirectory<>"Definitions.wl"]
 (****   Automatic Rules   ****)
 
 
-(*Import[$CodeDirectory<>"AutomaticRules.wl"]*)
+(*Import[$CodeDirectory<>"Core/AutomaticRules.wl"]*)
 
 
 (****   Assumptions   ****)
@@ -61,26 +58,26 @@ Import[$CodeDirectory<>"Definitions.wl"]
 (****   SVT Expand Rules   ****)
 
 
-(*Import[$CodeDirectory <> "ExpandRules.wl"]*)
+(*Import[$CodeDirectory <> "Core/ExpandRules.wl"]*)
 
 
 (****   Commands   ****)
 
 
-(*Import[$CodeDirectory<>"Commands.wl"]*)
+(*Import[$CodeDirectory<>"Core/Commands.wl"]*)
 
 
 (****   Import Basic Quantities   ****)
 
 
-(*Import[$CodeDirectory<>"Lagrangian.wl"]*)
+(*Import[$CodeDirectory<>"Core/Lagrangian.wl"]*)
 
 
-(*Import[$CodeDirectory<>"AlphaDefinitions.wl"]*)
+(*Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]*)
 
 
 (****   Import Additional Functions   ****)
 
 
 (*If[$ExtraFunctions==1,
-	Import[$CodeDirectory<>"ExtraFunctions.wl"]]*)
+	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]*)
