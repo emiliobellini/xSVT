@@ -37,22 +37,22 @@ Import[$CodeDirectory<>"Core/Definitions.wl"]
 Import[$CodeDirectory<>"Core/DerivedTensors.wl"]
 
 
-(*SetOptions[ToCanonical, UseMetricOnVBundle->{TangentM4}];*)
+SetOptions[ToCanonical, UseMetricOnVBundle->{TangentM4}];
 
 
-(*Off[VBundleOfIndex::unknown]*)
+Off[VBundleOfIndex::unknown]
 
 
 (****   Automatic Rules   ****)
 
 
-(*Import[$CodeDirectory<>"Core/AutomaticRules.wl"]*)
+Import[$CodeDirectory<>"Core/AutomaticRules.wl"]
 
 
 (****   Assumptions   ****)
 
 
-(*$Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0, primescalar[]!=0};*)
+$Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0, primescalar[]!=0};
 
 
 (****   SVT Expand Rules   ****)

@@ -71,7 +71,6 @@ DefTensor[pertalphasync[LI[order]], {M1, M3}, PrintAs -> "\[Alpha]",
 
 DefTensor[scalarcov[], M4, PrintAs -> "\[Phi]"]
 DefTensorPerturbation[pertscalarcov[LI[order]], scalarcov[], M4, PrintAs -> "\[Delta]\[Phi]"]
-DefTensor[pertscalargrad[LI[1], -\[Mu]], M4, PrintAs -> "V"]
 
 
 DefTensor[scalar[], M1, PrintAs -> "\[Phi]", DefInfo -> {"tensor", "background"}]
