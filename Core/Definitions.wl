@@ -89,9 +89,9 @@ DefTensor[pertX[LI[order]], {M1, M3}, PrintAs -> "\[Delta]X",
 	DefInfo -> {"tensor", "perturbation"}]
 
 
-DefTensor[current[], M1, PrintAs -> "J",
+DefTensor[currentS[], M1, PrintAs -> "\!\(\*SubscriptBox[\(J\), \(\[Phi]\)]\)",
 	DefInfo -> {"tensor", "background"}]
-DefTensor[shift[], M1, PrintAs -> "S",
+DefTensor[shiftS[], M1, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(\[Phi]\)]\)",
 	DefInfo -> {"tensor", "background"}]
 
 
