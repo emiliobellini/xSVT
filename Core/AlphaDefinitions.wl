@@ -104,11 +104,11 @@ EQalphaBB = - hubbleC[]*mass2[]*alphaBB[]/scale[] -
 	(8*hubbleC[]*primescalar[]^4*Derivative[1, 1][G5fun][scalar[], X[]])/scale[]^5 +
 	(2*primescalar[]^5*Derivative[1, 2][G4fun][scalar[], X[]])/scale[]^5 +
 	(2*hubbleC[]*primescalar[]^6*Derivative[1, 2][G5fun][scalar[], X[]])/scale[]^7 +
-	(-(32*hubbleC[]*primescalar[]^4*F4fun[scalar[], X[]])/scale[]^5 -
-	(120*hubbleC[]^2*primescalar[]^5*F5fun[scalar[], X[]])/scale[]^7 +
-	(32*hubbleC[]*primescalar[]^6*Derivative[0, 1][F4fun][scalar[], X[]])/scale[]^7 -
-	(66*hubbleC[]^2*primescalar[]^7*Derivative[0, 1][F5fun][scalar[], X[]])/(scale[]^9) +
-	(4*hubbleC[]*primescalar[]^8*Derivative[0, 2][F4fun][scalar[], X[]])/scale[]^9 -
+	(-(32*hubbleC[]*primescalar[]^4*F4fun[scalar[], X[]])/scale[]^5 +
+	(120*hubbleC[]^2*primescalar[]^5*F5fun[scalar[], X[]])/scale[]^7 -
+	(32*hubbleC[]*primescalar[]^6*Derivative[0, 1][F4fun][scalar[], X[]])/scale[]^7 +
+	(66*hubbleC[]^2*primescalar[]^7*Derivative[0, 1][F5fun][scalar[], X[]])/(scale[]^9) -
+	(4*hubbleC[]*primescalar[]^8*Derivative[0, 2][F4fun][scalar[], X[]])/scale[]^9 +
 	(6*hubbleC[]^2*primescalar[]^9*Derivative[0, 2][F5fun][scalar[], X[]])/(scale[]^11)) // ToCanonical;
 
 
