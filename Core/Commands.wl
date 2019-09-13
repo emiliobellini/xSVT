@@ -359,3 +359,6 @@ ImportEquations[dir_] := Module[{files, names},
 	MapThread[Set, {ToExpression[#] & /@ names, Import[#] & /@ files}];
 	names
 ]
+
+
+ToGauge[gauge___][expr_] := expr //.Flatten[{RuleDelayed[#,0]&/@List[gauge]}]
