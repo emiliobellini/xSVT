@@ -201,12 +201,14 @@ FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
 (****   Fourier Transformations   ****)
 
 
+(*
 FourierT[expr1_ + expr2_] := FourierT[expr1] + FourierT[expr2]
 FourierT[ten1_ ten2_] /; ! StringMatchQ[ToString[ten1], "*pert*"] := ten1 FourierT[ten2]
 FourierT[ten_] /; ! StringMatchQ[ToString[ten], "*pert*"] := ten
 FourierT[Times[ten1_, ten2_]] /; StringMatchQ[ToString[ten1], "*pert*"] && StringMatchQ[ToString[ten2], "*pert*"] :=
 	ToCanonical[ten1 //. PD[-i_?TangentM3`Q]@tens_ :> -I kvec[-i] tens, UseMetricOnVBundle -> None] ToCanonical[ten2 //. PD[-i_?TangentM3`Q]@tens_ :> I kvec[-i] tens, UseMetricOnVBundle -> None]
 FourierT[ten_] /; StringMatchQ[ToString[ten], "*pert*"] && !StringMatchQ[ToString[ten], "*Times*"] := ToCanonical[ten //. PD[-i_?TangentM3`Q]@tens_ :> -I kvec[-i] tens, UseMetricOnVBundle -> None]
+*)
 
 
 (****   Gauge Transformations   ****)
