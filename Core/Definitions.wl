@@ -17,6 +17,15 @@ DefMetric[1, metric\[Gamma][-i, -j], CDS, SymbolOfCovD -> {",", "\[DifferentialD
 	PrintAs -> "\[Gamma]", FlatMetric -> False]
 
 
+DefMetricPerturbation[metricg, pertmetricg, \[Epsilon]g];
+PrintAs[pertmetricg] ^= "\[Delta]g";
+DefMetricPerturbation[metric\[Gamma], pertmetric\[Gamma], \[Epsilon]\[Gamma]];
+PrintAs[pertmetric\[Gamma]] ^= "\[Delta]\[Gamma]";
+
+
+DefTensor[timevec[a], M1, PrintAs -> "t"]
+
+
 PrintAs[RiemannCD] ^= "R";
 PrintAs[RicciCD] ^= "R";
 PrintAs[RicciScalarCD] ^= "R";
@@ -29,15 +38,6 @@ PrintAs[RicciCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((
 PrintAs[RicciScalarCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)R";
 PrintAs[EinsteinCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)G";
 PrintAs[ChristoffelCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)\[CapitalGamma]";
-
-
-DefMetricPerturbation[metricg, pertmetricg, \[Epsilon]g];
-PrintAs[pertmetricg] ^= "\[Delta]g";
-DefMetricPerturbation[metric\[Gamma], pertmetric\[Gamma], \[Epsilon]\[Gamma]];
-PrintAs[pertmetric\[Gamma]] ^= "\[Delta]\[Gamma]";
-
-
-DefTensor[timevec[a], M1, PrintAs -> "t"]
 
 
 (****   Metric   ****)
@@ -196,7 +196,7 @@ DefTensor[alphaH[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(H\)]\)",
 	DefInfo -> {"tensor", "building function"}]
 
 
-DefTensor[alphaMM[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(MM\)]\)",
+(*DefTensor[alphaMM[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(MM\)]\)",
 	DefInfo -> {"tensor", "building function"}]
 DefTensor[alphaKK[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(KK\)]\)",
 	DefInfo -> {"tensor", "building function"}]
@@ -207,7 +207,7 @@ DefTensor[alphaTT[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(TT\)]\)"
 DefTensor[alphaHH[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(HH\)]\)",
 	DefInfo -> {"tensor", "building function"}]
 DefTensor[alphaDEG[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(DEG\)]\)",
-	DefInfo -> {"tensor", "building function"}]
+	DefInfo -> {"tensor", "building function"}]*)
 
 
 DefTensor[kinD[], M1, PrintAs -> "D",
@@ -237,10 +237,10 @@ DefScalarFunction[F4fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(4\)]\)"]
 DefScalarFunction[F5fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(5\)]\)"]
 
 
-(****   Sources   ****)
+(*(****   Sources   ****)*)
 
 
-DefTensor[source1[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(1\)]\)",
+(*DefTensor[source1[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(1\)]\)",
 	DefInfo -> {"tensor", "source"}]
 DefTensor[source2[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(2\)]\)",
 	DefInfo -> {"tensor", "source"}]
@@ -253,25 +253,25 @@ DefTensor[source5[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\),
 DefTensor[source6[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(6\)]\)",
 	DefInfo -> {"tensor", "source"}]
 DefTensor[source7[LI[order],-i,-j], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(7\)]\)",
-	DefInfo -> {"tensor", "source"}]
+	DefInfo -> {"tensor", "source"}]*)
 
 
-DefTensor[source8[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(8\)]\)",
-	DefInfo -> {"tensor", "source"}]
+(*DefTensor[source8[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(8\)]\)",
+	DefInfo -> {"tensor", "source"}]*)
 
 
-DefTensor[source9[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(9\)]\)",
+(*DefTensor[source9[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(9\)]\)",
 	DefInfo -> {"tensor", "source"}]
 DefTensor[source10[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(10\)]\)",
 	DefInfo -> {"tensor", "source"}]
 DefTensor[source11[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(11\)]\)",
-	DefInfo -> {"tensor", "source"}]
+	DefInfo -> {"tensor", "source"}]*)
 
 
-DefTensor[sourceS[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(S\)]\)",
+(*DefTensor[sourceS[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(S\)]\)",
 	DefInfo -> {"tensor", "source"}]
 DefTensor[sourceT[LI[order],-i,-j], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(T\)]\)",
-	DefInfo -> {"tensor", "source"}]
+	DefInfo -> {"tensor", "source"}]*)
 
 
 (****   Tex Correction   ****)
@@ -352,12 +352,12 @@ Tex[alphaT] ^= "\\alpha_\\textrm{T}";
 Tex[alphaH] ^= "\\alpha_\\textrm{H}";
 
 
-Tex[alphaMM] ^= "\\alpha_\\textrm{MM}";
+(*Tex[alphaMM] ^= "\\alpha_\\textrm{MM}";
 Tex[alphaKK] ^= "\\alpha_\\textrm{KK}";
 Tex[alphaBB] ^= "\\alpha_\\textrm{BB}";
 Tex[alphaTT] ^= "\\alpha_\\textrm{TT}";
 Tex[alphaHH] ^= "\\alpha_\\textrm{HH}";
-Tex[alphaDEG] ^= "\\alpha_\\textrm{DEG}";
+Tex[alphaDEG] ^= "\\alpha_\\textrm{DEG}";*)
 
 
 Tex[cs2] ^= "c_\\textrm{S}^2";
@@ -366,14 +366,14 @@ Tex[Qs] ^= "Q_\\textrm{S}";
 Tex[Qt] ^= "Q_\\textrm{T}";
 
 
-Tex[source1] ^= "S_1";
+(*Tex[source1] ^= "S_1";
 Tex[source2] ^= "S_2";
 Tex[source3] ^= "S_3";
 Tex[source4] ^= "S_4";
 Tex[source5] ^= "S_5";
 Tex[source6] ^= "S_6";
-Tex[source7] ^= "S_7";
+Tex[source7] ^= "S_7";*)
 
 
-Tex[sourceS] ^= "S_\\textrm{S}";
-Tex[sourceT] ^= "S_\\textrm{T}";
+(*Tex[sourceS] ^= "S_\\textrm{S}";
+Tex[sourceT] ^= "S_\\textrm{T}";*)

@@ -31,9 +31,6 @@ AutomaticRules[delta, {
 Protect[delta];
 
 
-(*AutomaticRules[metric\[Delta], {
-	PD[\[Mu]_]@metric\[Delta][j_?TangentM3`pmQ, k_?TangentM3`pmQ] :> 0
-	}]*)
 AutomaticRules[timevec, {
 	timevec[-a_?TangentM1`Q] timevec[a_?TangentM1`Q] :> 1,
 	timevec[i_?TangentM3`pmQ] :> 0,
@@ -41,7 +38,7 @@ AutomaticRules[timevec, {
 	}]
 
 
-(*AutomaticRules[pertmetric\[Delta], {pertmetric\[Delta][LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]*)
+AutomaticRules[pertmetric\[Gamma], {pertmetric\[Gamma][LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]
 
 
 (****   Stress Energy Tensor   ****)

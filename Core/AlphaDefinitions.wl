@@ -65,7 +65,7 @@ EQalphaH = - mass2[] alphaH[] +
 	(6*hubbleC[]*primescalar[]^5*F5fun[scalar[], X[]])/(scale[]^6) // ToCanonical;
 
 
-EQalphaKK = - hubbleC[]^2*mass2[]*alphaKK[]/scale[]^2 +
+(*EQalphaKK = - hubbleC[]^2*mass2[]*alphaKK[]/scale[]^2 +
 	(21*hubbleC[]^2*primescalar[]^4*Derivative[0, 2][G4fun][scalar[], X[]])/(2*scale[]^6) +
 	(6*hubbleC[]^3*primescalar[]^5*Derivative[0, 2][G5fun][scalar[], X[]])/scale[]^8 -
 	(primescalar[]^4*Derivative[0, 2][G2fun][scalar[], X[]])/(4*scale[]^4) -
@@ -90,10 +90,10 @@ EQalphaKK = - hubbleC[]^2*mass2[]*alphaKK[]/scale[]^2 +
 	(5*hubbleC[]^2*primescalar[]^8*Derivative[0, 2][F4fun][scalar[], X[]])/(2*scale[]^10) +
 	(3*hubbleC[]^3*primescalar[]^9*Derivative[0, 2][F5fun][scalar[], X[]])/(2*scale[]^12) -
 	(hubbleC[]^2*primescalar[]^10*Derivative[0, 3][F4fun][scalar[], X[]])/(2*scale[]^12) +
-	(hubbleC[]^3*primescalar[]^11*Derivative[0, 3][F5fun][scalar[], X[]])/(2*scale[]^14) // ToCanonical;
+	(hubbleC[]^3*primescalar[]^11*Derivative[0, 3][F5fun][scalar[], X[]])/(2*scale[]^14) // ToCanonical;*)
 
 
-EQalphaBB = - hubbleC[]*mass2[]*alphaBB[]/scale[] -
+(*EQalphaBB = - hubbleC[]*mass2[]*alphaBB[]/scale[] -
 	(primescalar[]^5*Derivative[0, 2][G3fun][scalar[], X[]])/scale[]^5 -
 	(12*hubbleC[]*primescalar[]^4*Derivative[0, 2][G4fun][scalar[], X[]])/scale[]^5 -
 	(7*hubbleC[]^2*primescalar[]^5*Derivative[0, 2][G5fun][scalar[], X[]])/scale[]^7 -
@@ -109,35 +109,35 @@ EQalphaBB = - hubbleC[]*mass2[]*alphaBB[]/scale[] -
 	(32*hubbleC[]*primescalar[]^6*Derivative[0, 1][F4fun][scalar[], X[]])/scale[]^7 +
 	(66*hubbleC[]^2*primescalar[]^7*Derivative[0, 1][F5fun][scalar[], X[]])/(scale[]^9) -
 	(4*hubbleC[]*primescalar[]^8*Derivative[0, 2][F4fun][scalar[], X[]])/scale[]^9 +
-	(6*hubbleC[]^2*primescalar[]^9*Derivative[0, 2][F5fun][scalar[], X[]])/(scale[]^11)) // ToCanonical;
+	(6*hubbleC[]^2*primescalar[]^9*Derivative[0, 2][F5fun][scalar[], X[]])/(scale[]^11)) // ToCanonical;*)
 
 
-EQalphaTT = - alphaTT[] mass2[] +
-	2 primescalar[]^3 hubbleC[] Derivative[0, 1][G5fun][scalar[], X[]]/scale[]^4 // ToCanonical;
+(*EQalphaTT = - alphaTT[] mass2[] +
+	2 primescalar[]^3 hubbleC[] Derivative[0, 1][G5fun][scalar[], X[]]/scale[]^4 // ToCanonical;*)
 
 
-EQalphaMM = -mass2[]*alphaMM[] -
+(*EQalphaMM = -mass2[]*alphaMM[] -
 	(primescalar[]^2*Derivative[0, 1][G4fun][scalar[], X[]])/scale[]^2 -
 	(primescalar[]^4*Derivative[0, 2][G4fun][scalar[], X[]])/scale[]^4 -
 	(hubbleC[]*primescalar[]^5*Derivative[0, 2][G5fun][scalar[], X[]])/(2*scale[]^6) +
 	(primescalar[]^2*Derivative[1, 0][G5fun][scalar[], X[]])/scale[]^2 +
-	(primescalar[]^4*Derivative[1, 1][G5fun][scalar[], X[]])/(2*scale[]^4) // ToCanonical;
+	(primescalar[]^4*Derivative[1, 1][G5fun][scalar[], X[]])/(2*scale[]^4) // ToCanonical;*)
 
 
-EQalphaHH = - mass2[] alphaHH[] +
+(*EQalphaHH = - mass2[] alphaHH[] +
 	(4*primescalar[]^4*F4fun[scalar[], X[]])/scale[]^4 -
 	(18*hubbleC[]*primescalar[]^5*F5fun[scalar[], X[]])/(scale[]^6) +
 	(primescalar[]^6*Derivative[0, 1][F4fun][scalar[], X[]])/(scale[]^6) -
-	(3*hubbleC[]*primescalar[]^7*Derivative[0, 1][F5fun][scalar[], X[]])/(scale[]^8) // ToCanonical;
+	(3*hubbleC[]*primescalar[]^7*Derivative[0, 1][F5fun][scalar[], X[]])/(scale[]^8) // ToCanonical;*)
 
 
-EQalphaDEG = -alphaDEG[] mass2[] + 12 primescalar[]^5 hubbleC[]/scale[]^6 F5fun[scalar[],X[]]
+(*EQalphaDEG = -alphaDEG[] mass2[] + 12 primescalar[]^5 hubbleC[]/scale[]^6 F5fun[scalar[],X[]]*)
 
 
-EQBHdegeneracyG = primescalar[]^2/2/scale[]^2 Derivative[0,1][G5fun][scalar[],X[]] F4fun[scalar[],X[]]-
+(*EQBHdegeneracyG = primescalar[]^2/2/scale[]^2 Derivative[0,1][G5fun][scalar[],X[]] F4fun[scalar[],X[]]-
 	3 F5fun[scalar[],X[]] (G4fun[scalar[],X[]]-
 		2 primescalar[]^2/2/scale[]^2 Derivative[0,1][G4fun][scalar[],X[]]+
-		primescalar[]^2/2/scale[]^2 Derivative[1,0][G5fun][scalar[],X[]]) // ToCanonical;
+		primescalar[]^2/2/scale[]^2 Derivative[1,0][G5fun][scalar[],X[]]) // ToCanonical;*)
 
 
 EQdensityS = -densityS[] -
