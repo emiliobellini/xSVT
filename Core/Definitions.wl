@@ -5,7 +5,7 @@
 
 DefManifold[M1, 1, IndexRange[a, h]]
 DefManifold[M3, 3, IndexRange[i, p]]
-DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma], \[Tau], \[Gamma]}]
+DefManifold[M4, 4, IndexRange[\[Alpha], \[Xi]]]
 
 
 (****   Metrics   ****)
@@ -13,8 +13,8 @@ DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma]
 
 DefMetric[-1, metricg[-\[Mu], -\[Nu]], CD, SymbolOfCovD -> {";", "\[EmptyDownTriangle]"},
 	PrintAs -> "g", CurvatureRelations->True]
-DefMetric[1, metric\[Delta][-i, -j], CDS, SymbolOfCovD -> {";", "\[Del]"},
-	PrintAs -> "\[Delta]", FlatMetric -> True]
+DefMetric[1, metric\[Gamma][-i, -j], CDS, SymbolOfCovD -> {",", "\[DifferentialD]"},
+	PrintAs -> "\[Gamma]", FlatMetric -> False]
 
 
 PrintAs[RiemannCD] ^= "R";
@@ -24,15 +24,27 @@ PrintAs[EinsteinCD] ^= "G";
 PrintAs[ChristoffelCD] ^= "\[CapitalGamma]";
 
 
+PrintAs[RiemannCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)R";
+PrintAs[RicciCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)R";
+PrintAs[RicciScalarCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)R";
+PrintAs[EinsteinCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)G";
+PrintAs[ChristoffelCDS] ^= "\!\(\*SuperscriptBox[\(\[InvisiblePrefixScriptBase]\), \((3)\)]\)\[CapitalGamma]";
+
+
 DefMetricPerturbation[metricg, pertmetricg, \[Epsilon]g];
 PrintAs[pertmetricg] ^= "\[Delta]g";
-DefMetricPerturbation[metric\[Delta], pertmetric\[Delta], \[Epsilon]\[Delta]];
+DefMetricPerturbation[metric\[Gamma], pertmetric\[Gamma], \[Epsilon]\[Gamma]];
+PrintAs[pertmetric\[Gamma]] ^= "\[Delta]\[Gamma]";
 
 
 DefTensor[timevec[a], M1, PrintAs -> "t"]
 
 
 (****   Metric   ****)
+
+
+DefConstantSymbol[Mpl, PrintAs->"\!\(\*SubscriptBox[\(M\), \(Pl\)]\)"]
+DefConstantSymbol[kappa, PrintAs->"\[Kappa]"]
 
 
 DefTensor[scale[], M1, PrintAs -> "a", DefInfo -> {"tensor", "background"}]

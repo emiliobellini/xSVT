@@ -96,7 +96,7 @@ SVTExpand[expr_] := Module[{tmp, inds},
 	If[ToString[tmp] == ToString[0], tmp,
 		inds = IndicesOf[TangentM3][tmp];
 		inds = DeleteCases[inds, -_?TangentM3`Q];
-		tmp = SeparateMetric[metric\[Delta]][tmp, inds]];
+		tmp = SeparateMetric[metric\[Gamma]][tmp, inds]];
 tmp]
 
 

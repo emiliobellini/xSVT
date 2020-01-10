@@ -27,6 +27,9 @@ NoF4[expr_]:=expr//.Derivative[__][F4fun][__]:>0//.F4fun[__]:>0
 NoF5[expr_]:=expr//.Derivative[__][F5fun][__]:>0//.F5fun[__]:>0
 
 
+ConstG4[expr_]:=expr//.Derivative[__][G4fun][__]:>0//.G4fun[__]:>Mpl^2/2
+
+
 (****   Remove G's   ****)
 
 
