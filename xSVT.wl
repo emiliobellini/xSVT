@@ -9,6 +9,7 @@ $IterationLimit = 32768;
 
 << xAct`xTensor`
 << xAct`xPert`
+<< xAct`xTras`
 << xAct`TexAct`
 
 
@@ -28,6 +29,17 @@ IndexForm[LI[x_]] := ColorString[ToString[x], RGBColor[1, 0, 0]];
 Protect[IndexForm];
 
 
+(****   Print messages and Warnings   ****)
+
+
+PrintLevel[msg_, level_:0] := Print[If[level>0,StringRepeat["-", 4*level]<>"> ",""]<>msg]
+
+
+Warning[msg_, level_:0] := PrintLevel["\n\!\(\*
+StyleBox[\"WARNING\",\nFontColor->RGBColor[1, 0, 0]]\)\!\(\*
+StyleBox[\" \",\nFontColor->RGBColor[1, 0, 0]]\):: "<>msg<>"\n", level]
+
+
 (****   Definitions   ****)
 
 
@@ -37,7 +49,7 @@ Import[$CodeDirectory<>"Core/Definitions.wl"]
 Import[$CodeDirectory<>"Core/DerivedTensors.wl"]
 
 
-SetOptions[ToCanonical, UseMetricOnVBundle->{TangentM4}];
+SetOptions[ToCanonical, UseMetricOnVBundle->None];
 
 
 Off[VBundleOfIndex::unknown]
@@ -67,6 +79,9 @@ Import[$CodeDirectory <> "Core/ExpandRules.wl"]
 Import[$CodeDirectory<>"Core/Commands.wl"]
 
 
+(****   Commands   ****)
+
+
 (****   Import Basic Quantities   ****)
 
 
@@ -79,5 +94,5 @@ Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]
 (****   Import Additional Functions   ****)
 
 
-If[$ExtraFunctions==1,
+If[$ExtraFunctions,
 	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]

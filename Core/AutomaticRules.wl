@@ -3,13 +3,13 @@
 (****   Scalar-Vector-Tensor   ****)
 
 
-If[$Scalar==0, AutomaticRules[#, {#[LI[order_]] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==1];];
+If[Not[$ScalarsQ], AutomaticRules[#, {#[LI[order_]] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==1];];
 
 
-If[$Vector==0, AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==2];];
+If[Not[$VectorsQ], AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==2];];
 
 
-If[$Tensor==0, AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==3];];
+If[Not[$TensorsQ], AutomaticRules[#, {#[LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]&/@Cases[SelectTensors[$Tensors, "perturbation*"], x_ /; Length[SlotsOfTensor[x]]==3];];
 
 
 (****   Covariant   ****)
@@ -38,7 +38,13 @@ AutomaticRules[timevec, {
 	}]
 
 
+AutomaticRules[metric\[Gamma], {PD[-a_?TangentM1`Q]@metric\[Gamma][i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]
+
+
 AutomaticRules[pertmetric\[Gamma], {pertmetric\[Gamma][LI[order_], i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0}]
+
+
+AutomaticRules[ChristoffelCDS, {PD[-a_?TangentM1`Q]@ChristoffelCDS[i_?TangentM3`pmQ, j_?TangentM3`pmQ, k_?TangentM3`pmQ] :> 0}]
 
 
 (****   Stress Energy Tensor   ****)

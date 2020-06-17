@@ -1,5 +1,23 @@
 (* ::Package:: *)
 
+(****   Try to import DecompositionRules   ****)
+
+
+If[$ImportDecompositionRules,
+	If[FileExistsQ[$DecompositionRulesPath],
+		Import[$DecompositionRulesPath];
+		fill = False;
+		PrintLevel["Using rules from "<>$DecompositionRulesPath<>"."];,
+		$DecompositionRules = {{},{}};
+		fill = True;
+		Warning["You requested "<>$DecompositionRulesPath<>", but the file does not exists. Initializing the default rules."];
+	];,
+	$DecompositionRules = {{},{}};
+	fill = True;
+	PrintLevel["Using default rules."];
+]
+
+
 (****   Metric   ****)
 
 
@@ -16,9 +34,6 @@ metricrules = {
 	Detmetricg[] :> -scale[]^8};
 
 
-Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
-
-
 (****   Scalar Field   ****)
 
 
@@ -27,9 +42,6 @@ scalarrules = Flatten[{
 	pertscalarcov[LI[order_]] :> pertscalar[LI[order]],
 	Xcov[]:>X[],
 	pertXcov[LI[order_]]:>pertX[LI[order]]}];
-
-
-Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[scalarrules]}]]
 
 
 (****   Matter Field   ****)
@@ -53,12 +65,6 @@ matterrules = Flatten[{
 	}];
 
 
-Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[DownValues[stressenergy]]}]]
-
-
-Print[Column[{"Matter field Decomposition", ScreenDollarIndices[matterrules]}]]
-
-
 (****   Gauge Fields   ****)
 
 
@@ -69,13 +75,27 @@ gaugerules = {
 		metric\[Gamma][i, j] (PD[-j]@pertgaugebeta[LI[order]] + pertgaugegamma[LI[order], -j])]};
 
 
-Print[Column[{"Gauge Decomposition", ScreenDollarIndices[gaugerules]}]]
-
-
 (****   Total   ****)
 
 
-expandrules = Flatten[{metricrules, scalarrules, matterrules, gaugerules}];
+If[fill,
+	$DecompositionRules[[1]] = {metricrules, scalarrules, matterrules, gaugerules};
+]
+
+
+Print[Column[{"Metric Decomposition", ScreenDollarIndices[$DecompositionRules[[1,1]]]}]]
+
+
+Print[Column[{"Scalar field Decomposition", ScreenDollarIndices[$DecompositionRules[[1,2]]]}]]
+
+
+Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[DownValues[stressenergy]]}]]
+
+
+Print[Column[{"Matter field Decomposition", ScreenDollarIndices[$DecompositionRules[[1,3]]]}]]
+
+
+Print[Column[{"Gauge Decomposition", ScreenDollarIndices[$DecompositionRules[[1,4]]]}]]
 
 
 Clear[metricrules, scalarrules, matterrules, gaugerules]

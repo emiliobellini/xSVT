@@ -14,7 +14,7 @@ DefManifold[M4, 4, IndexRange[\[Alpha], \[Xi]]]
 DefMetric[-1, metricg[-\[Mu], -\[Nu]], CD, SymbolOfCovD -> {";", "\[EmptyDownTriangle]"},
 	PrintAs -> "g", CurvatureRelations->True]
 DefMetric[1, metric\[Gamma][-i, -j], CDS, SymbolOfCovD -> {",", "\[DifferentialD]"},
-	PrintAs -> "\[Gamma]", FlatMetric -> False]
+	PrintAs -> "\[Gamma]", CurvatureRelations->True, FlatMetric -> False]
 
 
 DefMetricPerturbation[metricg, pertmetricg, \[Epsilon]g];
