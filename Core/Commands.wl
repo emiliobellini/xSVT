@@ -35,28 +35,6 @@ IsSource[tens_] := Module[{name, is},
 (****   Order of Derivatives   ****)
 
 
-FirstT[expr_] := expr //. PD[a_?TangentM1`pmQ]@PD[i_?TangentM3`pmQ]@object_ :> PD[i]@PD[a]@object
-
-
-FirstS[expr_] := expr //. PD[i_?TangentM3`pmQ]@PD[a_?TangentM1`pmQ]@object_ :> PD[a]@PD[i]@object
-
-
-FirstDummies[expr1_+expr2_] := FirstDummies[expr1] + FirstDummies[expr2]
-FirstDummies[expr1_*expr2_] := FirstDummies[expr1] * FirstDummies[expr2]
-FirstDummies[tens_] := Module[{idx, pdidx, final, count}, final = tens;
-	pdidx = IndicesOf[PD][final];
-	If[IsPert[final] && Length[pdidx]>0,
-		idx = FindIndices[Evaluate[final]];
-		For[count=1,count<=Length[idx],count++,
-			If[!MemberQ[pdidx,idx[[count]]],idx[[count]]=0;];
-		];
-		idx = DeleteCases[idx,0];
-		idx = MapThread[Rule,{idx, IndexSort[idx]}//.IndexList->List];
-		final = ReplaceIndex[Evaluate[final],idx];
-		];
-	final]
-
-
 DivFree[expr1_+expr2_]:=DivFree[expr1]+DivFree[expr2]
 DivFree[expr1_*expr2_]:=DivFree[expr1]*DivFree[expr2]
 DivFree[expr_^n_]:=DivFree[expr]^n
@@ -70,18 +48,6 @@ DivFree[expr_]:=Module[{tmp, pert, pdidx, tensidx},
 	];
 	tmp
 ]
-
-
-(****   SplitDummySpaceTime   ****)
-
-
-SplitDummySpaceTime[expr_] := Module[{ListAll, subs},
-	ListAll = IndicesOf[TangentM4, Dummy][expr];
-	ListAll = DeleteCases[ListAll, -_?TangentM4`Q];
-	ListAll = DeleteCases[ListAll, _?TangentM3`Q];
-	ListAll = DeleteCases[ListAll, _?TangentM1`Q];
-	subs = Table[ListAll[[col]] -> IndexList[DummyIn[TangentM3], DummyIn[TangentM1]], {col, Length[ListAll]}];
-	TraceDummy[expr, subs]]
 
 
 (****   SVTExpand   ****)
@@ -189,11 +155,17 @@ subfr2 = PD[-j]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
 subfr4 = PD[-j]@PD[-k]@PD[-l]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
 
 
-Clear[FieldRedefinition]
-FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
+PertScalarToPertV[expr_] := Module[{tmp}, tmp = expr;
 	tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@PD[-k]@PD[-l]@pertscalar[LI[2]]], Evaluate[subfr4]}] // Expand;
 	tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@pertscalar[LI[2]]], Evaluate[subfr2]}] // Expand;
 	tmp = tmp //.pertscalar[LI[1]] :> -primescalar[]/scale[] pertV[LI[1]] // Expand;
+	tmp
+]
+
+
+PertVToPertScalar[expr_] := Module[{tmp}, tmp = expr;
+	(* Only at first order *)
+	tmp = tmp //.pertV[LI[1]] :> -scale[]/primescalar[] pertscalar[LI[1]] // Expand;
 	tmp
 ]
 
@@ -308,6 +280,27 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
 		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
 			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"])};
+	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
+	tmp //.isolate[tmp1_]:>tmp1 // Expand
+]
+
+
+(****   ToConformal   ****)
+
+
+ToConformal[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
+	isolate[tmp1_+tmp2_] := isolate[tmp1] + isolate[tmp2];
+	isolate[tmp1_*tmp2_] := isolate[tmp1] * isolate[tmp2];
+	match[tens_, str_] := StringMatchQ[ToString[tens], str];
+	sub[tens_, str1_, str2_] := ToExpression[StringReplace[ToString[tens], str1 -> str2]];
+	hubblerules = {hubbleP[] :> hubbleC[]/scale[],
+		dothubbleP[] :> primehubbleC[]/scale[]^2 - hubbleP[]^2, 
+		ddothubbleP[] :> pprimehubbleC[]/scale[]^3 - 4 hubbleP[] dothubbleP[] - 2 hubbleP[]^3,
+		dddothubbleP[] :> ppprimehubbleC[]/scale[]^4 - 4 dothubbleP[]^2 - 7 ddothubbleP[] hubbleP[] - 18 hubbleP[]^2 dothubbleP[] - 6 hubbleP[]^4};
+	primerules = {tens_ /; match[tens, "dot*"] :> sub[tens, "dot", "prime"]/scale[],
+		tens_ /; match[tens, "ddot*"] :> sub[tens, "ddot", "pprime"]/scale[]^2 - hubbleC[]/scale[] sub[tens, "ddot", "dot"],
+		tens_ /; match[tens, "dddot*"] :> sub[tens, "dddot", "ppprime"]/scale[]^3 - 3 hubbleC[]/scale[] sub[tens, "dddot", "ddot"]
+			- 2 (hubbleC[]/scale[])^2 sub[tens, "dddot", "dot"] - (primehubbleC[]/scale[]^2 - hubbleC[]^2/scale[]^2) sub[tens, "dddot", "dot"]};
 	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
 	tmp //.isolate[tmp1_]:>tmp1 // Expand
 ]
