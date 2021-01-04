@@ -162,13 +162,20 @@ subfr3 = PD[-j]@PD[-k]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
 subfr4 = PD[-j]@PD[-k]@PD[-l]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
 
 
-Clear[FieldRedefinition]
+(*Clear[FieldRedefinition]
 FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
 	tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@PD[-k]@PD[-l]@pertscalarpre[LI[2]]], Evaluate[subfr4]}] // Expand;
 	(*tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@PD[-k]@pertscalarpre[LI[2]]], Evaluate[subfr3]}] // Expand;*)
 	tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@PD[-j]@pertscalarpre[LI[2]]], Evaluate[subfr2]}] // Expand;
 	(*tmp = FirstS[tmp] //.MakeRule[{Evaluate[PD[-i]@pertscalarpre[LI[2]]], Evaluate[subfr1]}] // Expand;*)
 	tmp = tmp //.pertscalarpre[LI[1]] :> -primescalar[]/scale[] pertscalar[LI[1]] // Expand;
+	tmp
+]*)
+
+
+Clear[FieldRedefinition]
+FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
+	tmp = tmp //.pertscalarpre[LI[1]] :> primescalar[] pertscalar[LI[1]] // Expand;
 	tmp
 ]
 
@@ -281,13 +288,22 @@ InvPrintWell[expr_]:= Module[{tmp}, tmp = expr;
 
 
 CollectPerts[expr_, options___] := CollectPerts[expr, {}, options]
-CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, tmp, tens},
+CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, tmp, tens, order},
 	tmp = expr // PrintWell // ReplaceDummies;
 	FindPerts[expr1_ + expr2_] := FindPerts[expr1] + FindPerts[expr2];
 	FindPerts[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := FindPerts[expr2];
 	tens = FindPerts[tmp] //.Plus->List;
 	tens = tens //.n_ FindPerts[expr1_] :> FindPerts[expr1];
 	tens = tens //.FindPerts[expr1_] :> expr1;
+	(* Order perturbations *)
+	order = List[#]&/@tens;
+	order = ReplaceRepeated[order,Times->List];
+	order = Flatten[#]&/@order;
+	order = Replace[order,pert_^n_:>n,{2}];
+	order = Replace[order,pert_/;Not@IntegerQ[pert]:>1,{2}];
+	order = ReplaceRepeated[#,List->Plus]&/@order;
+	order = Ordering@order;
+	tens = Reverse@tens[[order]];
 	Collect[tmp, Join[tens, {more}], options]
 ]
 

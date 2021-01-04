@@ -30,6 +30,9 @@ PrintAs[ChristoffelCD] ^= "\[CapitalGamma]";
 (****   Metric   ****)
 
 
+DefConstantSymbol[Mpl,PrintAs->"\!\(\*SubscriptBox[\(M\), \(Pl\)]\)"]
+
+
 DefMetricPerturbation[metricg, pertmetricg, \[Epsilon]g];
 PrintAs[pertmetricg] ^= "\[Delta]g";
 DefMetricPerturbation[metric\[Delta], pertmetric\[Delta], \[Epsilon]\[Delta]];
@@ -83,6 +86,10 @@ DefTensor[pertscalar[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(X\)
 	DefInfo -> {"tensor", "perturbation"}]
 
 
+DefTensor[pertxi[LI[order]], M4, PrintAs -> "\[Xi]",
+	DefInfo -> {"tensor", "perturbation"}]
+
+
 DefTensor[Xcov[], M4, PrintAs -> "X"]
 DefTensorPerturbation[pertXcov[LI[order]], Xcov[], M4, PrintAs -> "\[Delta]X"]
 
@@ -115,6 +122,7 @@ DefTensor[pertmatter[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[
 
 
 DefTensor[stressenergy[-\[Mu], -\[Nu]], M4, PrintAs -> "T"]
+DefTensorPerturbation[pertstressenergy[LI[order],-\[Mu], -\[Nu]], stressenergy[-\[Mu], -\[Nu]], M4, PrintAs -> "\[Delta]T"]
 
 
 DefTensor[densitycov[], M4, PrintAs -> "\[Rho]"]
@@ -173,6 +181,9 @@ DefTensor[densityS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalE]\), 
 DefTensor[pressureS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(S\)]\)", DefInfo -> {"tensor", "building function"}]
 
 
+DefTensor[wS[], M4, PrintAs -> "\!\(\*SubscriptBox[\(w\), \(S\)]\)", DefInfo -> {"tensor", "building function"}]
+
+
 DefTensor[mass2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(*\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
 
 
@@ -195,6 +206,12 @@ DefTensor[cs2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(S\)]
 DefTensor[ct2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(T\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
 DefTensor[Qs[], M4, PrintAs -> "\!\(\*SubscriptBox[\(Q\), \(S\)]\)", DefInfo -> {"tensor", "building function"}]
 DefTensor[Qt[], M4, PrintAs -> "\!\(\*SubscriptBox[\(Q\), \(T\)]\)", DefInfo -> {"tensor", "building function"}]
+
+
+DefTensor[cs2N[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(SN\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[cs2D[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(SD\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[ca2[], M4, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(a\)], \(2\)]\)", DefInfo -> {"tensor", "building function"}]
+DefTensor[ess[], M4, PrintAs -> "s", DefInfo -> {"tensor", "building function"}]
 
 
 (****   Scalar Functions   ****)
