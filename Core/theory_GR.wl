@@ -15,7 +15,7 @@ DefManifold[M3, 3, IndexRange[i, p]]
 DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma], \[Tau], \[Gamma]}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Metric*)
 
 
@@ -30,7 +30,8 @@ AutomaticRules[metricg, {
 
 (*TODO: rethink this when adding curvature*)
 DefMetric[1, metric\[Delta][-i, -j], CDS, SymbolOfCovD -> {";", "\[Del]"},
-	PrintAs -> "\[Delta]", CurvatureRelations->True, FlatMetric -> True]
+	PrintAs -> "\[Delta]", CurvatureRelations->True, FlatMetric -> True];
+Print["The MakeRule error comes from the FlatMetric->True option in DefMetric"];
 
 AutomaticRules[metric\[Delta], {
 	PD[\[Mu]_]@metric\[Delta][j_?TangentM3`pmQ, k_?TangentM3`pmQ] :> 0
@@ -80,11 +81,28 @@ AutomaticRules[kscal, {PD[ind1_]@kscal[ind2___] :> 0}]
 AutomaticRules[kvec, {metric\[Delta][i_?TangentM3`Q, j_?TangentM3`Q] kvec[-i_?TangentM3`Q] kvec[-j_?TangentM3`Q] :> kscal[]^2}];
 
 
+DefTensor[kvec1[-i], M3, PrintAs -> "p"]
+DefTensor[kscal1[], M3, PrintAs -> "p"]
+
+AutomaticRules[kvec1, {PD[ind1_]@kvec1[ind2___] :> 0}]
+AutomaticRules[kscal1, {PD[ind1_]@kscal1[ind2___] :> 0}]
+AutomaticRules[kvec1, {metric\[Delta][i_?TangentM3`Q, j_?TangentM3`Q] kvec1[-i_?TangentM3`Q] kvec1[-j_?TangentM3`Q] :> kscal1[]^2}];
+
+
+DefTensor[kvec2[-i], M3, PrintAs -> "q"]
+DefTensor[kscal2[], M3, PrintAs -> "q"]
+
+AutomaticRules[kvec2, {PD[ind1_]@kvec2[ind2___] :> 0}]
+AutomaticRules[kscal2, {PD[ind1_]@kscal2[ind2___] :> 0}]
+AutomaticRules[kvec2, {metric\[Delta][i_?TangentM3`Q, j_?TangentM3`Q] kvec2[-i_?TangentM3`Q] kvec2[-j_?TangentM3`Q] :> kscal2[]^2}];
+
+
 (****   Metric   ****)
 
 
 DefConstantSymbol[Mpl, PrintAs->"\!\(\*SubscriptBox[\(M\), \(Pl\)]\)"]
 DefConstantSymbol[kappa, PrintAs->"\[Kappa]"]
+DefConstantSymbol[Lambda, PrintAs->"\[CapitalLambda]"]
 
 
 DefTensorSVT[scale[], M1, PrintAs -> "a", BackgroundQ->True]
@@ -110,6 +128,15 @@ DefTensorSVT[perth[LI[order], -i, -j], {M1, M3}, Symmetric[{-i, -j}], PrintAs ->
 (*Matter*)
 
 
+DefScalarFunction[V]
+
+DefTensor[mattercov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(m\)]\)"]
+DefTensorPerturbation[pertmattercov[LI[order]], mattercov[], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[CurlyPhi]\), \(m\)]\)"]
+
+DefTensorSVT[matter[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[CurlyPhi]\), \(m\)]\)", BackgroundQ->True]
+DefTensorSVT[pertmatter[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[CurlyPhi]\), \(m\)]\)", ScalarPertQ->True]
+
+
 DefTensor[stressenergy[-\[Mu], -\[Nu]], M4, PrintAs -> "T"]
 
 DefTensor[densitycov[], M4, PrintAs -> "\[Rho]"]
@@ -117,8 +144,8 @@ DefTensor[pressurecov[], M4, PrintAs -> "p"]
 DefTensor[velocitycov[\[Mu]], M4, PrintAs -> "u"]
 DefTensor[shearcov[-\[Mu], -\[Nu]], M4, Symmetric[{-\[Mu], -\[Nu]}], PrintAs -> "\[Sigma]"]
 
-AutomaticRules[stressenergy,
-	{stressenergy[\[Mu]_?TangentM4`pmQ, \[Nu]_?TangentM4`pmQ] :> (densitycov[] + pressurecov[]) velocitycov[\[Mu]] velocitycov[\[Nu]] + pressurecov[] metricg[\[Mu], \[Nu]] + shearcov[\[Mu], \[Nu]]}]
+(*AutomaticRules[stressenergy,
+	{stressenergy[\[Mu]_?TangentM4`pmQ, \[Nu]_?TangentM4`pmQ] :> (densitycov[] + pressurecov[]) velocitycov[\[Mu]] velocitycov[\[Nu]] + pressurecov[] metricg[\[Mu], \[Nu]] + shearcov[\[Mu], \[Nu]]}]*)
 AutomaticRules[velocitycov, {velocitycov[i_?TangentM3`pmQ] :> 0}]
 AutomaticRules[shearcov, {
 	shearcov[i_?TangentM3`pmQ, j_?TangentM3`pmQ] :> 0,
@@ -205,9 +232,16 @@ Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 Clear[metricrules];
 
 
+$StressEnergyDecomposition = stressenergy[\[Mu]_?TangentM4`pmQ, \[Nu]_?TangentM4`pmQ] :> (densitycov[] + pressurecov[]) velocitycov[\[Mu]] velocitycov[\[Nu]] + pressurecov[] metricg[\[Mu], \[Nu]] + shearcov[\[Mu], \[Nu]];
+
+Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[$StressEnergyDecomposition]}]]
+
+
 (****   Matter Field   ****)
 
 matterrules = Flatten[{
+	mattercov[] :> matter[],
+	pertmattercov[LI[order_]] :> pertmatter[LI[order]],
 	densitycov[] :> density[],
 	pressurecov[] :> pressure[],
 	velocitycov[a_?TangentM1`Q] :> timevec[a] scale[]^-1,
@@ -217,8 +251,8 @@ matterrules = Flatten[{
 	MakeRule[{pertvelocitycov[LI[2], c], timevec[c] (metric\[Delta][-i, -j]*pertvelocitycov[LI[1], i]*pertvelocitycov[LI[1], j]*scale[] + (2*pertmetricg[LI[1], -i, -a]*pertvelocitycov[LI[1], i]*timevec[a])/scale[]^2 - pertvelocitycov[LI[1], a]*pertvelocitycov[LI[1], b]*scale[]*timevec[-a]*timevec[-b] + (2*pertmetricg[LI[1], -a, -b]*pertvelocitycov[LI[1], a]*timevec[b])/scale[]^2 + (pertmetricg[LI[2], -a, -b]*timevec[a]*timevec[b])/(2*scale[]^3))}],
 	MakeRule[{pertvelocitycov[LI[1], i], (pertvelocityvec[LI[1], i] + metric\[Delta][i, j] PD[-j]@pertvelocity[LI[1]]-scale[] metric\[Delta][i, j] PD[-j]@pertB[LI[1]])/scale[]^2}],
 	MakeRule[{pertvelocitycov[LI[2], i], (pertvelocityvec[LI[2], i] + metric\[Delta][i, j] PD[-j]@pertvelocity[LI[2]]-scale[] metric\[Delta][i, j] PD[-j]@pertB[LI[2]])/scale[]^2}],
-	MakeRule[{pertshearcov[LI[1], -i, -j], (density[] + pressure[]) (pertshearten[LI[1], -i, -j] + PD[-i]@pertshearvec[LI[1], -j] + PD[-j]@pertshearvec[LI[1], -i] + 3/2 PD[-i]@PD[-j]@pertshear[LI[1]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[1]])}],
-	MakeRule[{pertshearcov[LI[2], -i, -j], (density[] + pressure[]) (pertshearten[LI[2], -i, -j] + PD[-i]@pertshearvec[LI[2], -j] + PD[-j]@pertshearvec[LI[2], -i] + 3/2 PD[-i]@PD[-j]@pertshear[LI[2]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[2]])}],
+	MakeRule[{pertshearcov[LI[1], -i, -j], (density[] + pressure[]) (pertshearten[LI[1], -i, -j] + PD[-i]@pertshearvec[LI[1], -j] + PD[-j]@pertshearvec[LI[1], -i] + 1/2 PD[-i]@PD[-j]@pertshear[LI[1]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[1]])}],
+	MakeRule[{pertshearcov[LI[2], -i, -j], (density[] + pressure[]) (pertshearten[LI[2], -i, -j] + PD[-i]@pertshearvec[LI[2], -j] + PD[-j]@pertshearvec[LI[2], -i] + 1/2 PD[-i]@PD[-j]@pertshear[LI[2]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[2]])}],
 	pertshearcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> 0,
 	pertshearcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> 0,
 	pertshearcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> 0
@@ -227,7 +261,6 @@ If[fill,
 	$SVTDecompositionRules[[1]] = Union[$SVTDecompositionRules[[1]], matterrules];
 ]
 
-Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[DownValues[stressenergy]]}]]
 Print[Column[{"Matter field Decomposition", ScreenDollarIndices[matterrules]}]]
 Clear[matterrules]
 

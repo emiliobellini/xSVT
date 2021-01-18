@@ -1,17 +1,5 @@
 (* ::Package:: *)
 
-(** TODO: delete this **)
-$CodeDirectory=NotebookDirectory[];
-$EquationsDirectory=$CodeDirectory<>"Equations/";
-$Theory="ST";
-$Metric="FRW Flat";
-$ScalarPerts=True;
-$VectorPerts=True;
-$TensorPerts=True;
-$ImportDecompositionRules = "";
-(** TODO: delete this **)
-
-
 (* ::Title:: *)
 (*xSVT*)
 
@@ -151,36 +139,33 @@ Off[Attributes::ssle]
 $Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0, primescalar[]!=0};
 
 
-?SVTDecomposition
+(*TODO*)
+
+(*(****   Commands   ****)*)
+(*Import[$CodeDirectory<>"Core/Commands.wl"]*)
 
 
-(*** HERE ***)
+(****   Lagrangian   ****)
+
+Import[$CodeDirectory<>"Core/lagrangian_matter.wl"];
+
+If[$Theory=="GR", Import[$CodeDirectory<>"Core/lagrangian_GR.wl"]];
+
+If[$Theory=="ST", Import[$CodeDirectory<>"Core/lagrangian_ST.wl"]];
 
 
-(****   Commands   ****)
+(*Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]*)
 
 
-Import[$CodeDirectory<>"Core/Commands.wl"]
+(*(****   Import Additional Functions   ****)*)
 
 
-(****   Import Basic Quantities   ****)
+(*If[$ExtraFunctions==1,
+	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]*)
 
 
-Import[$CodeDirectory<>"Core/Lagrangian.wl"]
+(*(****   ToClass   ****)*)
 
 
-Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]
-
-
-(****   Import Additional Functions   ****)
-
-
-If[$ExtraFunctions==1,
-	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]
-
-
-(****   ToClass   ****)
-
-
-If[$ToClass==1,
-	Import[$CodeDirectory<>"Core/ToClass.wl"]]
+(*If[$ToClass==1,
+	Import[$CodeDirectory<>"Core/ToClass.wl"]]*)

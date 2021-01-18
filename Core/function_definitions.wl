@@ -18,7 +18,7 @@ Options[GlobalOptionsSVT] = {
 GlobalOptionsSVT[opt_, OptionsPattern[]] := Return@OptionValue@opt;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Utilities*)
 
 
@@ -33,29 +33,182 @@ StyleBox[\"WARNING\",\nFontColor->RGBColor[1, 0, 0]]\)\!\(\*
 StyleBox[\" \",\nFontColor->RGBColor[1, 0, 0]]\):: "<>msg<>"\n", level]
 
 
-ListifyExpr[expr_, decmethod_, chunkslength_, collectvars_] := Module[
+SetDefInfo[tens_, backQ_, scalQ_, vecQ_, tensQ_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	str = ""
+	},
+	
+	If[backQ, str=backS];
+	If[scalQ, str=scalS];
+	If[vecQ, str=vecS];
+	If[tensQ, str=tensS];
+	
+	DefInfo[tens] ^= {DefInfo[tens][[1]], str};
+]
+
+
+GetTypeTens[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	{type===backS, type===scalS, type===vecS, type===tensS}
+]
+
+
+BackQ[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	type===backS
+]
+
+
+ScalQ[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	type===scalS
+]
+
+
+VecQ[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	type===vecS
+]
+
+
+TensQ[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	type===tensS
+]
+
+
+SVTPertQ[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	Or[type===scalS, type===vecS, type===tensS]
+]
+
+
+(* True if scalar or vector or tensor perturbation *)
+SVTPertQ[tens_] := Module[
+	{
+	backS = "background",
+	scalS = "scalar perturbation",
+	vecS = "vector perturbation",
+	tensS = "tensor perturbation",
+	type = DefInfo[tens][[2]]
+	},
+	
+	Or[type===scalS, type===vecS, type===tensS]
+]
+
+
+(* True for perturbation (anything that is a xAct tensor and has a Label Index LI) *)
+PertQ[tens_] := Module[
+	{
+	head = tens
+	},
+	
+	head = Head@Evaluate[head //.PD[__]@smth_:>smth];
+	xTensorQ[head] && MemberQ[SlotsOfTensor[head],xAct`xTensor`Labels]
+]
+
+
+ListifyExpr[expr_, method_, partlength_, collectvars_] := Module[
 	{
 	tmpexpr = expr,
-	tmpexpr1, tmpexpr2
+	tmpexpr1, tmpexpr2, tmpexpr3,
+	count, lengths, findperts, pos
 	},
 
 	If[Head[tmpexpr]=!=Plus, tmpexpr = Expand[tmpexpr], tmpexpr = tmpexpr];
-	If[decmethod==="All", tmpexpr = {tmpexpr}];
-	If[decmethod==="Chunks",
+	If[method==="All", tmpexpr = {tmpexpr}];
+	If[method==="Part",
 		If[Head[tmpexpr]===Plus,
 			tmpexpr = Replace[tmpexpr,Plus->List,{1},Heads->True];
-			tmpexpr1 = Partition[tmpexpr /.Plus->List,chunkslength];
-			tmpexpr2 = tmpexpr[[-Mod[Length[tmpexpr],chunkslength];;-1]];
+			tmpexpr1 = Partition[tmpexpr /.Plus->List,partlength];
+			tmpexpr2 = tmpexpr[[-Mod[Length[tmpexpr],partlength];;-1]];
 			tmpexpr = Append[tmpexpr1, tmpexpr2];
 			tmpexpr = Map[# /.List->Plus &, tmpexpr];,
 			tmpexpr = {tmpexpr}
 		];
 	];
-	If[decmethod==="Collect",
-		tmpexpr1 = Map[Expand[#*Coefficient[tmpexpr, #]]&,collectvars];
+	If[method==="Collect",
+		tmpexpr1 = Table[0,Length[collectvars]+1];
+		For[count=1,count<=Length[collectvars],count++,
+			tmpexpr1[[count]] = collectvars[[count]] Coefficient[tmpexpr,collectvars[[count]]] // Expand;
+			tmpexpr = tmpexpr-tmpexpr1[[count]] // Expand;
+		];
+		tmpexpr1[[Length[collectvars]+1]] = tmpexpr;
+		lengths = Map[Length[#]&,tmpexpr1];
+		If[Length[expr]!=Evaluate[lengths //.List->Plus],Print["Total length does not match the sum of the lengths!"];];
+		tmpexpr = tmpexpr1;
+		(* This code below is more elegant but it has a bug. If in a term of expr
+		are present two variables of collectvars, this term is duplicated *)
+		(*tmpexpr1 = Map[Expand[#*Coefficient[tmpexpr, #]]&,collectvars];
 		tmpexpr2 = {Expand[tmpexpr-Evaluate[tmpexpr1 /.List->Plus]]};
-		tmpexpr = Union[tmpexpr1,tmpexpr2];
+		tmpexpr = Union[tmpexpr1,tmpexpr2];*)
 	];
+	If[method==="SamePerts",
+		findperts[elem_]:=Module[{tmpelem},
+			tmpelem = elem //.Plus->List //.Times->List;
+			tmpelem = tmpelem //.Power[x_,exp_]:>Table[x,{i,exp}] //.PD[_]@obj_:>obj;
+			tmpelem = tmpelem // Flatten;
+			tmpelem = tmpelem*Boole[xSVTUtilities`PertQ[#]&/@tmpelem];
+			tmpelem = DeleteCases[tmpelem,0];
+			Head[#]&/@tmpelem
+		];
+		tmpexpr1 = tmpexpr //.Plus->List;
+		tmpexpr1 = ReplaceRepeated[#,List->Plus]&/@tmpexpr1;
+		tmpexpr2 = findperts[#]&/@tmpexpr1;
+		tmpexpr2 = Sort[#]&/@tmpexpr2;
+		tmpexpr3 = DeleteDuplicates[tmpexpr2];
+		pos=Position[tmpexpr2,#]&/@tmpexpr3;
+		pos=Flatten[#]&/@pos;
+		tmpexpr1 = tmpexpr1[[#]]&/@pos;
+		tmpexpr = ReplaceRepeated[#,List->Plus]&/@tmpexpr1;
+	];
+	If[Head[tmpexpr]=!=List, tmpexpr={tmpexpr}];
 	tmpexpr
 ]
 
@@ -79,46 +232,159 @@ FindOptions[useropts_, outerfun_, innerfun_] := Module[{selectedoptions},
 
 
 
-(*FirstT[expr_] := Module[
+FirstT[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
 	{
 	tan1pmQ = Symbol[ToString@Tangent@OptionValue@Manifold1D<>"`pmQ"],
 	tan3pmQ = Symbol[ToString@Tangent@OptionValue@Manifold3D<>"`pmQ"]
 	},
 
 	expr //. PD[a_?tan1pmQ]@PD[i_?tan3pmQ]@object_ :> PD[i]@PD[a]@object
-]*)
+]
 
 
-(*FirstS[expr_] := Module[
+FirstS[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
 	{
 	tan1pmQ = Symbol[ToString@Tangent@OptionValue@Manifold1D<>"`pmQ"],
 	tan3pmQ = Symbol[ToString@Tangent@OptionValue@Manifold3D<>"`pmQ"]
 	},
 
-	expr //. PD[i_?tan3pmQ]@PD[a_?tan3pmQ]@object_ :> PD[a]@PD[i]@object
-]*)
+	expr //. PD[i_?tan3pmQ]@PD[a_?tan1pmQ]@object_ :> PD[a]@PD[i]@object
+]
 
 
-(*FirstS[expr_] := expr //. PD[i_?TangentM3`pmQ]@PD[a_?TangentM1`pmQ]@object_ :> PD[a]@PD[i]@object*)
-
-
-(*FirstDummies[expr1_+expr2_] := FirstDummies[expr1] + FirstDummies[expr2]
-FirstDummies[expr1_*expr2_] := FirstDummies[expr1] * FirstDummies[expr2]
-FirstDummies[tens_] := Module[{idx, pdidx, final, count}, final = tens;
-	pdidx = IndicesOf[PD][final];
-	If[IsPert[final] && Length[pdidx]>0,
-		idx = FindIndices[Evaluate[final]];
-		For[count=1,count<=Length[idx],count++,
-			If[!MemberQ[pdidx,idx[[count]]],idx[[count]]=0;];
+DivFree[expr1_+expr2_] := DivFree[expr1] + DivFree[expr2]
+DivFree[expr1_*expr2_] := DivFree[expr1] * DivFree[expr2]
+DivFree[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
+	{
+	tan1pmQ = Symbol[ToString@Tangent@OptionValue@Manifold1D<>"`pmQ"],
+	tan3 = Tangent@OptionValue@Manifold3D,
+	tmp, head, idxpert, idxPD, commonidx
+	},
+	
+	tmp = expr;
+	head = Head@Evaluate[tmp //.PD[__]@smth_:>smth];
+	If[xTensorQ@head,
+		If[xSVTUtilities`VecQ@head || xSVTUtilities`TensQ@head,
+			idxpert = -#&/@IndicesOf[tan3, head][tmp];
+			idxPD = IndicesOf[tan3, PD][tmp];
+			commonidx=Intersection[idxpert, idxPD];
+			If[Length@commonidx>0, tmp=0];
 		];
-		idx = DeleteCases[idx,0];
-		idx = MapThread[Rule,{idx, IndexSort[idx]}//.IndexList->List];
-		final = ReplaceIndex[Evaluate[final],idx];
-		];
-	final]*)
+	];
+	tmp
+]
+
+
+HasPlusQ[expr_] := If[Head[Expand[expr]]===Plus, True, False]
+
+
+FourierTAtom[expr_, k_] := Module[{append, ispert, tmp},
+	tmp = Flatten[{expr} //.Times->List];
+	ispert = Boole[xSVTUtilities`PertQ[# //.PD[__]@tens_:>tens]&/@tmp];
+	If[Total[ispert]>1,Print["WARNING: Careful with this! This function can not deal with the convolution of multiple functions. Use FourierT instead!"]];
+	If[k===kvec,append=""];
+	If[k===kvec1,append="kvec1"];
+	If[k===kvec2,append="kvec2"];
+	tmp = ToCanonical[expr //. PD[-i_?TangentM3`Q]@tens_ :> -I k[-i] tens, UseMetricOnVBundle -> None];
+	tmp = ToCanonical[tmp //. head_[args___] /;(xSVTUtilities`PertQ[head[args]] && Not[StringMatchQ[ToString[head], RegularExpression[".*"<>append]]]) :> ToExpression[ToString[head]<>append][args], UseMetricOnVBundle -> None];
+	tmp
+]
 
 
 End[];
+
+
+(* ::Subsection::Closed:: *)
+(*Import/Export*)
+
+
+Options[SVTExport] = {
+	ExportName -> Automatic,
+	ExportDirectory -> $EquationsDirectory,
+	ExportSuffix -> $Theory
+};
+
+SetAttributes[SVTExport, HoldFirst];
+
+SVTExport[expr_, OptionsPattern[]]:=Module[
+	{
+	name = OptionValue@ExportName,
+	dir = OptionValue@ExportDirectory,
+	suffix = OptionValue@ExportSuffix,
+	file, success
+	},
+
+	If[name===Automatic,
+		name = ToString@HoldForm@expr;
+		If[suffix=!="",
+			name = name <> "_" <> suffix;];
+		name = name <> ".m";
+	];
+	file = dir<>name;
+	
+	success = Check[Export[file, Evaluate@expr], False];
+	If[success=!=False, Print["Succesfully exported at "<>file]];
+]
+
+
+Options[SVTImport] = {
+	ImportVarName -> Automatic,
+	ImportDirectory -> $EquationsDirectory,
+	ImportSuffix -> $Theory,
+	Verbose -> True
+};
+
+SVTImport[name_, OptionsPattern[]]:=Module[
+	{
+	varname = OptionValue@ImportVarName,
+	dir = OptionValue@ImportDirectory,
+	suffix = OptionValue@ImportSuffix,
+	verbose = OptionValue@Verbose,
+	file, tmp, success
+	},
+
+	If[varname===Automatic,
+		varname = name;
+	];
+
+	file = dir<>name;
+	If[suffix=!="",
+		file = file <> "_" <> suffix;
+	];
+	file = file <> ".m";
+	
+	Clear[Evaluate@varname];
+	success = Check[MapThread[Set, {ToExpression[#] & /@ {varname}, Import[#] & /@ {file}}],False];
+	If[success=!=False && verbose, Print["Succesfully imported "<>varname<>" from "<>file];];
+]
+
+
+Options[ImportEquations] = {
+	ImportSuffix -> $Theory
+};
+
+ImportEquations[dir_, OptionsPattern[]] := Module[
+	{
+	suffix = OptionValue@ImportSuffix,
+	files, names
+	},
+
+	files = FileNames[dir<>"*"<>suffix<>".m"];
+	names = StringReplace[files, dir->""];
+	names = StringReplace[names, ".m"->""];
+	If[suffix==="",
+		names = StringReplace[names, "_"->""];,
+		names = StringSplit[#,"_"][[1]]&/@names;
+	];
+	
+	SVTImport[#,
+		ImportVarName -> #,
+		ImportDirectory -> dir,
+		ImportSuffix ->suffix,
+		Verbose -> False]&/@names;
+	Print["Imported equations:"];
+	Print[names];
+]
 
 
 (* ::Section:: *)
@@ -277,6 +543,10 @@ DefDerivedTensorsSVT[tensor_, opts : OptionsPattern[{DefDerivedTensorsSVT, Globa
 	man4 = OptionValue@Manifold4D,
 	maxtders = OptionValue@MaxTimeDerivatives,
 	automaticQ = OptionValue@AutomaticRulesSVTQ,
+	backQ = OptionValue@BackgroundQ,
+	scalQ = OptionValue@ScalarPertQ,
+	vecQ = OptionValue@VectorPertQ,
+	tensQ = OptionValue@TensorPertQ,
 	(** Additional variables **)
 	tensorname, derivedtensor, basetens,
 	defproperties, print, tex,
@@ -300,6 +570,7 @@ DefDerivedTensorsSVT[tensor_, opts : OptionsPattern[{DefDerivedTensorsSVT, Globa
 	defproperties[tensin_, tensout_, printas_, texas_, autoQ_] := Module[{},
 		xTensorQ[tensout] ^= True;
 		DefInfo@tensout ^= DefInfo@tensin;
+		xSVTUtilities`SetDefInfo[tensout, backQ, scalQ, vecQ, tensQ];
 		SlotsOfTensor@tensout ^= Evaluate@SlotsOfTensor@tensin;
 		SymmetryGroupOfTensor@tensout ^= Evaluate@SymmetryGroupOfTensor@tensin;
 		DependenciesOfTensor@tensout ^= Evaluate@DependenciesOfTensor@tensin;
@@ -348,7 +619,7 @@ DefDerivedTensorsSVT[tensor_, opts : OptionsPattern[{DefDerivedTensorsSVT, Globa
 				prefix = StringJoin@Table["p", iter-nconfder];
 				If[nconfder==0, prefix=StringJoin[prefix,"rime"]];
 				derivedtensor = ToExpression[prefix<>ToString@tensorname];
-				print[expr_] := ToExpression@StringJoin[expr,Table["'", iter]];
+				print[expr_] := Superscript[expr, StringJoin@Table["\[Prime]", iter]];
 				tex[expr_] := TexPrint[expr]<>"^{"<>StringJoin@Table["\\prime", iter]<>"}";
 				defproperties[basetens, derivedtensor, print, tex, automaticQ]
 			];
@@ -365,6 +636,18 @@ DefDerivedTensorsSVT[tensor_, opts : OptionsPattern[{DefDerivedTensorsSVT, Globa
 				defproperties[basetens, derivedtensor, print, tex, automaticQ]
 			];
 		];
+	];
+
+	(** Define extra tensors to deal with the Fourier transform **)
+	If[MemberQ[DependenciesOfTensor@tensorname, man3],
+		derivedtensor = ToExpression[ToString@tensorname<>"kvec1"];
+		print[expr_] := Subscript[expr,"p"];
+		tex[expr_] := TexPrint[expr]<>"\\left(\\vec{p}\\right)";
+		defproperties[tensorname, derivedtensor, print, tex, automaticQ];
+		derivedtensor = ToExpression[ToString@tensorname<>"kvec2"];
+		print[expr_] := Subscript[expr,"q"];
+		tex[expr_] := TexPrint[expr]<>"\\left(\\vec{q}\\right)";
+		defproperties[tensorname, derivedtensor, print, tex, automaticQ];
 	];
 
 	If[verbose,
@@ -389,6 +672,10 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 	verbose = OptionValue@Verbose,
 	derivedQ = OptionValue[DefDerivedTensorsSVTQ],
 	automaticQ = OptionValue[AutomaticRulesSVTQ],
+	backQ = OptionValue@BackgroundQ,
+	scalQ = OptionValue@ScalarPertQ,
+	vecQ = OptionValue@VectorPertQ,
+	tensQ = OptionValue@TensorPertQ,
 	(** Additional variables **)
 	tensorname, selectedoptions
 	},
@@ -407,6 +694,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 	(** Define tensor **)
 	selectedoptions = xSVTUtilities`FindOptions[{opts}, DefTensorSVT, DefTensor];
 	DefTensor[tensor, man, sym, selectedoptions];
+	xSVTUtilities`SetDefInfo[tensorname, backQ, scalQ, vecQ, tensQ];
 
 	(** Derived tensors tensor **)
 	If[derivedQ,
@@ -428,6 +716,45 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 
 (* ::Section:: *)
 (*Manipulation of expressions*)
+
+
+(* ::Subsection:: *)
+(*Listify*)
+
+
+Options[Listify] = {
+	ListMethod   -> "All",
+	PartLength   -> 1000,
+	CollectVars  -> {},
+	Verbose      -> False
+};
+
+Listify[fun_, expr_, args_, OptionsPattern[]] := Module[
+	{
+	method      = OptionValue@ListMethod,
+	partlength  = OptionValue@PartLength,
+	collectvars = OptionValue@CollectVars,
+	verbose     = OptionValue@Verbose,
+	tmpexpr, x, time, lengths
+	},
+
+	(** Check that the input is as expected **)
+	Assert[StringQ@method && MemberQ[{"All", "Part", "Collect", "SamePerts"}, method]];
+	If[method==="Part", Assert[IntegerQ[partlength] && partlength>0]];
+	If[method==="Collect", Assert[Head[collectvars]==List]];
+
+	tmpexpr = xSVTUtilities`ListifyExpr[expr, method, partlength, collectvars];
+	lengths = Map[Length[#]&,tmpexpr];
+	If[verbose,xSVTUtilities`PrintLevel["Listify produced array with lengths: "<>ToString[lengths],1]];
+	Table[
+		{time, tmpexpr[[x]]} = Timing@fun[tmpexpr[[x]], Sequence@@args];
+		If[verbose && Length@tmpexpr>1,
+			xSVTUtilities`PrintLevel["Step "<>ToString[x]<>"/"<>ToString[Length@tmpexpr]<>" evaluated in "<>ToString[time]<>" seconds.", 1]
+		];, {x,Length@tmpexpr}];
+	tmpexpr = xSVTUtilities`DeListifyExpr[tmpexpr];
+	
+	tmpexpr
+]
 
 
 (* ::Subsection::Closed:: *)
@@ -493,13 +820,16 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 
 	If[tometric,
 		If[verbose, xSVTUtilities`PrintLevel["Replacing Riemann tensors with Christoffel symbols.", 1]];
-		tmp = tmp // RiemannToChristoffel // Expand;
+		tmp = tmp // RiemannToChristoffel;
+		tmp = Expand[#]&/@tmp;
 		If[verbose, xSVTUtilities`PrintLevel["Replacing Christoffel symbols with metric derivatives.", 1]];
 		tmp = tmp // ChristoffelToGradMetric;
 	];
 
 	If[verbose, xSVTUtilities`PrintLevel["Canonicalizing expression.", 1]];
-	tmp = tmp // NoScalar // Expand;
+	tmp = tmp // NoScalar;
+	tmp = Expand[#]&/@tmp;
+	tmp = ToCanonical[#, UseMetricOnVBundle -> None]&/@tmp;
 	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
 	If[verbose, xSVTUtilities`PrintLevel["Finished GRToBuildingBlocks.", 0]];
 
@@ -590,8 +920,8 @@ SVTPerturbation[expr_, order_, opts : OptionsPattern[{SVTPerturbation, GlobalOpt
 
 
 Options[SVTExpand] = {
-	UseDerivedResults -> True,
-	DecompositionRules -> "$SVTDecompositionRules"
+	UseDerivedResults   -> True,
+	DecompositionRules  -> "$SVTDecompositionRules"
 };
 
 SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
@@ -603,7 +933,7 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 	baserules = ToExpression[OptionValue@DecompositionRules][[1]],
 	derivedrules = ToExpression[OptionValue@DecompositionRules][[2]],
 	(** Additional variables **)
-	tmpexpr
+	tmpexpr, time1, time2
 	},
 
 	(** Check that the input is as expected **)
@@ -628,9 +958,13 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 		tmpexpr = NoScalar[tmpexpr] //.Flatten[derivedrules];
 	];
 	tmpexpr = tmpexpr // Expand // ContractMetric;
+	tmpexpr = tmpexpr // xSVTUtilities`FirstS;
+	tmpexpr = tmpexpr // xSVTUtilities`DivFree;
+	(*tmpexpr = tmpexpr // xSVTUtilities`FirstDummies // NoScalar;*)
 	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
 	tmpexpr = tmpexpr // SeparateMetric[metric3] // Expand;
 	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	tmpexpr = tmpexpr // ReplaceDummies;
 	tmpexpr // NoScalar
 ]
 
@@ -644,12 +978,9 @@ Options[SVTDecomposition] = Join[{
 	GRToBuildingBlocksQ   -> True,
 	SplitSpaceTimeQ       -> True,
 	SVTExpandQ            -> True,
-	DecompositionMethod   -> "All",
-	ChunksLength          -> 1000,
-	CollectVars           -> {},
 	StoreResultQ          -> False,
 	StoreName             -> None
-}, Options[GRToBuildingBlocks], Options[SplitSpaceTime], Options[SVTPerturbation], Options[SVTExpand]];
+}, Options[GRToBuildingBlocks], Options[SplitSpaceTime], Options[SVTPerturbation], Options[SVTExpand], Options[Listify]];
 
 SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDecomposition, GlobalOptionsSVT}]] := Module[
 	{
@@ -660,18 +991,16 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 	runSplitSpaceTime       = OptionValue@SplitSpaceTimeQ,
 	runSVTExpand            = OptionValue@SVTExpandQ,
 	cd                      = CovDOfMetric@OptionValue@Metric4D,
-	decmethod               = OptionValue@DecompositionMethod,
-	chunkslength            = OptionValue@ChunksLength,
-	collectvars             = OptionValue@CollectVars,
 	storeresults            = OptionValue@StoreResultQ,
 	tanm1                   = Tangent@OptionValue@Manifold1D,
 	tanm3                   = Tangent@OptionValue@Manifold3D,
 	tanm4                   = Tangent@OptionValue@Manifold4D,
 	decrules                = OptionValue@DecompositionRules,
 	storename               = OptionValue@StoreName,
+	baserules               = ToExpression[OptionValue@DecompositionRules][[1]],
 	(** Additional variables **)
 	tmpexpr = expr,
-	time1, time2, selectedoptions
+	time1, time2, opts1, opts2
 	},
 
 	(** Check that the input is as expected **)
@@ -684,14 +1013,11 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 	Assert[BooleanQ@runGRToBuildingBlocks];
 	Assert[BooleanQ@runSplitSpaceTime];
 	Assert[BooleanQ@runSVTExpand];
-	Assert[StringQ@decmethod && MemberQ[{"All", "Chunks", "Collect"}, decmethod]];
 	Assert[BooleanQ@storeresults];
 	Assert[VBundleQ@tanm1 && DimOfVBundle@tanm1==1];
 	Assert[VBundleQ@tanm3 && DimOfVBundle@tanm3==3];
 	Assert[VBundleQ@tanm4 && DimOfVBundle@tanm4==4];
 
-	If[decmethod==="Chunks", Assert[IntegerQ[chunkslength] && chunkslength>0]];
-	If[decmethod==="Collect", Assert[Head[collectvars]==List]];
 	If[runSVTPerturbation, Assert[IntegerQ[orderPT] && orderPT>=0]];
 	If[runSplitSpaceTime,
 		Assert[Head[freeindsrules]==List];
@@ -709,53 +1035,54 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 	];
 	If[storeresults, Assert[xTensorQ@Head@storename]];
 	Off[Assert];
+	
+	opts2 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, Listify];
+
+	(* Substitute the stress energy tensor with its definition *)
+	tmpexpr = tmpexpr //.$StressEnergyDecomposition // Expand;
 
 	(* Perturbation *)
 	If[runSVTPerturbation && orderPT>0,
 		If[verbose, xSVTUtilities`PrintLevel["1 - Running SVTPerturbation module", 0]];
 		time1 = SessionTime[];
-		tmpexpr = xSVTUtilities`ListifyExpr[tmpexpr, decmethod, chunkslength, collectvars];
-		selectedoptions = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SVTPerturbation];
-		tmpexpr = SVTPerturbation[#, orderPT, selectedoptions]&/@tmpexpr;
-		tmpexpr = xSVTUtilities`DeListifyExpr[tmpexpr];
+		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SVTPerturbation];
+		tmpexpr = Listify[SVTPerturbation, tmpexpr, {orderPT, opts1}, opts2];
 		time2 = SessionTime[];
-		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];
+		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
+		If[verbose, xSVTUtilities`PrintLevel["1 - No SVTPerturbation module requested. I am skipping it!", 0]];
 	];
 
 	(* GRToBuildingBlocks *)
 	If[runGRToBuildingBlocks,
 		If[verbose, xSVTUtilities`PrintLevel["2 - Running GRToBuildingBlocks module", 0]];
 		time1 = SessionTime[];
-		tmpexpr = xSVTUtilities`ListifyExpr[tmpexpr, decmethod, chunkslength, collectvars];
-		selectedoptions = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, GRToBuildingBlocks];
-		tmpexpr = GRToBuildingBlocks[#, cd, selectedoptions]&/@tmpexpr;
-		tmpexpr = xSVTUtilities`DeListifyExpr[tmpexpr];
+		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, GRToBuildingBlocks];
+		tmpexpr = Listify[GRToBuildingBlocks, tmpexpr, {cd, opts1}, opts2];
 		time2 = SessionTime[];
-		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];
+		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
+		If[verbose, xSVTUtilities`PrintLevel["2 - No GRToBuildingBlocks module requested. I am skipping it!", 0]];
 	];
 
 	(* SplitSpaceTime *)
 	If[runSplitSpaceTime,
 		If[verbose, xSVTUtilities`PrintLevel["3 - Running SplitSpaceTime module", 0]];
 		time1 = SessionTime[];
-		tmpexpr = xSVTUtilities`ListifyExpr[tmpexpr, decmethod, chunkslength, collectvars];
-		selectedoptions = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SplitSpaceTime];
-		tmpexpr = SplitSpaceTime[#, freeindsrules, selectedoptions]&/@tmpexpr;
-		tmpexpr = xSVTUtilities`DeListifyExpr[tmpexpr];
+		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SplitSpaceTime];
+		tmpexpr = Listify[SplitSpaceTime, tmpexpr, {freeindsrules, opts1}, opts2];
 		time2 = SessionTime[];
-		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];
+		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
+		If[verbose, xSVTUtilities`PrintLevel["3 - No SplitSpaceTime module requested. I am skipping it!", 0]];
 	];
 
 	(* SVTExpand *)
 	If[runSVTExpand,
 		If[verbose, xSVTUtilities`PrintLevel["4 - Running SVTExpand module", 0]];
 		time1 = SessionTime[];
-		tmpexpr = xSVTUtilities`ListifyExpr[tmpexpr, decmethod, chunkslength, collectvars];
-		selectedoptions = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SplitSpaceTime];
-		tmpexpr = SVTExpand[#, selectedoptions]&/@tmpexpr;
-		tmpexpr = xSVTUtilities`DeListifyExpr[tmpexpr];
+		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SVTExpand];
+		tmpexpr = Listify[SVTExpand, tmpexpr, {opts1}, opts2];
 		time2 = SessionTime[];
-		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];
+		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
+		If[verbose, xSVTUtilities`PrintLevel["4 - No SVTExpand module requested. I am skipping it!", 0]];
 	];
 
 	(* storeresults *)
@@ -781,4 +1108,122 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 	];
 
 	tmpexpr
+]
+
+
+(* ::Section:: *)
+(*PrintWell*)
+
+
+(* ::Subsection::Closed:: *)
+(*PrintWell*)
+
+
+xTensorFormStop[InertHead]
+SetAttributes[interpretbox, HoldFirst];
+interpretbox[expr_, box_] := InterpretationBox[StyleBox[box, AutoSpacing -> False, ShowAutoStyles -> False], expr, Editable -> False];
+xTensorFormStart[InertHead] := MakeBoxes[ih_Symbol?InertHeadQ[expr_, z___], StandardForm] := interpretbox[ih[expr, z], RowBox[{PrintAs[Unevaluated[ih]], "", MakeBoxes[expr, StandardForm], ""}]];
+xTensorFormStop[InertHead] := MakeBoxes[ih_Symbol?InertHeadQ[expr_, z___], StandardForm] =.;
+xTensorFormStart[InertHead]
+DefInertHead[Lap, ContractThrough -> {delta, g}, PrintAs -> "\!\(\*SuperscriptBox[\(\[Del]\), \(2\)]\)"]
+LinearQ[Lap] ^= True;
+Lap[PD[i_?TangentM3`pmQ]@expr_] := PD[i]@Lap@expr
+Lap[expr1_ + expr2_] := Lap[expr1] + Lap[expr2]
+Lap[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := expr1 * Lap[expr2]
+
+
+ToLaplacian[bigexpr_] := If[ToString[bigexpr] == ToString[0] || Length[IndicesOf[PD][bigexpr]]<2, 
+      bigexpr, If[Length[IndicesOf[TangentM3, PD, Dummy][bigexpr]] > 0, 
+        Nest[Lap, Level[bigexpr //.PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@expr_ /; (MemberQ[IndicesOf[TangentM3, Dummy][bigexpr], j] && 
+        MemberQ[IndicesOf[TangentM3, Free][bigexpr], i]) :> PD[j]@PD[i]@expr, Length[IndicesOf[TangentM3, Dummy][bigexpr]]][[1]], 
+        Length[IndicesOf[TangentM3, Dummy][bigexpr]]/2], bigexpr]]
+ToLaplacian[Times[x_, y_]] := Times[ToLaplacian[x], ToLaplacian[y]]
+ToLaplacian[x_ + y_] := ToLaplacian[x] + ToLaplacian[y]
+
+
+PrintWell[expr_] := Module[{tmp},
+	tmp = xSVTUtilities`FirstT@expr;
+	tmp = tmp //.PD[-a_?TangentM1`Q]@tens_?xTensorQ[inds___] /; !StringMatchQ[ToString[tens],"*prime*"]:> timevec[-a] ToExpression["prime" <> ToString[tens]][inds];
+	tmp = tmp //.PD[-a_?TangentM1`Q]@tens_?xTensorQ[inds___] /; StringMatchQ[ToString[tens],"*prime*"]:> timevec[-a] ToExpression["p" <> ToString[tens]][inds];
+	tmp = tmp // ContractMetric // ToLaplacian // NoScalar
+]
+
+
+(* ::Subsection::Closed:: *)
+(*UnPrintWell*)
+
+
+UnPrintWell[expr_]:= Module[{tmp}, tmp = expr;
+	tmp = tmp //.Lap[tens_]:>Module[{i=DummyIn[TangentM3]},PD[-i]@PD[i]@tens] // ToCanonical // ReplaceDummies;
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"pp*ime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]^n]];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"pp*ime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]];
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"prime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]^n]];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"prime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]];
+	tmp = tmp // SeparateMetric[] // NoScalar
+]
+
+
+(* ::Subsection:: *)
+(*CollectPerts*)
+
+
+CollectPerts[expr_, options___] := CollectPerts[expr, {}, options]
+CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, tmp, tens, order},
+	tmp = expr // PrintWell // ReplaceDummies;
+	FindPerts[expr1_ + expr2_] := FindPerts[expr1] + FindPerts[expr2];
+	FindPerts[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := FindPerts[expr2];
+	tens = FindPerts[tmp] //.Plus->List;
+	tens = tens //.n_ FindPerts[expr1_] :> FindPerts[expr1];
+	tens = tens //.FindPerts[expr1_] :> expr1;
+	(* Order perturbations *)
+	order = List[#]&/@tens;
+	order = ReplaceRepeated[order,Times->List];
+	order = Flatten[#]&/@order;
+	order = Replace[order,pert_^n_:>n,{2}];
+	order = Replace[order,pert_/;Not@IntegerQ[pert]:>1,{2}];
+	order = ReplaceRepeated[#,List->Plus]&/@order;
+	order = Ordering@order;
+	tens = Reverse@tens[[order]];
+	Collect[tmp, Join[tens, {more}], options]
+]
+
+
+(* ::Section:: *)
+(*Useful functions*)
+
+
+(* ::Subsection::Closed:: *)
+(*TimeDer*)
+
+
+TimeDer[Equal[expr1_,expr2_]] := Equal[TimeDer[expr1], TimeDer[expr2]]
+TimeDer[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
+	{
+	ind = DummyIn@Tangent@OptionValue@Manifold1D,
+	tmp
+	},
+	tmp = timevec[ind] PD[-ind]@expr;
+	tmp = tmp // Expand;
+	ToCanonical[tmp, UseMetricOnVBundle -> None]
+]
+
+
+(* ::Subsection::Closed:: *)
+(*FourierT*)
+
+
+FourierT[expr1_ + expr2_] := FourierT[expr1] + FourierT[expr2]
+FourierT[expr_?xSVTUtilities`HasPlusQ] := FourierT[Expand[expr]];
+FourierT[expr_] := Module[{tmp, ispert, back, pert},
+	tmp = Flatten[{expr} //.Times->List];
+	ispert = Boole[xSVTUtilities`PertQ[# //.PD[__]@tens_:>tens]&/@tmp];
+	back = Extract[tmp,Position[ispert,0]] //.List->Times;
+	pert = Extract[tmp,Position[ispert,1]] //.List->Times;
+	If[Total[ispert]==0,pert=1;];
+	If[Total[ispert]==1,pert=xSVTUtilities`FourierTAtom[pert,kvec]];
+	If[Total[ispert]==2,
+		pert=1/2 (xSVTUtilities`FourierTAtom[pert[[1]],kvec1] xSVTUtilities`FourierTAtom[pert[[2]],kvec2]+xSVTUtilities`FourierTAtom[pert[[1]],kvec2] xSVTUtilities`FourierTAtom[pert[[2]],kvec1])
+	];
+	If[Total[ispert]>2,Print["Fourier transform, as it has been implemented here, can deal with at most the convolution of 2 functions"]; Return[]];
+	back*pert // Expand
 ]

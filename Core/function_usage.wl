@@ -65,6 +65,46 @@ contains all the derived rules. Note that if you want to use all the rules toget
 or even just rulesBasic alone you should Flatten them.";
 
 
+(* ::Subsection::Closed:: *)
+(*Import/Export*)
+
+
+SVTExport::usage =
+"SVTExport[expr] is a small script to easily export expr into a predefined folder \
+and name. Check Options[SVTExport] for a full list of available options.";
+
+ExportName::usage = "ExportName (string, default: Automatic) is an \
+option for SVTExport. It allows to define a custom name for the output file. \
+If it is different from Automatic, the option ExportSuffix is ignored.";
+ExportDirectory::usage = "ExportDirectory (string, default: $EquationsDirectory) is an \
+option for SVTExport. It allows to define a custom folder for the output file.";
+ExportSuffix::usage = "ExportSuffix (string, default: $Theory) is an \
+option for SVTExport. It allows to define a custom suffix for the output file. \
+If ExportName is different from Automatic, this option is ignored.";
+
+
+SVTImport::usage =
+"SVTImport[name] is a small script to easily import the equation with name name from \
+a predefined folder. name is a string that contains the name of the file to be imported \
+without extension and suffix. Check Options[SVTImport] for a full list of available options.";
+
+ImportVarName::usage = "ImportVarName (string, default: Automatic) is an \
+option for SVTImport. It allows to define a custom name for the variable containing \
+the output file.";
+ImportDirectory::usage = "ImportDirectory (string, default: $EquationsDirectory) is an \
+option for SVTImport. It allows to define a custom folder for the input file.";
+ImportSuffix::usage = "ImportSuffix (string, default: $Theory) is an option for \
+SVTImport and ImportEquations. It allows to define a custom suffix for the input file.";
+
+
+ImportEquations::usage =
+"ImportEquations[dir] is a small script to easily import equations from a predefined \
+folder. Using SVTImport, it imports all the files ending with ImportSuffix. By default \
+it removes the suffix, to shorten the name of the variable. If ImportSuffix is an empty \
+string it imports all the equations in the folder, without removing the suffix to avoid \
+conflicts. Check Options[SVTImport] for a full list of available options.";
+
+
 (* ::Section::Closed:: *)
 (*Definition and properties of tensors*)
 
@@ -129,8 +169,33 @@ DefDerivedTensorsSVTQ::usage = "DefDerivedTensorsSVTQ (boolean, default:True) is
 DefTensorSVT. If True the DefDerivedTensorsSVT is used.";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Manipulation of expressions*)
+
+
+Listify::usage =
+"Listify[fun, expr, args] converts expr into a list. Then, it runs the function fun on \
+each element of the list and finally delistify. It is useful to speed up the computation of \
+large expressions. Finally, args is a list that contains all the additional arguments of fun. \
+If there are no additional parameters an empty list should be passed. \
+Check Options[Listify] for a full list of available options.";
+
+ListMethod::usage =
+"ListMethod (default: 'All') is an option for ListMethod. Possible values are 'All', 'Part', 'Collect' and 'SamePerts'.\
+If method is 'All', the input expression is decomposed at once. If method is 'Part', the input expression \
+is decomposed in many parts of equal length, set by the option PartLength. If method is 'Collect', the terms \
+in CollectVars are first collected in the input expression, and then the decomposition is run on each of these \
+terms. If it is 'SamePerts', terms with the same perturbations will be collected together. 'Part', \
+'Collect' and 'SamePerts' are particularly useful for long expressions. Tipically you do not want to run \
+ToCanonical on more than 10^4 terms at once.";
+
+PartLength::usage =
+"PartLength (default: 1000) is an option for Listify. It accepts positive integers. If \
+Method = 'Listify' it fixes the length of each part of the expression.";
+
+CollectVars::usage =
+"CollectVars (default: {}) is an option for Listify. It accepts a list of variables to collect and internally \
+it uses the Mathematica function Coefficient.";
 
 
 SortRiemannIndices::usage =
@@ -151,7 +216,7 @@ GRToBuildingBlocks. If True curvature tensor are rewritten as derivatives of the
 metric, otherwise Christoffel symbols.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*3+1 Decomposition*)
 
 
@@ -218,22 +283,6 @@ SVTExpandQ::usage =
 SVTExpand module. This applis the decomposition rules stored in $DecompositionRules and canonicalize \
 expr with the properties of vectors and tensors on the space manifold.";
 
-DecompositionMethod::usage =
-"DecompositionMethod (default: 'All') is an option for SVTDecomposition. Possible values are 'All', 'Chunks' and \
-'Collect'. If method is 'All', the input expression is decomposed at once. If method is 'Chunks', the input \
-expression is decomposed in chunks of ChunksLength. If method is 'Collect', the terms in CollectVars are first \
-collected in the input expression, and then the decomposition is run on each of these terms. 'Chunks' and 'Collect' \
-are particularly useful for long expressions (tipically you do not want to run ToCanonical on more than 10^4 \
-terms at once.).";
-
-ChunksLength::usage =
-"ChunksLength (default: 1000) is an option for SVTDecomposition. It accepts positive integers. If \
-DecomposeMethod = 'Chunks' it fixes the length of the chunks.";
-
-CollectVars::usage =
-"CollectVars (default: {}) is an option for SVTDecomposition. It accepts a list of variables to collect and internally \
-it uses the Mathematica function Coefficient.";
-
 StoreResultQ::usage =
 "StoreResultQ (default: False) is a boolean option for SVTDecomposition. It stores the result of the computation \
 in the derived rules of $DecompostionRules. To build the rules it uses the built-in MakeRule with its default options. \
@@ -243,3 +292,41 @@ right-hand side is the result. It is particularly convenient to decompose long c
 StoreName::usage =
 "StoreName (default: None) is an option for SVTDecomposition. It used only in combination with StoreResultQ=True. \
 It contains the tensorial expression used on the left-hand side of the stored rules.";
+
+
+(* ::Section::Closed:: *)
+(*PrintWell*)
+
+
+PrintWell::usage =
+"PrintWell[expr] rewrites expr in a more readable format. Time derivatives \
+are represented as primes (conformal time) or dots (physical time). Whenever \
+possible, space derivatives are replaced with laplacians. This is intended for \
+visualisations purposes only. Calculations should be carried on without Printwell.";
+
+
+UnPrintWell::usage =
+"UnPrintWell[expr] reverts the PrintWell command.";
+
+
+CollectPerts::usage =
+"CollectPerts[expr, {addvars}, options] uses first the PrintWell command, and then \
+collects the perturbations in expr. Additionally, after the perturbations it \
+collects all the variables addvar. The argument options includes all the options \
+of the Collect function.";
+
+
+(* ::Section:: *)
+(*Useful functions*)
+
+
+TimeDer::usage =
+"TimeDer[expr] takes the time derivative (w.r.t. conformal time) of expr.";
+
+
+FourierT::usage =
+"FourierT[expr] calculates the Fourier transform of expr. It is capable to calculate \
+the Fourier transform up to second order in perturbation theory. In this case, the \
+output is not the Fourier transform itself, but its integrand. This is to say that, \
+if F is the Fourier transform, the output will be f, where \
+F(k)=Integral[d^3p d^3q delta(k-p-q) f(k,p,q)].";
