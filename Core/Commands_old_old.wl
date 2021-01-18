@@ -50,7 +50,102 @@ DivFree[expr_]:=Module[{tmp, pert, pdidx, tensidx},
 ]
 
 
+(****   SVTExpand   ****)
+
+
+SVTExpand[expr_] := Module[{tmp, inds},
+	tmp = NoScalar[expr] //.expandrules;
+	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
+	tmp = tmp // ContractMetric // FirstS // DivFree;
+	tmp = tmp // FirstDummies // NoScalar;
+	tmp = tmp //.$Rules // ToCanonical // NoScalar;
+	If[ToString[tmp] == ToString[0], tmp,
+		inds = IndicesOf[TangentM3][tmp];
+		inds = DeleteCases[inds, -_?TangentM3`Q];
+		tmp = SeparateMetric[metric\[Delta]][tmp, inds]];
+tmp]
+
+
+SVTExpandBits[nelem_][expr_] := Module[{len, tmpexpr, nsteps, tmp, count, min, max},
+	tmpexpr = expr // Expand;
+	len = tmpexpr // Length;
+	If[Mod[len,nelem]==0,nsteps = Quotient[len,nelem];,nsteps = Quotient[len,nelem]+1;];
+	tmp = 0;
+	For[count=0,count<nsteps,count++,
+		min = nelem*count+1;
+		If[nelem*(count+1)<len,max=nelem*(count+1),max=len];
+		tmp += SVTExpand[tmpexpr[[min;;max]]];
+		If[Mod[count,1]==0,Print["Done "<>ToString[count+1]<>" steps over "<>ToString[nsteps]]];
+	];
+	tmp // Expand
+]
+
+
+SVTExpandList[terms_][expr_] := Module[{tmp,tmplist,count,lengths},
+	tmp = expr;
+	tmplist = Table[0,Length[terms]+1];
+	For[count=1,count<=Length[terms],count++,
+		tmplist[[count]] = terms[[count]] Coefficient[tmp,terms[[count]]] // Expand;
+		tmp = tmp-tmplist[[count]] // Expand;
+	];
+	tmplist[[Length[terms]+1]] = tmp;
+	lengths = Map[Length[#]&,tmplist];
+	Print[lengths];
+	If[Length[expr]!=Evaluate[lengths //.List->Plus],Print["Lengths not correct!"];];
+	For[count=1,count<=Length[tmplist],count++,
+		If[Length[tmplist[[count]]]>12000, tmplist[[count]] = tmplist[[count]] // SVTExpandBits[2000];];
+		If[Length[tmplist[[count]]]>12000, tmplist[[count]] = tmplist[[count]] // SVTExpandBits[6000];];
+		tmplist[[count]] = tmplist[[count]] // SVTExpand // ReplaceDummies;
+		Print["Done "<>ToString[count]<>" steps over "<>ToString[Length[tmplist]]];
+	];
+	lengths = Map[Length[#]&,tmplist];
+	Print[lengths];
+	Return[tmplist //.List->Plus // Expand];
+]
+
+
 (****   Decomposition   ****)
+
+
+SVTPerturbation[expr_, n_] := Module[{tmp},
+	tmp = Perturbation[expr, n];
+	tmp = tmp // ExpandPerturbation;
+	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
+	tmp // SeparateMetric[] // NoScalar
+]
+
+
+GRToGradMetric[expr_] := Module[{tmp},
+	tmp = expr // WeylToRiemann;
+	tmp = tmp // EinsteinToRicci;
+	tmp = tmp // RiemannToChristoffel;
+	tmp = tmp // ChangeCovD;
+	tmp = tmp // ChristoffelToGradMetric;
+	tmp = tmp // NoScalar // Expand;
+	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
+	tmp = tmp // NoScalar;
+	ToCanonical[tmp, UseMetricOnVBundle -> None]
+]
+
+
+Decomposition[order_, inds___][expr_] := Module[{tmp, timevecs,inds1,inds2,inds3,signs},
+	inds1 = {inds} //.Rule[a_,b_]:>a // Flatten;
+	inds2 = Map[DummyIn[TangentM4]&,inds1] // Flatten;
+	signs = Map[Sign[#]&,{inds} //.Rule[a_,b_]:>b] //.Sign[a_]:>1 // Flatten;
+	inds3 = Map[Abs[#]&,{inds} //.Rule[a_,b_]:>b] //.Abs[a_]:>a // Flatten;
+	tmp = GRToGradMetric[expr //.MapThread[Rule,{inds1,inds2*signs}]];
+	tmp = SVTPerturbation[tmp, order];
+	tmp = tmp // SeparateMetric[];
+	tmp = tmp // SplitDummySpaceTime;
+	tmp = tmp //.MapThread[Rule,{inds2,inds3}];
+	timevecs = IndicesOf[Free, TangentM1][tmp] /. IndexList -> List;
+	timevecs = Cases[timevecs, a_?TangentM1`pmQ :>timevec[-a]];
+	timevecs = Evaluate[timevecs /.List -> Times];
+	tmp = tmp timevecs // Expand;
+	If[NumberQ[tmp],
+		tmp,
+		tmp // SVTExpand // ReplaceDummies]
+]
 
 
 subfr1 = -primescalar[]/scale[] PD[-i]@pertV[LI[2]]+
