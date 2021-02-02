@@ -49,7 +49,7 @@ Clear[IsPert]
 IsPert[expr_]:=Module[{is,hd},
 	is = False;
 	hd = Head[expr];
-	If[MemberQ[$Tensors,hd],If[DefInfo[Head[expr]][[2]] == "perturbation", is = True];];
+	If[MemberQ[$Tensors,hd],If[StringMatchQ[DefInfo[Head[expr]][[2]], "perturbation*"], is = True];];
 	is]
 
 
@@ -154,12 +154,12 @@ Decomposition[order_, inds___][expr_] := Module[{tmp, timevecs},
 ]
 
 
-subfr1 = -primescalar[]/scale[] PD[-i]@pertscalar[LI[2]]+
+(*subfr1 = -primescalar[]/scale[] PD[-i]@pertscalar[LI[2]]+
 	2/primescalar[] timevec[a] PD[-a]@pertscalarpre[LI[1]] PD[-i]@pertscalarpre[LI[1]]-
 	2 pertpsi[LI[1]] PD[-i]@pertscalarpre[LI[1]];
 subfr2 = PD[-j]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
 subfr3 = PD[-j]@PD[-k]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
-subfr4 = PD[-j]@PD[-k]@PD[-l]@subfr1 // SVTExpand // Symmetrize // SVTExpand;
+subfr4 = PD[-j]@PD[-k]@PD[-l]@subfr1 // SVTExpand // Symmetrize // SVTExpand;*)
 
 
 (*Clear[FieldRedefinition]
@@ -173,11 +173,11 @@ FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
 ]*)
 
 
-Clear[FieldRedefinition]
+(*Clear[FieldRedefinition]
 FieldRedefinition[expr_] := Module[{tmp}, tmp = expr;
 	tmp = tmp //.pertscalarpre[LI[1]] :> primescalar[] pertscalar[LI[1]] // Expand;
 	tmp
-]
+]*)
 
 
 (*pertscalarpre[LI[1]] :> -primescalar[]/scale[] pertscalar[LI[1]]

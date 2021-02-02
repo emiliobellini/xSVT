@@ -80,9 +80,11 @@ DefTensorPerturbation[pertscalarcov[LI[order]], scalarcov[], M4, PrintAs -> "\[D
 
 
 DefTensor[scalar[], M4, PrintAs -> "\[Phi]", DefInfo -> {"tensor", "background"}]
-DefTensor[pertscalarpre[LI[order]], M4, PrintAs -> "\[Delta]\[Phi]",
+DefTensor[pertscalar[LI[order]], M4, PrintAs -> "\[Delta]\[Phi]",
 	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertscalar[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(X\)]\)",
+DefTensor[pertV[LI[order]], M4, PrintAs -> "\!\(\*SubscriptBox[\(v\), \(X\)]\)",
+	DefInfo -> {"tensor", "perturbation"}]
+DefTensor[pertP[LI[order]], M4, PrintAs -> "\[Pi]",
 	DefInfo -> {"tensor", "perturbation"}]
 
 

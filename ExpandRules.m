@@ -22,7 +22,7 @@ Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 (****   Scalar Field   ****)
 
 
-scalarrules = Flatten[{scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> pertscalarpre[LI[order]],
+scalarrules = Flatten[{scalarcov[] :> scalar[], pertscalarcov[LI[order_]] :> pertscalar[LI[order]],
 	Xcov[]:>X[], pertXcov[LI[order_]]:>pertX[LI[order]], currentcov[-a_?TangentM1`Q] :> -scale[] timevec[-a] current[], shiftcov[] :> shift[]}];
 
 
