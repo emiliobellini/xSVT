@@ -25,7 +25,7 @@ GlobalOptionsSVT[opt_, OptionsPattern[]] := Return@OptionValue@opt;
 Begin["xSVTUtilities`"];
 
 
-PrintLevel[msg_, level_:0] := Print[If[level>0,StringRepeat["-", 4*level]<>"> ",""]<>msg]
+PrintLevel[msg_, level_:0] := Print[Row[{If[level>0,StringRepeat["-", 4*level]<>"> ",""],msg}]]
 
 
 Warning[msg_, level_:0] := PrintLevel["\n\!\(\*
@@ -198,8 +198,7 @@ ListifyExpr[expr_, method_, partlength_, collectvars_] := Module[
 			tmpelem = DeleteCases[tmpelem,0];
 			Head[#]&/@tmpelem
 		];
-		tmpexpr1 = tmpexpr //.Plus->List;
-		tmpexpr1 = ReplaceRepeated[#,List->Plus]&/@tmpexpr1;
+		tmpexpr1 = Flatten@{Replace[tmpexpr,Plus->List,{1},Heads->True]};
 		tmpexpr2 = findperts[#]&/@tmpexpr1;
 		tmpexpr2 = Sort[#]&/@tmpexpr2;
 		tmpexpr3 = DeleteDuplicates[tmpexpr2];
@@ -263,7 +262,7 @@ DivFree[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
 	
 	tmp = expr;
 	head = Head@Evaluate[tmp //.PD[__]@smth_:>smth];
-	If[xTensorQ@head,
+	If[xTensorQ@head && xSVTUtilities`PertQ@tmp,
 		If[xSVTUtilities`VecQ@head || xSVTUtilities`TensQ@head,
 			idxpert = -#&/@IndicesOf[tan3, head][tmp];
 			idxPD = IndicesOf[tan3, PD][tmp];
@@ -530,7 +529,7 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 
 
 Options[DefDerivedTensorsSVT] = Join[{
-	MaxTimeDerivatives -> 2,
+	MaxTimeDerivatives -> 4,
 	AutomaticRulesSVTQ -> True
 }, Options[AutomaticRulesSVT]];
 
@@ -718,7 +717,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 (*Manipulation of expressions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Listify*)
 
 
@@ -744,7 +743,7 @@ Listify[fun_, expr_, args_, OptionsPattern[]] := Module[
 	If[method==="Collect", Assert[Head[collectvars]==List]];
 
 	tmpexpr = xSVTUtilities`ListifyExpr[expr, method, partlength, collectvars];
-	lengths = Map[Length[#]&,tmpexpr];
+	lengths = Map[If[Head[#]===Plus,Length[#],1]&,tmpexpr];
 	If[verbose,xSVTUtilities`PrintLevel["Listify produced array with lengths: "<>ToString[lengths],1]];
 	Table[
 		{time, tmpexpr[[x]]} = Timing@fun[tmpexpr[[x]], Sequence@@args];
@@ -915,7 +914,7 @@ SVTPerturbation[expr_, order_, opts : OptionsPattern[{SVTPerturbation, GlobalOpt
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*SVTExpand*)
 
 
@@ -944,7 +943,7 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 	Assert[Head[derivedrules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@derivedrules]];
 	Off[Assert];
 	
-	tmpexpr = NoScalar[expr] //.Flatten[baserules] // Expand;
+	tmpexpr = expr //.Flatten[baserules] // Expand;
 	If[Not@FlatMetricQ@metric3,
 		tmpexpr = GradMetricToChristoffel[tmpexpr, metric3, PD];
 		tmpexpr = GradMetricToChristoffel[tmpexpr, metric3, PD] // Expand;
@@ -955,7 +954,7 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 		tmpexpr = tmpexpr /.SymmetricSpaceRules[CovDOfMetric@metric3, kappa];
 	];
 	If[usederived,
-		tmpexpr = NoScalar[tmpexpr] //.Flatten[derivedrules];
+		tmpexpr = tmpexpr //.Flatten[derivedrules] // Expand // NoScalar;
 	];
 	tmpexpr = tmpexpr // Expand // ContractMetric;
 	tmpexpr = tmpexpr // xSVTUtilities`FirstS;
@@ -974,12 +973,12 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 
 
 Options[SVTDecomposition] = Join[{
-	SVTPerturbationQ      -> True,
-	GRToBuildingBlocksQ   -> True,
-	SplitSpaceTimeQ       -> True,
-	SVTExpandQ            -> True,
-	StoreResultQ          -> False,
-	StoreName             -> None
+	SVTPerturbationQ           -> True,
+	GRToBuildingBlocksQ        -> True,
+	SplitSpaceTimeQ            -> True,
+	SVTExpandQ                 -> True,
+	StoreResultQ               -> False,
+	StoreName                  -> None
 }, Options[GRToBuildingBlocks], Options[SplitSpaceTime], Options[SVTPerturbation], Options[SVTExpand], Options[Listify]];
 
 SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDecomposition, GlobalOptionsSVT}]] := Module[
@@ -1000,13 +999,12 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 	baserules               = ToExpression[OptionValue@DecompositionRules][[1]],
 	(** Additional variables **)
 	tmpexpr = expr,
-	time1, time2, opts1, opts2
+	time1, time2, opts1, opts2, opts3
 	},
 
 	(** Check that the input is as expected **)
 	On[Assert];
 	Validate[tmpexpr];
-	Validate@Evaluate@storename;
 	Assert[IntegerQ@orderPT && orderPT>=0];
 	Assert[BooleanQ@verbose];
 	Assert[BooleanQ@runSVTPerturbation];
@@ -1023,17 +1021,19 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 		Assert[Head[freeindsrules]==List];
 		Assert[AllTrue[freeindsrules, Head[#]===Rule || Head[#]===RuleDelayed &]];
 		With[{
-			indsL = #[[1]]&/@freeindsrules //.List->IndexList,
-			indsR = #[[2]]&/@freeindsrules //.List->IndexList
+			indsL = Sort[#[[1]]&/@freeindsrules //.List->IndexList],
+			indsR = Sort[#[[2]]&/@freeindsrules //.List->IndexList]
 			},
 			Assert[AllTrue[indsL, VBundleOfIndex[#]===tanm4 && UpIndexQ[#] &]];
 			Assert[AllTrue[indsR, (VBundleOfIndex[#]===tanm3 || VBundleOfIndex[#]===tanm1) && UpIndexQ[#] &]];
 			Assert[Length[indsL]==Length[DeleteDuplicates[indsL]]];
 			Assert[Length[indsR]==Length[DeleteDuplicates[indsR]]];
-			Assert[Evaluate[Abs[#]&/@IndicesOf[Free][tmpexpr] //.Abs[a_]:>a]===indsL];
+			Assert[Evaluate[Sort[Abs[#]&/@IndicesOf[Free][tmpexpr] //.Abs[a_]:>a]]===indsL];
 		];
 	];
 	If[storeresults, Assert[xTensorQ@Head@storename]];
+	Assert[Head[OptionValue@ListMethod]===List || Head[OptionValue@ListMethod]===String];
+	If[Head[OptionValue@ListMethod]===List, Assert[Length[OptionValue@ListMethod]==4]];
 	Off[Assert];
 	
 	opts2 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, Listify];
@@ -1046,7 +1046,8 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 		If[verbose, xSVTUtilities`PrintLevel["1 - Running SVTPerturbation module", 0]];
 		time1 = SessionTime[];
 		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SVTPerturbation];
-		tmpexpr = Listify[SVTPerturbation, tmpexpr, {orderPT, opts1}, opts2];
+		opts3 = opts2 /.Rule[ListMethod,val_]/;Head[val]===List:>Rule[ListMethod,val[[1]]];
+		tmpexpr = Listify[SVTPerturbation, tmpexpr, {orderPT, opts1}, opts3];
 		time2 = SessionTime[];
 		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
 		If[verbose, xSVTUtilities`PrintLevel["1 - No SVTPerturbation module requested. I am skipping it!", 0]];
@@ -1057,7 +1058,8 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 		If[verbose, xSVTUtilities`PrintLevel["2 - Running GRToBuildingBlocks module", 0]];
 		time1 = SessionTime[];
 		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, GRToBuildingBlocks];
-		tmpexpr = Listify[GRToBuildingBlocks, tmpexpr, {cd, opts1}, opts2];
+		opts3 = opts2 /.Rule[ListMethod,val_]/;Head[val]===List:>Rule[ListMethod,val[[2]]];
+		tmpexpr = Listify[GRToBuildingBlocks, tmpexpr, {cd, opts1}, opts3];
 		time2 = SessionTime[];
 		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
 		If[verbose, xSVTUtilities`PrintLevel["2 - No GRToBuildingBlocks module requested. I am skipping it!", 0]];
@@ -1068,7 +1070,8 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 		If[verbose, xSVTUtilities`PrintLevel["3 - Running SplitSpaceTime module", 0]];
 		time1 = SessionTime[];
 		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SplitSpaceTime];
-		tmpexpr = Listify[SplitSpaceTime, tmpexpr, {freeindsrules, opts1}, opts2];
+		opts3 = opts2 /.Rule[ListMethod,val_]/;Head[val]===List:>Rule[ListMethod,val[[3]]];
+		tmpexpr = Listify[SplitSpaceTime, tmpexpr, {freeindsrules, opts1}, opts3];
 		time2 = SessionTime[];
 		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
 		If[verbose, xSVTUtilities`PrintLevel["3 - No SplitSpaceTime module requested. I am skipping it!", 0]];
@@ -1079,7 +1082,8 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 		If[verbose, xSVTUtilities`PrintLevel["4 - Running SVTExpand module", 0]];
 		time1 = SessionTime[];
 		opts1 = xSVTUtilities`FindOptions[{opts}, SVTDecomposition, SVTExpand];
-		tmpexpr = Listify[SVTExpand, tmpexpr, {opts1}, opts2];
+		opts3 = opts2 /.Rule[ListMethod,val_]/;Head[val]===List:>Rule[ListMethod,val[[4]]];
+		tmpexpr = Listify[SVTExpand, tmpexpr, {opts1}, opts3];
 		time2 = SessionTime[];
 		If[verbose, xSVTUtilities`PrintLevel["Done! Evaluated module in "<>ToString[time2-time1]<>" seconds.", 1]];,
 		If[verbose, xSVTUtilities`PrintLevel["4 - No SVTExpand module requested. I am skipping it!", 0]];
@@ -1094,9 +1098,9 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 			timevecs = IndicesOf[Free,tanm1][storename] /.IndexList->List;
 			timevecs = Cases[timevecs,a_:>timevec[a]];
 			timevecs = timevecs /.List->Times;
-			right = timevecs*tmpexpr;
-			rule = MakeRule[{storename, right}, Evaluate->True];
-			Print[rule[[1]]];
+			right = timevecs*tmpexpr // ReplaceDummies // ScreenDollarIndices;
+			rule = MakeRule[{Evaluate@storename, Evaluate@right}, Evaluate->True];
+			If[verbose, xSVTUtilities`PrintLevel[ScreenDollarIndices@rule[[1]], 1]];
 			SetAttributes[step, HoldAll];
 			step[TT_] := Module[{P},
 				P = (P = Return[#, TraceScan] &) &;
@@ -1163,7 +1167,7 @@ UnPrintWell[expr_]:= Module[{tmp}, tmp = expr;
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*CollectPerts*)
 
 

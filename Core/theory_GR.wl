@@ -15,7 +15,7 @@ DefManifold[M3, 3, IndexRange[i, p]]
 DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma], \[Tau], \[Gamma]}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Metric*)
 
 
@@ -202,9 +202,9 @@ DefTensor[source6[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\),
 DefTensor[source7[LI[order],-i,-j], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(7\)]\)"]
 
 
-DefTensor[source8[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(9\)]\)"]
-DefTensor[source9[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(10\)]\)"]
-DefTensor[source10[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(11\)]\)"]
+DefTensor[source8[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(8\)]\)"]
+DefTensor[source9[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(9\)]\)"]
+DefTensor[source10[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(10\)]\)"]
 
 
 (* ::Section:: *)

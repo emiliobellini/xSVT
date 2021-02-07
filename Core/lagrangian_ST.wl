@@ -10,4 +10,4 @@ L5 = G5fun[scalarcov[], Xcov[]] EinsteinCD[-\[Mu], -\[Nu]] CD[\[Mu]]@CD[\[Nu]]@s
 	F5fun[scalarcov[], Xcov[]] epsilonmetricg[\[Alpha],\[Beta],\[Eta],\[Lambda]] epsilonmetricg[\[Mu],\[Nu],\[Sigma],\[Tau]] CD[-\[Alpha]]@scalarcov[] CD[-\[Mu]]@scalarcov[] CD[-\[Beta]]@CD[-\[Nu]]@scalarcov[] CD[-\[Eta]]@CD[-\[Sigma]]@scalarcov[] CD[-\[Lambda]]@CD[-\[Tau]]@scalarcov[];
 
 
-L = Sqrt[-Detmetricg[]] ContractMetric[ToCanonical[EinsteinToRicci[L2 + L3 + L4 + L5]]] // NoScalar // ReplaceDummies;
+Lgravity = Sqrt[-Detmetricg[]] ContractMetric[ToCanonical[EinsteinToRicci[L2 + L3 + L4 + L5]]] // NoScalar // ReplaceDummies;
