@@ -116,19 +116,6 @@ TensQ[tens_] := Module[
 ]
 
 
-SVTPertQ[tens_] := Module[
-	{
-	backS = "background",
-	scalS = "scalar perturbation",
-	vecS = "vector perturbation",
-	tensS = "tensor perturbation",
-	type = DefInfo[tens][[2]]
-	},
-	
-	Or[type===scalS, type===vecS, type===tensS]
-]
-
-
 (* True if scalar or vector or tensor perturbation *)
 SVTPertQ[tens_] := Module[
 	{
@@ -914,7 +901,7 @@ SVTPerturbation[expr_, order_, opts : OptionsPattern[{SVTPerturbation, GlobalOpt
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*SVTExpand*)
 
 
@@ -1231,3 +1218,67 @@ FourierT[expr_] := Module[{tmp, ispert, back, pert},
 	If[Total[ispert]>2,Print["Fourier transform, as it has been implemented here, can deal with at most the convolution of 2 functions"]; Return[]];
 	back*pert // Expand
 ]
+
+
+(* ::Subsection::Closed:: *)
+(*Coeff*)
+
+
+Coeff[Times[expr1_, expr2_]] /;xSVTUtilities`PertQ[expr2] := Coeff[expr1]*expr2
+Coeff[Times[expr1_, Power[expr2_,n_]]] /;xSVTUtilities`PertQ[expr2] := Coeff[expr1]*expr2^n
+Coeff[expr1_ + expr2_] := Coeff[expr1] + Coeff[expr2]
+Coeff[expr_] /;xSVTUtilities`PertQ[expr] := Coeff[1] expr
+
+
+(* ::Subsection::Closed:: *)
+(*NSpaceDer*)
+
+
+NSpaceDer[n_][expr_] := Module[{tmp,order},
+	tmp = expr // Expand;
+	tmp = Replace[tmp,Plus->List,{1},Heads->True];
+	order = Length[IndicesOf[PD,TangentM3][#]]&/@tmp;
+	order = Boole[#==n]&/@order;
+	tmp = tmp*order //.List->Plus;
+	tmp
+]
+
+
+(* ::Subsection::Closed:: *)
+(*ToPhysical & ToConformal (TODO)*)
+
+
+(*ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
+	isolate[tmp1_+tmp2_] := isolate[tmp1] + isolate[tmp2];
+	isolate[tmp1_*tmp2_] := isolate[tmp1] * isolate[tmp2];
+	match[tens_, str_] := StringMatchQ[ToString[tens], str];
+	sub[tens_, str1_, str2_] := ToExpression[StringReplace[ToString[tens], str1 -> str2]];
+	hubblerules = {hubbleC[] :> scale[] hubbleP[],
+		primehubbleC[] :> scale[]^2 (hubbleP[]^2 + dothubbleP[]), 
+		pprimehubbleC[] :> scale[]^3 (ddothubbleP[] + 4 hubbleP[] dothubbleP[] + 2 hubbleP[]^3),
+		ppprimehubbleC[] :> scale[]^4 (dddothubbleP[] + 4 dothubbleP[]^2 + 7 ddothubbleP[] hubbleP[] + 18 hubbleP[]^2 dothubbleP[] + 6 hubbleP[]^4)};
+	primerules = {tens_ /; match[tens, "prime*"] :> scale[] sub[tens, "prime", "dot"],
+		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
+		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
+			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"])};
+	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
+	tmp //.isolate[tmp1_]:>tmp1 // Expand
+]*)
+
+
+(*ToConformal[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
+	isolate[tmp1_+tmp2_] := isolate[tmp1] + isolate[tmp2];
+	isolate[tmp1_*tmp2_] := isolate[tmp1] * isolate[tmp2];
+	match[tens_, str_] := StringMatchQ[ToString[tens], str];
+	sub[tens_, str1_, str2_] := ToExpression[StringReplace[ToString[tens], str1 -> str2]];
+	hubblerules = {hubbleP[] :> hubbleC[]/scale[],
+		dothubbleP[] :> primehubbleC[]/scale[]^2 - hubbleP[]^2, 
+		ddothubbleP[] :> pprimehubbleC[]/scale[]^3 - 4 hubbleP[] dothubbleP[] - 2 hubbleP[]^3,
+		dddothubbleP[] :> ppprimehubbleC[]/scale[]^4 - 4 dothubbleP[]^2 - 7 ddothubbleP[] hubbleP[] - 18 hubbleP[]^2 dothubbleP[] - 6 hubbleP[]^4};
+	primerules = {tens_ /; match[tens, "dot*"] :> sub[tens, "dot", "prime"]/scale[],
+		tens_ /; match[tens, "ddot*"] :> sub[tens, "ddot", "pprime"]/scale[]^2 - hubbleC[]/scale[] sub[tens, "ddot", "dot"],
+		tens_ /; match[tens, "dddot*"] :> sub[tens, "dddot", "ppprime"]/scale[]^3 - 3 hubbleC[]/scale[] sub[tens, "dddot", "ddot"]
+			- 2 (hubbleC[]/scale[])^2 sub[tens, "dddot", "dot"] - (primehubbleC[]/scale[]^2 - hubbleC[]^2/scale[]^2) sub[tens, "dddot", "dot"]};
+	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
+	tmp //.isolate[tmp1_]:>tmp1 // Expand
+]*)

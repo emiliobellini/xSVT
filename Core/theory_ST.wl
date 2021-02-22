@@ -333,7 +333,7 @@ EQBHdegeneracy = primescalar[]^2/2/scale[]^2 Derivative[0,1][G5fun][scalar[],X[]
 		primescalar[]^2/2/scale[]^2 Derivative[1,0][G5fun][scalar[],X[]]) // ToCanonical;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Functions*)
 
 
@@ -349,6 +349,13 @@ NoF5[expr_]:=expr//.Derivative[__][F5fun][__]:>0//.F5fun[__]:>0
 PertScalarToPertP[expr_] := Module[{tmp}, tmp = expr;
 	tmp = tmp //.pertscalar[LI[2]] :> primescalar[] pertP[LI[2]] + pprimescalar[] pertP[LI[1]]^2 // Expand;
 	tmp = tmp //.pertscalar[LI[1]] :> primescalar[] pertP[LI[1]] // Expand;
+	tmp
+]
+
+
+PertPToPertScalar[expr_] := Module[{tmp}, tmp = expr;
+	tmp = tmp //.pertP[LI[2]] :> pertscalar[LI[2]]/primescalar[] - pprimescalar[]/primescalar[]^3 pertscalar[LI[1]]^2 // Expand;
+	tmp = tmp //.pertP[LI[1]] :> pertscalar[LI[1]]/primescalar[] // Expand;
 	tmp
 ]
 
