@@ -1,76 +1,55 @@
 (* ::Package:: *)
 
-DefScalarFunction[DG4fun, PrintAs -> "\[CapitalDelta]\!\(\*SubscriptBox[\(G\), \(4\)]\)"]
+SubX0=MakeRule[{X[],primescalar[]^2/2/scale[]^2}];
+invSubX0={primescalar[]^n_/;EvenQ[n]:>(2 scale[]^2 X[])^(n/2),primescalar[]^n_/;OddQ[n]:>(2 scale[]^2 X[])^((n-1)/2) primescalar[]};
+restoreXinG={Derivative[n_,m_][Gfun_][scalar[],x_]:>Derivative[n,m][Gfun][scalar[],X[]],Gfun_[scalar[],x_]:>Gfun[scalar[],X[]]};
 
 
 (****   Definitions   ****)
 
 
-tensorsbefore = $Tensors;
+DefScalarFunction[DG4fun, PrintAs -> "\[CapitalDelta]\!\(\*SubscriptBox[\(G\), \(4\)]\)"]
 
 
 (****   Metric   ****)
 
 
-DefTensor[pertetasync[LI[order]], {M1, M3}, PrintAs -> "\[Eta]",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[perthsync[LI[order]], {M1, M3}, PrintAs -> "h",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertalphasync[LI[order]], {M1, M3}, PrintAs -> "\[Alpha]",
-	DefInfo -> {"tensor", "perturbation"}]
+DefTensorSVT[pertetasync[LI[order]], {M1, M3}, PrintAs -> "\[Eta]", ScalarPertQ->True]
+DefTensorSVT[perthsync[LI[order]], {M1, M3}, PrintAs -> "h", ScalarPertQ->True]
+DefTensorSVT[pertalphasync[LI[order]], {M1, M3}, PrintAs -> "\[Alpha]", ScalarPertQ->True]
 
 
 (****   Scalar Field   ****)
 
 
-DefTensor[densitySC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalE]\), \(SC\)]\)",
-	DefInfo -> {"tensor", "building function"}]
-DefTensor[pressureSC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(SC\)]\)",
-	DefInfo -> {"tensor", "building function"}]
+DefTensorSVT[densitySC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalE]\), \(SC\)]\)", BackgroundQ->True]
+DefTensorSVT[pressureSC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]\), \(SC\)]\)", BackgroundQ->True]
 
 
-DefTensor[pertVsync[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(V\), \(X\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
+DefTensorSVT[pertVsync[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(V\), \(X\)]\)", ScalarPertQ->True]
 
 
 (****   Matter Fields   ****)
 
 
-DefTensor[densityC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(mC\)]\)",
-	DefInfo -> {"tensor", "background"}]
-DefTensor[pressureC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(mC\)]\)",
-	DefInfo -> {"tensor", "background"}]
+DefTensorSVT[densityC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(mC\)]\)", BackgroundQ->True]
+DefTensorSVT[pressureC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(mC\)]\)", BackgroundQ->True]
 
 
-DefTensor[densityRC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(rC\)]\)",
-	DefInfo -> {"tensor", "background"}]
-DefTensor[pressureRC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(rC\)]\)",
-	DefInfo -> {"tensor", "background"}]
+DefTensorSVT[densityRC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(rC\)]\)", BackgroundQ->True]
+DefTensorSVT[pressureRC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(rC\)]\)", BackgroundQ->True]
 
 
-DefTensor[pertdensityC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Rho]\), \(mC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertvelocityC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Theta]\), \(mC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertpressureC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]p\), \(mC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertshearC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Sigma]\), \(mC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
+DefTensorSVT[pertdensityC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Rho]\), \(mC\)]\)", ScalarPertQ->True]
+DefTensorSVT[pertvelocityC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Theta]\), \(mC\)]\)", ScalarPertQ->True]
+DefTensorSVT[pertpressureC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]p\), \(mC\)]\)", ScalarPertQ->True]
+DefTensorSVT[pertshearC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Sigma]\), \(mC\)]\)", ScalarPertQ->True]
 
 
-DefTensor[pertdensityRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Rho]\), \(rC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertvelocityRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Theta]\), \(rC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertpressureRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]p\), \(rC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-DefTensor[pertshearRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Sigma]\), \(rC\)]\)",
-	DefInfo -> {"tensor", "perturbation"}]
-
-
-tensorstoderive = Complement[$Tensors, tensorsbefore];
-Import[$CodeDirectory<>"Core/DerivedTensors.wl"]
-Clear[tensorsbefore, tensorstoderive]
+DefTensorSVT[pertdensityRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Rho]\), \(rC\)]\)", ScalarPertQ->True]
+DefTensorSVT[pertvelocityRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Theta]\), \(rC\)]\)", ScalarPertQ->True]
+DefTensorSVT[pertpressureRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]p\), \(rC\)]\)", ScalarPertQ->True]
+DefTensorSVT[pertshearRC[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\[Sigma]\), \(rC\)]\)", ScalarPertQ->True]
 
 
 (****   Commands   ****)
@@ -102,7 +81,7 @@ ToSync[expr_] := Module[{tmp}, tmp = expr;
 SyncToClass[expr_] := Module[{tmp}, tmp = expr;
 	tmp = tmp //.pertphi[LI[order_]]:>pertetasync[LI[order]];
 	tmp = tmp //.pertE[LI[order_]]:>-1/2/kscal[]^2 (perthsync[LI[order]]+6 pertetasync[LI[order]]);
-	tmp = tmp //.pertV[LI[order_]]:>scale[] pertVsync[LI[order]];
+	tmp = tmp //.pertP[LI[order_]]:> -pertVsync[LI[order]];
 	tmp = tmp //.PD[-a_]@pertetasync[LI[1]]:>1/6 (2 kscal[]^2 timevec[-a] pertalphasync[LI[1]]-PD[-a]@perthsync[LI[1]]);
 	tmp // Expand
 ]

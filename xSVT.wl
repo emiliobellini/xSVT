@@ -26,7 +26,8 @@ list = Map[Unevaluated, Unevaluated@{
 	{$ScalarPerts,               BooleanQ},
 	{$VectorPerts,               BooleanQ},
 	{$TensorPerts,               BooleanQ},
-	{$ImportDecompositionRules,  StringQ}
+	{$ImportDecompositionRules,  StringQ},
+	{$ToClass,                   BooleanQ}
 }, {2}];
 listvar = #[[1]] & /@list;
 listtype = #[[2]] & /@list;
@@ -151,4 +152,4 @@ If[$Theory=="ST", Import[$CodeDirectory<>"Core/lagrangian_ST.wl"]];
 (****   ToClass   ****)
 
 
-Import[$CodeDirectory<>"Core/to_class.wl"]
+If[$ToClass, Import[$CodeDirectory<>"Core/to_class.wl"]];
