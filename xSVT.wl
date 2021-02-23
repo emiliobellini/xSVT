@@ -139,12 +139,6 @@ Off[Attributes::ssle]
 $Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0, primescalar[]!=0};
 
 
-(*TODO*)
-
-(*(****   Commands   ****)*)
-(*Import[$CodeDirectory<>"Core/Commands.wl"]*)
-
-
 (****   Lagrangian   ****)
 
 Import[$CodeDirectory<>"Core/lagrangian_matter.wl"];
@@ -154,18 +148,7 @@ If[$Theory=="GR", Import[$CodeDirectory<>"Core/lagrangian_GR.wl"]];
 If[$Theory=="ST", Import[$CodeDirectory<>"Core/lagrangian_ST.wl"]];
 
 
-(*Import[$CodeDirectory<>"Core/AlphaDefinitions.wl"]*)
+(****   ToClass   ****)
 
 
-(*(****   Import Additional Functions   ****)*)
-
-
-(*If[$ExtraFunctions==1,
-	Import[$CodeDirectory<>"Core/ExtraFunctions.wl"]]*)
-
-
-(*(****   ToClass   ****)*)
-
-
-(*If[$ToClass==1,
-	Import[$CodeDirectory<>"Core/ToClass.wl"]]*)
+Import[$CodeDirectory<>"Core/to_class.wl"]
