@@ -292,7 +292,7 @@ XsyncToScalar[expr_]:=Module[{tmp},
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*MathematicaToClass Dictionary*)
 
 
@@ -473,11 +473,11 @@ $MathematicaToClass =
 	primepertxsyncnum[LI[1]]  -> {"x_prime_qs_smg_num"},
 	primepertxsyncden[LI[1]]  -> {"x_prime_qs_smg_den"},
 	(* Quasi static approximation *)
-	massQS2[]                 -> {"mass2"},
-	primemassQS2[]            -> {"mass2_p"},
-	massRQS2[]                -> {"rad2"},
-	frictionQS[]              -> {"friction"},
-	slopeQS[]                 -> {"slope"}
+	massQS2[]                 -> {"mass2_qs"},
+	primemassQS2[]            -> {"mass2_qs_p"},
+	massRQS2[]                -> {"rad2_qs"},
+	frictionQS[]              -> {"friction_qs"},
+	slopeQS[]                 -> {"slope_qs"}
 	|>;
 
 

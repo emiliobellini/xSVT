@@ -316,7 +316,7 @@ collects all the variables addvar. The argument options includes all the options
 of the Collect function.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Useful functions*)
 
 

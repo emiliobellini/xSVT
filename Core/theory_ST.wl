@@ -30,7 +30,7 @@ DefTensorSVT[X[], M1, BackgroundQ->True]
 DefTensorSVT[pertX[LI[order]], {M1, M3}, PrintAs -> "\[Delta]X", ScalarPertQ->True]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Alphas*)
 
 
@@ -97,7 +97,7 @@ DefScalarFunction[F5fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(5\)]\)"]
 DefTensor[source11[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(11\)]\)"]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Expansion Rules*)
 
 
@@ -334,7 +334,7 @@ EQBHdegeneracy = primescalar[]^2/2/scale[]^2 Derivative[0,1][G5fun][scalar[],X[]
 		primescalar[]^2/2/scale[]^2 Derivative[1,0][G5fun][scalar[],X[]]) // ToCanonical;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Functions*)
 
 
@@ -393,7 +393,7 @@ PertPToPertV[expr_] := Module[{tmp}, tmp = expr;
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Tex Corrections*)
 
 

@@ -211,7 +211,9 @@ DefTensor[source10[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\)
 (*Expansion Rules*)
 
 
-(****   Metric   ****)
+(* ::Subsection::Closed:: *)
+(*Metric*)
+
 
 metricrules = {
 	metricg[-a_?TangentM1`Q, -b_?TangentM1`Q] :> -timevec[-a] timevec[-b] scale[]^2, 
@@ -232,12 +234,14 @@ Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 Clear[metricrules];
 
 
+(* ::Subsection::Closed:: *)
+(*Matter*)
+
+
 $StressEnergyDecomposition = stressenergy[\[Mu]_?TangentM4`pmQ, \[Nu]_?TangentM4`pmQ] :> (densitycov[] + pressurecov[]) velocitycov[\[Mu]] velocitycov[\[Nu]] + pressurecov[] metricg[\[Mu], \[Nu]] + shearcov[\[Mu], \[Nu]];
 
 Print[Column[{"Stress-Energy Tensor Decomposition", ScreenDollarIndices[$StressEnergyDecomposition]}]]
 
-
-(****   Matter Field   ****)
 
 matterrules = Flatten[{
 	mattercov[] :> matter[],
@@ -265,6 +269,10 @@ Print[Column[{"Matter field Decomposition", ScreenDollarIndices[matterrules]}]]
 Clear[matterrules]
 
 
+(* ::Subsection::Closed:: *)
+(*Gauge Transformations*)
+
+
 (****   Gauge Transformations   ****)
 
 gaugerules = Flatten[{
@@ -279,7 +287,7 @@ Print[Column[{"Gauge Decomposition", ScreenDollarIndices[gaugerules]}]]
 Clear[gaugerules]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Tex Corrections*)
 
 
