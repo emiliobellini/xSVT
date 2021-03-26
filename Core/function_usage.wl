@@ -169,7 +169,7 @@ DefDerivedTensorsSVTQ::usage = "DefDerivedTensorsSVTQ (boolean, default:True) is
 DefTensorSVT. If True the DefDerivedTensorsSVT is used.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Manipulation of expressions*)
 
 

@@ -8,7 +8,7 @@
 (*Definitions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Scalar Field*)
 
 
@@ -30,7 +30,7 @@ DefTensorSVT[X[], M1, BackgroundQ->True]
 DefTensorSVT[pertX[LI[order]], {M1, M3}, PrintAs -> "\[Delta]X", ScalarPertQ->True]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Alphas*)
 
 
@@ -45,7 +45,7 @@ DefTensorSVT[pressureS[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[ScriptCapitalP]
 DefTensorSVT[mass2[], M1, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(*\)], \(2\)]\)", BackgroundQ->True]
 
 
-DefTensorSVT[Dmass2[], M1, PrintAs -> "\[CapitalDelta]\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(*\)], \(2\)]\)", BackgroundQ->True]
+DefTensorSVT[Dmass2[], M1, PrintAs -> "\[Delta]\!\(\*SuperscriptBox[SubscriptBox[\(M\), \(*\)], \(2\)]\)", BackgroundQ->True]
 
 
 DefTensorSVT[alphaM[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(M\)]\)", BackgroundQ->True]
@@ -63,6 +63,7 @@ DefTensorSVT[alphaHH[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(HH\)]
 DefTensorSVT[alphaDEG[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Alpha]\), \(DEG\)]\)", BackgroundQ->True]
 
 
+DefTensorSVT[wS[], M1, PrintAs -> "\!\(\*SubscriptBox[\(w\), \(S\)]\)", BackgroundQ->True]
 DefTensorSVT[kinD[], M1, PrintAs -> "D", BackgroundQ->True]
 DefTensorSVT[cs2[], M1, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(S\)], \(2\)]\)", BackgroundQ->True]
 DefTensorSVT[ct2[], M1, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(T\)], \(2\)]\)", BackgroundQ->True]
@@ -96,7 +97,7 @@ DefScalarFunction[F5fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(5\)]\)"]
 DefTensor[source11[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(11\)]\)"]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Expansion Rules*)
 
 
@@ -340,7 +341,7 @@ EQBHdegeneracy = primescalar[]^2/2/scale[]^2 Derivative[0,1][G5fun][scalar[],X[]
 (****   NoG's   ****)
 NoG2[expr_]:=expr//.Derivative[__][G2fun][__]:>0//.G2fun[__]:>0
 NoG3[expr_]:=expr//.Derivative[__][G3fun][__]:>0//.G3fun[__]:>0
-NoG4[expr_]:=expr//.Derivative[__][G4fun][__]:>0//.G4fun[__]:>0
+NoG4[expr_]:=expr//.Derivative[__][G4fun][__]:>0//.G4fun[__]:>0//.Derivative[__][DG4fun][__]:>0//.DG4fun[__]:>0
 NoG5[expr_]:=expr//.Derivative[__][G5fun][__]:>0//.G5fun[__]:>0
 NoF4[expr_]:=expr//.Derivative[__][F4fun][__]:>0//.F4fun[__]:>0
 NoF5[expr_]:=expr//.Derivative[__][F5fun][__]:>0//.F5fun[__]:>0

@@ -1231,13 +1231,17 @@ Coeff[expr_] /;xSVTUtilities`PertQ[expr] := Coeff[1] expr
 
 
 (* ::Subsection::Closed:: *)
-(*NSpaceDer*)
+(*NDers*)
 
 
-NSpaceDer[n_][expr_] := Module[{tmp,order},
+NDers[n_,type_:All][expr_] := Module[{tmp,order},
 	tmp = expr // Expand;
 	tmp = Replace[tmp,Plus->List,{1},Heads->True];
-	order = Length[IndicesOf[PD,TangentM3][#]]&/@tmp;
+	If[ToString[Head[tmp]]!="List",tmp = {tmp}];
+	If[type===All,
+		order = Length[IndicesOf[PD][#]]&/@tmp;,
+		order = Length[IndicesOf[PD,type][#]]&/@tmp
+	];
 	order = Boole[#==n]&/@order;
 	tmp = tmp*order //.List->Plus;
 	tmp
@@ -1248,7 +1252,7 @@ NSpaceDer[n_][expr_] := Module[{tmp,order},
 (*ToPhysical & ToConformal (TODO)*)
 
 
-(*ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
+ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 	isolate[tmp1_+tmp2_] := isolate[tmp1] + isolate[tmp2];
 	isolate[tmp1_*tmp2_] := isolate[tmp1] * isolate[tmp2];
 	match[tens_, str_] := StringMatchQ[ToString[tens], str];
@@ -1263,7 +1267,7 @@ NSpaceDer[n_][expr_] := Module[{tmp,order},
 			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"])};
 	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
 	tmp //.isolate[tmp1_]:>tmp1 // Expand
-]*)
+]
 
 
 (*ToConformal[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
