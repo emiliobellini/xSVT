@@ -451,7 +451,7 @@ $MathematicaToClass =
 	primec12[]         -> {"c12_p"},
 	primec13[]         -> {"c13_p"},
 	(* Perturbations metric *)
-	checkeinsteinfirst[]      -> {"checkeinsteinfirst"},
+	checkeinsteinfirst[]      -> {"ppw->pvecmetric[ppw->index_mt_checkeinstein00_smg]"},
 	pertetasync[LI[1]]        -> {"ppw->pvecmetric[ppw->index_mt_eta]"},
 	primepertetasync[LI[1]]   -> {"ppw->pvecmetric[ppw->index_mt_eta_prime]"},
 	primeperthsync[LI[1]]     -> {"ppw->pvecmetric[ppw->index_mt_h_prime]"},
