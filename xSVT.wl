@@ -4,11 +4,11 @@
 (*xSVT*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Initialise*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Preliminary checks*)
 
 
@@ -49,7 +49,7 @@ If[exit, Print["Exiting..."]; Exit[]];
 Clear[list, listvar, listtype, exit];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Main xAct call and global settings*)
 
 
@@ -91,9 +91,9 @@ Protect[IndexForm];
   of xSVT functions and variables.
 ****)
 
-Import[$CodeDirectory<>"Core/function_usage.wl"]
+Import[FileNameJoin[{$CodeDirectory,"Core","function_usage.wl"}]]
 
-Import[$CodeDirectory<>"Core/function_definitions.wl"]
+Import[FileNameJoin[{$CodeDirectory,"Core","function_definitions.wl"}]]
 
 
 (****
@@ -123,10 +123,10 @@ If[FileExistsQ[$ImportDecompositionRules],
 ****)
 
 (** Basic definitions: GR and matter **)
-Import[$CodeDirectory<>"Core/theory_GR.wl"]
+Import[FileNameJoin[{$CodeDirectory,"Core","theory_GR.wl"}]]
 
 (** Additional definitions: ST **)
-If[$Theory=="ST" || $Theory=="ALL", Import[$CodeDirectory<>"Core/theory_ST.wl"]];
+If[$Theory=="ST" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_ST.wl"}]]];
 
 Clear[fill]
 
@@ -142,14 +142,14 @@ $Assumptions = {scale[]>0, hubbleC[]>0, hubbleP[]>0, primescalar[]!=0};
 
 (****   Lagrangian   ****)
 
-Import[$CodeDirectory<>"Core/lagrangian_matter.wl"];
+Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_matter.wl"}]];
 
-If[$Theory=="GR", Import[$CodeDirectory<>"Core/lagrangian_GR.wl"]];
+If[$Theory=="GR", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_GR.wl"}]]];
 
-If[$Theory=="ST", Import[$CodeDirectory<>"Core/lagrangian_ST.wl"]];
+If[$Theory=="ST", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_ST.wl"}]]];
 
 
 (****   ToClass   ****)
 
 
-If[$ToClass, Import[$CodeDirectory<>"Core/to_class.wl"]];
+If[$ToClass, Import[FileNameJoin[{$CodeDirectory,"Core","to_class.wl"}]]];
