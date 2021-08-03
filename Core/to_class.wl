@@ -292,7 +292,7 @@ XsyncToScalar[expr_]:=Module[{tmp},
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*MathematicaToClass Dictionary*)
 
 
@@ -477,7 +477,11 @@ $MathematicaToClass =
 	primemassQS2[]            -> {"mass2_qs_p"},
 	massRQS2[]                -> {"rad2_qs"},
 	frictionQS[]              -> {"friction_qs"},
-	slopeQS[]                 -> {"slope_qs"}
+	slopeQS[]                 -> {"slope_qs"},
+	geff[]                    -> {"geff"},
+	slip[]                    -> {"slip"},
+	primegeff[]               -> {"geff_p"},
+	primeslip[]               -> {"slip_p"}
 	|>;
 
 
