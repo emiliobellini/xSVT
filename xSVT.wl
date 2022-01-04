@@ -4,11 +4,11 @@
 (*xSVT*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Initialise*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Preliminary checks*)
 
 
@@ -23,9 +23,9 @@ list = Map[Unevaluated, Unevaluated@{
 	{$EquationsDirectory,        StringQ},
 	{$Theory,                    StringQ},
 	{$Metric,                    StringQ},
-	{$ScalarPerts,               BooleanQ},
-	{$VectorPerts,               BooleanQ},
-	{$TensorPerts,               BooleanQ},
+	{$ScalarPertsQ,              BooleanQ},
+	{$VectorPertsQ,              BooleanQ},
+	{$TensorPertsQ,              BooleanQ},
 	{$ImportDecompositionRules,  StringQ},
 	{$ToClass,                   BooleanQ}
 }, {2}];
@@ -49,7 +49,7 @@ If[exit, Print["Exiting..."]; Exit[]];
 Clear[list, listvar, listtype, exit];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Main xAct call and global settings*)
 
 
@@ -83,6 +83,17 @@ Protect[IndexForm];
 
 (* ::Section:: *)
 (*xSVT pipeline*)
+
+
+(****
+  Initialise global variables containing the
+  list of tensors defined in xSVT.
+****)
+
+$ListBackground = List[];
+$ListScalarPerts = List[];
+$ListVectorPerts = List[];
+$ListTensorPerts = List[];
 
 
 (****

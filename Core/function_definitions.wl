@@ -439,6 +439,7 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 
 	(** Background **)
 	If[backQ,
+		AppendTo[$ListBackground, tensorname];
 		AutomaticRules[#, {PD[i_?tan3pmQ]@#[] :> 0}]&/@{tensorname};
 		If[StringMatchQ[ToString@tensorname, RegularExpression@"p*prime.*"],
 			AutomaticRules[#, {PD[-a_?tan1Q]@#[] :> timevec[-a] ToExpression["p"<>ToString[#]<>"[]"]}]&/@{tensorname};,
@@ -450,12 +451,14 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 
 	(** Scalar Perturbations **)
 	If[scalQ,
-		If[Not@$ScalarPerts, AutomaticRules[#, {#[LI[order_]] :> 0}]&/@{tensorname}];
+		AppendTo[$ListScalarPerts, tensorname];
+		If[Not@$ScalarPertsQ, AutomaticRules[#, {#[LI[order_]] :> 0}]&/@{tensorname}];
 	];
 
 	(** Vector Perturbations **)
 	If[vecQ,
-		If[Not@$VectorPerts, AutomaticRules[#, {#[LI[order_], i_?tan3pmQ] :> 0}]&/@{tensorname}];
+		AppendTo[$ListVectorPerts, tensorname];
+		If[Not@$VectorPertsQ, AutomaticRules[#, {#[LI[order_], i_?tan3pmQ] :> 0}]&/@{tensorname}];
 		AutomaticRules[#, {
 			PD[i_?tan3Q]@#[LI[order_], -i_?tan3Q] :> 0,
 			PD[-i_?tan3Q]@#[LI[order_], i_?tan3Q] :> 0
@@ -476,7 +479,8 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 
 	(** Tensor Perturbations **)
 	If[tensQ,
-		If[Not@$TensorPerts, AutomaticRules[#, {#[LI[order_], i_?tan3pmQ, j_?tan3pmQ] :> 0}]&/@{tensorname}];
+		AppendTo[$ListTensorPerts, tensorname];
+		If[Not@$TensorPertsQ, AutomaticRules[#, {#[LI[order_], i_?tan3pmQ, j_?tan3pmQ] :> 0}]&/@{tensorname}];
 		AutomaticRules[#, {
 			#[LI[order_], i_?tan3Q, -i_?tan3Q] :> 0,
 			#[LI[order_], -i_?tan3Q, i_?tan3Q] :> 0, 

@@ -18,15 +18,25 @@ the equations imported. Options: GR (General Relativity), ST (scalar-tensor, \
 beyond Horndeski), ALL (import everything).";
 $Metric::usage = "$Metric (string) is a global variable where the user specifies \
 the metric that he wants to use. The only option for now is: FRW Flat.";
-$ScalarPerts::usage = "$ScalarPerts (boolean) is a global variable that \
+$ScalarPertsQ::usage = "$ScalarPertsQ (boolean) is a global variable that \
 automatically suppress (if False) scalar perturbations in the 3+1 decomposition.";
-$VectorPerts::usage = "$VectorPerts (boolean) is a global variable that \
+$VectorPertsQ::usage = "$VectorPertsQ (boolean) is a global variable that \
 automatically suppress (if False) vector perturbations in the 3+1 decomposition.";
-$TensorPerts::usage = "$TensorPerts (boolean) is a global variable that \
+$TensorPertsQ::usage = "$TensorPertsQ (boolean) is a global variable that \
 automatically suppress (if False) tensor perturbations in the 3+1 decomposition.";
 $ImportDecompositionRules::usage = "$ImportDecompositionRules (string) is a global \
 variable that allows the user to import preconputed or custom decomposition rules \
 instead of the default ones. Leave an empty string to use default rules.";
+
+
+$ListBackground::usage = "$ListBackground (list of tensors) is a global variable that \
+contains the list of all the background quantities as defined in xSVT.";
+$ListScalarPerts::usage = "$ListScalarPerts (list of tensors) is a global variable that \
+contains the list of all the scalar perturbations as defined in xSVT.";
+$ListVectorPerts::usage = "$ListVectorPerts (list of tensors) is a global variable that \
+contains the list of all the vector perturbations as defined in xSVT.";
+$ListTensorPerts::usage = "$ListTensorPerts (list of tensors) is a global variable that \
+contains the list of all the tensor perturbations as defined in xSVT.";
 
 
 GlobalOptionsSVT::usage = "GlobalOptionsSVT[opt] returns the value of the option \
@@ -122,7 +132,7 @@ spatial derivatives are defined.";
 ScalarPertQ::usage = "ScalarPertQ (boolean, default:False) is an option for \
 AutomaticRulesSVT, DefDerivedTensorsSVT and DefTensorsSVT (in the last two cases \
 it is used only if AutomaticRulesSVTQ->True). If True the tensor is considered as \
-a scalar perturbation. Then, if $ScalarPerts=False, these quantities are automatically \
+a scalar perturbation. Then, if $ScalarPertsQ=False, these quantities are automatically \
 suppressed.";
 VectorPertQ::usage = "VectorPertQ (boolean, default:False) is an option for \
 AutomaticRulesSVT, DefDerivedTensorsSVT and DefTensorsSVT (in the last two cases \
