@@ -769,7 +769,7 @@ SortRiemannIndices[expr_, cd_?CovDQ] := Module[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*GRToBuildingBlocks*)
 
 
@@ -819,7 +819,9 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 	If[verbose, xSVTUtilities`PrintLevel["Canonicalizing expression.", 1]];
 	tmp = tmp // NoScalar;
 	tmp = Expand[#]&/@tmp;
+	tmp = xSVTUtilities`ListifyExpr[tmp, "Part", 1, {}];
 	tmp = ToCanonical[#, UseMetricOnVBundle -> None]&/@tmp;
+	tmp = xSVTUtilities`DeListifyExpr[tmp];
 	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
 	If[verbose, xSVTUtilities`PrintLevel["Finished GRToBuildingBlocks.", 0]];
 
