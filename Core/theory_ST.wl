@@ -30,7 +30,7 @@ DefTensorSVT[X[], M1, BackgroundQ->True]
 DefTensorSVT[pertX[LI[order]], {M1, M3}, PrintAs -> "\[Delta]X", ScalarPertQ->True]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Alphas*)
 
 
@@ -70,6 +70,11 @@ DefTensorSVT[ct2[], M1, PrintAs -> "\!\(\*SuperscriptBox[SubscriptBox[\(c\), \(T
 DefTensorSVT[Qs[], M1, PrintAs -> "\!\(\*SubscriptBox[\(Q\), \(S\)]\)", BackgroundQ->True]
 DefTensorSVT[Qt[], M1, PrintAs -> "\!\(\*SubscriptBox[\(Q\), \(T\)]\)", BackgroundQ->True]
 DefTensorSVT[kB[], M1, PrintAs -> "\!\(\*SubscriptBox[\(k\), \(B\)]\)", BackgroundQ->True]
+
+
+DefTensorSVT[Geff[], M1, PrintAs -> "\!\(\*SubscriptBox[\(G\), \(eff\)]\)", BackgroundQ->True]
+DefTensorSVT[slip[], M1, PrintAs -> "\[Eta]", BackgroundQ->True]
+DefTensorSVT[Glight[], M1, PrintAs->"\[CapitalSigma]", BackgroundQ->True]
 
 
 AutomaticRules[primemass2, {primemass2[] :> hubbleC[] mass2[] alphaM[]}]

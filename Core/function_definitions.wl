@@ -769,7 +769,7 @@ SortRiemannIndices[expr_, cd_?CovDQ] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*GRToBuildingBlocks*)
 
 
@@ -1301,3 +1301,26 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
 	tmp //.isolate[tmp1_]:>tmp1 // Expand
 ]*)
+
+
+(* ::Subsection:: *)
+(*GaugeTransformation*)
+
+
+GaugeTransformation[ten_, gen_, inds___] := Module[{FindPerts,tmpL,tmpR,ruleL},
+	FindPerts[List[terms__]] := FindPerts[#]&/@List[terms];
+	FindPerts[expr1_ + expr2_] := FindPerts[expr1] + FindPerts[expr2];
+	FindPerts[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := FindPerts[expr2];
+	FindPerts[tens_]/;xSVTUtilities`PertQ[tens] := tens;
+	tmpR = GaugeChange[ten,gen] // LieDToCovD // Expand;
+	tmpR = SplitSpaceTime[tmpR, inds];
+	tmpR = SVTExpand[tmpR];
+	tmpL = SplitSpaceTime[ten, inds];
+	tmpL = SVTExpand[tmpL];
+	ruleL = FindPerts[tmpL //.Plus->List];
+	ruleL = {ruleL} // Flatten;
+	ruleL = ruleL //.PD[_]@tens_:>tens //.tens_[LI[_],___]:>tens;
+	ruleL = MapThread[Rule,{ruleL,ToExpression[ToString[#]<>"G"]&/@ruleL}];
+	tmpL = tmpL //.ruleL;
+	-tmpL+tmpR
+]

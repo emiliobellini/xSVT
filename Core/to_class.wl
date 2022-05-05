@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
 SubX0=MakeRule[{X[],primescalar[]^2/2/scale[]^2}];
-invSubX0={primescalar[]^n_/;EvenQ[n]:>(2 scale[]^2 X[])^(n/2),primescalar[]^n_/;OddQ[n]:>(2 scale[]^2 X[])^((n-1)/2) primescalar[]};
+invSubX0={primescalar[]^n_/;EvenQ[n]:>(2 scale[]^2 X[])^(n/2),primescalar[]^n_/;(OddQ[n] && n>0):>(2 scale[]^2 X[])^((n-1)/2) primescalar[]};
 restoreXinG={Derivative[n_,m_][Gfun_][scalar[],x_]:>Derivative[n,m][Gfun][scalar[],X[]],Gfun_[scalar[],x_]:>Gfun[scalar[],X[]]};
 
 
@@ -182,6 +182,14 @@ DefTensorSVT[c13[], M1, PrintAs -> "\!\(\*SubscriptBox[\(c\), \(13\)]\)", Backgr
 DefTensorSVT[c14[], M1, PrintAs -> "\!\(\*SubscriptBox[\(c\), \(14\)]\)", BackgroundQ->True]
 DefTensorSVT[c15[], M1, PrintAs -> "\!\(\*SubscriptBox[\(c\), \(15\)]\)", BackgroundQ->True]
 DefTensorSVT[c16[], M1, PrintAs -> "\!\(\*SubscriptBox[\(c\), \(16\)]\)", BackgroundQ->True]
+
+
+(****   QS functions   ****)
+
+
+DefTensorSVT[DGeff[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]G\), \(eff\)]\)", BackgroundQ->True]
+DefTensorSVT[Dslip[], M1, PrintAs -> "\[Delta]\[Eta]", BackgroundQ->True]
+DefTensorSVT[DGlight[], M1, PrintAs->"\[Delta]\[CapitalSigma]", BackgroundQ->True]
 
 
 (* ::Subsection::Closed:: *)
@@ -452,12 +460,15 @@ $MathematicaToClass =
 	primec13[]         -> {"c13_p"},
 	(* Perturbations metric *)
 	checkeinsteinfirst[]      -> {"ppw->pvecmetric[ppw->index_mt_checkeinstein00_smg]"},
-	pertetasync[LI[1]]        -> {"ppw->pvecmetric[ppw->index_mt_eta]"},
+	pertetasync[LI[1]]        -> {"y[ppw->pv->index_pt_eta]", "ppw->pvecmetric[ppw->index_mt_eta]"},
 	primepertetasync[LI[1]]   -> {"ppw->pvecmetric[ppw->index_mt_eta_prime]"},
 	primeperthsync[LI[1]]     -> {"ppw->pvecmetric[ppw->index_mt_h_prime]"},
 	pprimeperthsync[LI[1]]    -> {"ppw->pvecmetric[ppw->index_mt_h_prime_prime]"},
 	pertalphasync[LI[1]]      -> {"ppw->pvecmetric[ppw->index_mt_alpha]"},
 	primepertalphasync[LI[1]] -> {"ppw->pvecmetric[ppw->index_mt_alpha_prime]"},
+	pertpsi[LI[1]]            -> {"ppw->pvecmetric[ppw->index_mt_psi]"},
+	pertphi[LI[1]]            -> {"y[ppw->pv->index_pt_phi]", "ppw->pvecmetric[ppw->index_mt_phi]"},
+	primepertphi[LI[1]]       -> {"ppw->pvecmetric[ppw->index_mt_phi_prime]"},
 	(* Perturbations matter *)
 	pertdensityC[LI[1]]       -> {"ppw->delta_rho"},
 	pertpressureC[LI[1]]      -> {"ppw->delta_p"},
@@ -466,6 +477,7 @@ $MathematicaToClass =
 	pertpressureCRSA[LI[1]]   -> {"ppw->pvecmetric[ppw->index_mt_rsa_p_smg]"},
 	pertdensityRC[LI[1]]      -> {"ppw->delta_rho_r"},
 	pertvelocityRC[LI[1]]     -> {"ppw->rho_plus_p_theta_r"},
+	primepertshearC[LI[1]]    -> {"ppw->rho_plus_p_shear_prime"},
 	(* Perturbations scalar field *)
 	pertxsync[LI[1]]          -> {"ppw->pvecmetric[ppw->index_mt_x_smg]", "*x_qs_smg"},
 	primepertxsync[LI[1]]     -> {"ppw->pvecmetric[ppw->index_mt_x_prime_smg]", "*x_prime_qs_smg"},
@@ -477,7 +489,16 @@ $MathematicaToClass =
 	primemassQS2[]            -> {"mass2_qs_p"},
 	massRQS2[]                -> {"rad2_qs"},
 	frictionQS[]              -> {"friction_qs"},
-	slopeQS[]                 -> {"slope_qs"}
+	slopeQS[]                 -> {"slope_qs"},
+	Geff[]                    -> {"geff"},
+	slip[]                    -> {"slip"},
+	Glight[]                  -> {"glight"},
+	DGeff[]                   -> {"dgeff"},
+	Dslip[]                   -> {"dslip"},
+	DGlight[]                 -> {"dglight"},
+	primeGeff[]               -> {"geff_p"},
+	primeslip[]               -> {"slip_p"},
+	primeGlight[]             -> {"glight_p"}
 	|>;
 
 
@@ -661,6 +682,9 @@ ClassToMathematica[text_, var_, pos_:1, OptionsPattern[]]:=Module[
 
 	(* Special syntax (equal, powers) *)
 	str = "("<>StringReplace[str,{"="->")==(", ";"->")"}];
+	(* TODO: improve this. StringReplace applied many times to replace all the nested pow() *)
+	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
+	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
 	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
 
 	(* G functions and their derivatives *)
