@@ -18,7 +18,7 @@ Options[GlobalOptionsSVT] = {
 GlobalOptionsSVT[opt_, OptionsPattern[]] := Return@OptionValue@opt;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Utilities*)
 
 
@@ -780,7 +780,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 (*Manipulation of expressions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Listify*)
 
 
