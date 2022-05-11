@@ -18,7 +18,7 @@ Options[GlobalOptionsSVT] = {
 GlobalOptionsSVT[opt_, OptionsPattern[]] := Return@OptionValue@opt;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Utilities*)
 
 
@@ -136,7 +136,7 @@ PertQ[tens_] := Module[
 	head = tens
 	},
 	
-	head = Head@Evaluate[head //.PD[__]@smth_:>smth];
+	head = Head@Evaluate[head //.PD[__]@smth_:>smth //.CD[__]@smth_:>smth];
 	xTensorQ[head] && MemberQ[SlotsOfTensor[head],xAct`xTensor`Labels]
 ]
 
@@ -155,7 +155,10 @@ ListifyExpr[expr_, method_, partlength_, collectvars_] := Module[
 			tmpexpr = Replace[tmpexpr,Plus->List,{1},Heads->True];
 			tmpexpr1 = Partition[tmpexpr /.Plus->List,partlength];
 			tmpexpr2 = tmpexpr[[-Mod[Length[tmpexpr],partlength];;-1]];
-			tmpexpr = Append[tmpexpr1, tmpexpr2];
+			tmpexpr = If[tmpexpr2==={},
+				tmpexpr1,
+				Append[tmpexpr1, tmpexpr2]
+			];
 			tmpexpr = Map[# /.List->Plus &, tmpexpr];,
 			tmpexpr = {tmpexpr}
 		];
@@ -708,7 +711,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 (*Manipulation of expressions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Listify*)
 
 
