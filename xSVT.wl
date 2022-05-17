@@ -8,7 +8,7 @@
 (*Initialise*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Preliminary checks*)
 
 

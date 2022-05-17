@@ -15,8 +15,8 @@
 (* These are the necessary global variables to set before running the code *)
 
 (** Paths **)
-$CodeDirectory=NotebookDirectory[];
-$EquationsDirectory=FileNameJoin[{$CodeDirectory,"Equations"}]<>$PathnameSeparator;
+$CodeDirectory = Directory[];
+$EquationsDirectory = FileNameJoin[{$CodeDirectory,"Equations"}]<>$PathnameSeparator;
 
 (**
 Theories implemented (all of them include a metric and matter):
@@ -24,17 +24,17 @@ Theories implemented (all of them include a metric and matter):
   - ST: scalar-tensor (beyond Horndeski);
   - ALL: import all the theories implemented.
 **)
-$Theory="STfast";
+$Theory = "STfast";
 
 (**
 Type of metric. For now only FRW Flat is implemented.
 **)
-$Metric="FRW Flat";
+$Metric = "FRW Flat";
 
 (** Import scalar/vector/tensor perturbations **)
-$ScalarPertsQ=True;
-$VectorPertsQ=True;
-$TensorPertsQ=True;
+$ScalarPertsQ = True;
+$VectorPertsQ = True;
+$TensorPertsQ = True;
 
 (**
  Import decomposition rules from external file.
@@ -43,14 +43,16 @@ Leave an empty string to use default rules.
 $ImportDecompositionRules = "";
 
 (** Import module with Class definitions and conversions **)
-$ToClass=False;
+$ToClass = False;
 
 
 (* ::Subsection::Closed:: *)
 (*Run*)
 
 
-$HistoryLength=1
+$HistoryLength=1;
+
+If[$FrontEnd===Null,Off[FrontEndObject::notavail]];
 
 Get[FileNameJoin[{$CodeDirectory,"xSVT.wl"}]]
 
