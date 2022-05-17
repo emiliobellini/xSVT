@@ -18,7 +18,7 @@ Options[GlobalOptionsSVT] = {
 GlobalOptionsSVT[opt_, OptionsPattern[]] := Return@OptionValue@opt;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Utilities*)
 
 
@@ -518,7 +518,7 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DefDerivedTensorsSVT*)
 
 
@@ -568,8 +568,10 @@ DefDerivedTensorsSVT[tensor_, opts : OptionsPattern[{DefDerivedTensorsSVT, Globa
 		SymmetryGroupOfTensor@tensout ^= Evaluate@SymmetryGroupOfTensor@tensin;
 		DependenciesOfTensor@tensout ^= Evaluate@DependenciesOfTensor@tensin;
 		HostsOf@tensout ^= Evaluate@HostsOf@tensin;
-		PrintAs@Evaluate@tensout ^= Evaluate[ToString[printas@PrintAs@Evaluate@tensin, StandardForm]];
-		Tex@Evaluate@tensout ^= texas@tensin;
+		If[$FrontEnd=!=Null,
+			PrintAs@Evaluate@tensout ^= Evaluate[ToString[printas@PrintAs@Evaluate@tensin, StandardForm]];
+			Tex@Evaluate@tensout ^= texas@tensin;
+		];
 		AppendTo[$Tensors, tensout];
 		If[autoQ,
 			selectedoptions = xSVTUtilities`FindOptions[{opts}, DefDerivedTensorsSVT, AutomaticRulesSVT];
