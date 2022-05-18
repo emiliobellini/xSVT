@@ -15,7 +15,12 @@
 (* These are the necessary global variables to set before running the code *)
 
 (** Paths **)
-$CodeDirectory = Directory[];
+If[$FrontEnd===Null,
+	(* Switch off annoying warnings when there is no FrontEnd *)
+	Off[FrontEndObject::notavail];
+	$CodeDirectory = DirectoryName@$InputFileName;,
+	$CodeDirectory = NotebookDirectory[];
+];
 $EquationsDirectory = FileNameJoin[{$CodeDirectory,"Equations"}]<>$PathnameSeparator;
 
 (**
@@ -51,8 +56,6 @@ $ToClass = False;
 
 
 $HistoryLength=1;
-
-If[$FrontEnd===Null,Off[FrontEndObject::notavail]];
 
 Get[FileNameJoin[{$CodeDirectory,"xSVT.wl"}]]
 
@@ -396,50 +399,62 @@ EQBHdegeneracy // SVTExport
 (*Covariant Equations of Motion*)
 
 
-pertL = Lgravity+Lmatter // SeparateMetric[] // ToCanonical // ReplaceDummies;
-pertL = ExpandPerturbation[Perturbation[pertL // XcovToScalarcov,1]] // ScalarcovToXcov // NoScalar // ToCanonical;
+If[Or[Not@ValueQ@EQmetric, Not@ValueQ@EQscalar],
+	pertL = Lgravity+Lmatter // SeparateMetric[] // ToCanonical // ReplaceDummies;
+	pertL = ExpandPerturbation[Perturbation[pertL // XcovToScalarcov,1]] // ScalarcovToXcov // NoScalar // ToCanonical;
+]
 
 
-tmp = pertL // XcovToScalarcov;
-tmp = -2 VarD[pertmetricg[LI[1],\[Mu],\[Nu]],CD][tmp]/Sqrt[-Detmetricg[]] //.delta[-LI[1],LI[1]]:>1;
-tmp = tmp // ScalarcovToXcov // Expand;
-tmp = tmp + EQmattertoscalar // SeparateMetric[] // ToCanonical;
-tmp = tmp // SortCovDs // ToCanonical;
-tmp = tmp // ContractMetric // ToCanonical;
-tmp = tmp // SortCovDs // ToCanonical;
-tmp = tmp // RicciToEinstein // ContractMetric // ToCanonical;
-tmp = tmp // SeparateMetric[] // EinsteinToRicci // ToCanonical;
-tmp = tmp // ContractMetric;
-tmp = tmp //.RiemannRules // ToCanonical;
-tmp = tmp // SeparateMetric[] // ToCanonical;
-tmp = tmp // SortCovDs // ToCanonical;
-tmp = tmp // ContractMetric // ToCanonical;
-EQmetric = tmp // SortCovDs // ToCanonical;
-EQmetric // SVTExport
-EQmetric // Length
+If[Not@ValueQ@EQmetric,
+	tmp = pertL // XcovToScalarcov;
+	tmp = -2 VarD[pertmetricg[LI[1],\[Mu],\[Nu]],CD][tmp]/Sqrt[-Detmetricg[]] //.delta[-LI[1],LI[1]]:>1;
+	tmp = tmp // ScalarcovToXcov // Expand;
+	tmp = tmp + EQmattertoscalar // SeparateMetric[] // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // ContractMetric // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // RicciToEinstein // ContractMetric // ToCanonical;
+	tmp = tmp // SeparateMetric[] // EinsteinToRicci // ToCanonical;
+	tmp = tmp // ContractMetric;
+	tmp = tmp //.RiemannRules // ToCanonical;
+	tmp = tmp // SeparateMetric[] // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // ContractMetric // ToCanonical;
+	EQmetric = tmp // SortCovDs // ToCanonical;
+	EQmetric // SVTExport;
+	Print["Succesfully computed EQmetric. It has ", Length@EQmetric, " elements!"];,
+	Print["Skipping calculation of EQmetric, imported from external file!"];
+]
 
 
-tmp = pertL // XcovToScalarcov;
-tmp = -2 VarD[pertscalarcov[LI[1]],CD][tmp]/Sqrt[-Detmetricg[]] //.delta[-LI[1],LI[1]]:>1;
-tmp = tmp // ScalarcovToXcov // Expand;
-tmp = tmp // SeparateMetric[] // ToCanonical;
-tmp = tmp // SortCovDs // ToCanonical;
-tmp = tmp // ContractMetric // ToCanonical;
-tmp = tmp // SortCovDs // ToCanonical;
-tmp = tmp // RicciToEinstein // ContractMetric // ToCanonical;
-tmp = tmp // SeparateMetric[] // EinsteinToRicci // ToCanonical;
-tmp = tmp // ContractMetric;
-tmp = tmp //.RiemannRules // ToCanonical;
-tmp = tmp // SeparateMetric[] // ToCanonical;
-tmp = tmp // SortCovDs // ToCanonical;
-tmp = tmp // ContractMetric // ToCanonical;
-EQscalar = tmp // SortCovDs // ToCanonical;
-EQscalar // SVTExport
-EQscalar // Length
+If[Not@ValueQ@EQscalar,
+	tmp = pertL // XcovToScalarcov;
+	tmp = -2 VarD[pertscalarcov[LI[1]],CD][tmp]/Sqrt[-Detmetricg[]] //.delta[-LI[1],LI[1]]:>1;
+	tmp = tmp // ScalarcovToXcov // Expand;
+	tmp = tmp // SeparateMetric[] // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // ContractMetric // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // RicciToEinstein // ContractMetric // ToCanonical;
+	tmp = tmp // SeparateMetric[] // EinsteinToRicci // ToCanonical;
+	tmp = tmp // ContractMetric;
+	tmp = tmp //.RiemannRules // ToCanonical;
+	tmp = tmp // SeparateMetric[] // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // ContractMetric // ToCanonical;
+	EQscalar = tmp // SortCovDs // ToCanonical;
+	EQscalar // SVTExport;
+	Print["Succesfully computed EQscalar. It has ", Length@EQscalar, " elements!"];,
+	Print["Skipping calculation of EQscalar, imported from external file!"];
+]
 
 
-EQmatter = CD[-\[Nu]]@stressenergy[-\[Mu], \[Nu]] // ToCanonical // SeparateMetric[]
-EQmatter // SVTExport
+If[Not@ValueQ@EQmatter,
+	EQmatter = CD[-\[Nu]]@stressenergy[-\[Mu], \[Nu]] // ToCanonical // SeparateMetric[];
+	EQmatter // SVTExport;
+	Print["Succesfully computed EQmatter. It has ", Length@EQmatter, " elements!"];,
+	Print["Skipping calculation of EQmatter, imported from external file!"];
+]
 
 
 (* ::Section:: *)
@@ -450,205 +465,141 @@ EQmatter // SVTExport
 (*First-order metric*)
 
 
-order = 1;
-tmp = EQmetric;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
-tmp // Length
-
-
-EQpertmetric1 = tmp // MaxOrderCov;
-EQpertmetric1 // Length
-
-
-EQpertmetric1 // SVTExport
+If[Not@ValueQ@EQpertmetric1,
+	order = 1;
+	tmp = EQmetric;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	EQpertmetric1 = tmp // MaxOrderCov;
+	EQpertmetric1 // SVTExport;
+	Print["Succesfully computed EQpertmetric1. It has ", Length@EQpertmetric1, " elements!"];,
+	Print["Skipping calculation of EQpertmetric1, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*First-order scalar*)
 
 
-order = 1;
-tmp = EQscalar;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
-tmp // Length
-
-
-EQpertscalar1 = tmp // MaxOrderCov;
-EQpertscalar1 // Length
-
-
-EQpertscalar1 // SVTExport
+If[Not@ValueQ@EQpertscalar1,
+	order = 1;
+	tmp = EQscalar;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	EQpertscalar1 = tmp // MaxOrderCov;
+	EQpertscalar1 // SVTExport;
+	Print["Succesfully computed EQpertscalar1. It has ", Length@EQpertscalar1, " elements!"];,
+	Print["Skipping calculation of EQpertscalar1, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*Second-order metric*)
 
 
-order = 2;
-tmp = EQmetric;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
-tmp // Length
-
-
-EQpertmetric2 = tmp // MaxOrderCov;
-EQpertmetric2 // Length
-
-
-EQpertmetric2 // SVTExport
+If[Not@ValueQ@EQpertmetric2,
+	order = 2;
+	tmp = EQmetric;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	EQpertmetric2 = tmp // MaxOrderCov;
+	EQpertmetric2 // SVTExport;
+	Print["Succesfully computed EQpertmetric2. It has ", Length@EQpertmetric2, " elements!"];,
+	Print["Skipping calculation of EQpertmetric2, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*Second-order scalar*)
 
 
-order = 2;
-tmp = EQscalar;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
-tmp // Length
-
-
-EQpertscalar2 = tmp // MaxOrderCov;
-EQpertscalar2 // Length
-
-
-EQpertscalar2 // SVTExport
+If[Not@ValueQ@EQpertscalar2,
+	order = 2;
+	tmp = EQscalar;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	EQpertscalar2 = tmp // MaxOrderCov;
+	EQpertscalar2 // SVTExport;
+	Print["Succesfully computed EQpertscalar2. It has ", Length@EQpertscalar2, " elements!"];,
+	Print["Skipping calculation of EQpertscalar2, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*Third-order metric*)
 
 
-order = 3;
-tmp = EQmetric;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
-tmp // Length
-
-
-EQpertmetric3 = tmp // MaxOrderCov;
-EQpertmetric3 // Length
-
-
-EQpertmetric3 // SVTExport
+If[Not@ValueQ@EQpertmetric3,
+	order = 3;
+	tmp = EQmetric;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->10,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
+	EQpertmetric3 = tmp // MaxOrderCov;
+	EQpertmetric3 // SVTExport;
+	Print["Succesfully computed EQpertmetric3. It has ", Length@EQpertmetric3, " elements!"];,
+	Print["Skipping calculation of EQpertmetric3, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*Third-order scalar*)
 
 
-order = 3;
-tmp = EQscalar;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
-tmp // Length
-
-
-EQpertscalar3 = tmp // MaxOrderCov;
-EQpertscalar3 // Length
-
-
-EQpertscalar3 // SVTExport
+If[Not@ValueQ@EQpertscalar3,
+	order = 3;
+	tmp = EQscalar;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->10,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
+	EQpertscalar3 = tmp // MaxOrderCov;
+	EQpertscalar3 // SVTExport;
+	Print["Succesfully computed EQpertscalar3. It has ", Length@EQpertscalar3, " elements!"];,
+	Print["Skipping calculation of EQpertscalar3, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*Fourth-order metric*)
 
 
-order = 4;
-tmp = EQmetric;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->4,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
-tmp // Length
-
-
-EQpertmetric4 = tmp // MaxOrderCov;
-EQpertmetric4 // Length
-
-
-EQpertmetric4 // SVTExport
+If[Not@ValueQ@EQpertmetric4,
+	order = 4;
+	tmp = EQmetric;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->4,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
+	EQpertmetric4 = tmp // MaxOrderCov;
+	EQpertmetric4 // SVTExport;
+	Print["Succesfully computed EQpertmetric4. It has ", Length@EQpertmetric4, " elements!"];,
+	Print["Skipping calculation of EQpertmetric4, imported from external file!"];
+]
 
 
 (* ::Subsection::Closed:: *)
 (*Fourth-order scalar*)
 
 
-order = 4;
-tmp = EQscalar;
-tmp = tmp // XcovToScalarcov;
-tmp = ChangeCovD[tmp,CD,PD] // Expand;
-tmp // Length
-
-
-tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->4,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
-tmp // Length
-
-
-tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
-tmp // Length
-
-
-EQpertscalar4 = tmp // MaxOrderCov;
-EQpertscalar4 // Length
-
-
-EQpertscalar4 // SVTExport
+If[Not@ValueQ@EQpertscalar4,
+	order = 4;
+	tmp = EQscalar;
+	tmp = tmp // XcovToScalarcov;
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->4,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
+	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
+	EQpertscalar4 = tmp // MaxOrderCov;
+	EQpertscalar4 // SVTExport;
+	Print["Succesfully computed EQpertscalar4. It has ", Length@EQpertscalar4, " elements!"];,
+	Print["Skipping calculation of EQpertscalar4, imported from external file!"];
+]
