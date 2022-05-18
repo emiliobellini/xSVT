@@ -469,8 +469,10 @@ If[Not@ValueQ@EQpertmetric1,
 	order = 1;
 	tmp = EQmetric;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	EQpertmetric1 = tmp // MaxOrderCov;
 	EQpertmetric1 // SVTExport;
 	Print["Succesfully computed EQpertmetric1. It has ", Length@EQpertmetric1, " elements!"];,
@@ -486,8 +488,10 @@ If[Not@ValueQ@EQpertscalar1,
 	order = 1;
 	tmp = EQscalar;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	EQpertscalar1 = tmp // MaxOrderCov;
 	EQpertscalar1 // SVTExport;
 	Print["Succesfully computed EQpertscalar1. It has ", Length@EQpertscalar1, " elements!"];,
@@ -503,8 +507,10 @@ If[Not@ValueQ@EQpertmetric2,
 	order = 2;
 	tmp = EQmetric;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	EQpertmetric2 = tmp // MaxOrderCov;
 	EQpertmetric2 // SVTExport;
 	Print["Succesfully computed EQpertmetric2. It has ", Length@EQpertmetric2, " elements!"];,
@@ -520,8 +526,10 @@ If[Not@ValueQ@EQpertscalar2,
 	order = 2;
 	tmp = EQscalar;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	EQpertscalar2 = tmp // MaxOrderCov;
 	EQpertscalar2 // SVTExport;
 	Print["Succesfully computed EQpertscalar2. It has ", Length@EQpertscalar2, " elements!"];,
@@ -537,8 +545,10 @@ If[Not@ValueQ@EQpertmetric3,
 	order = 3;
 	tmp = EQmetric;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->10,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
 	EQpertmetric3 = tmp // MaxOrderCov;
@@ -556,8 +566,10 @@ If[Not@ValueQ@EQpertscalar3,
 	order = 3;
 	tmp = EQscalar;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->10,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
 	EQpertscalar3 = tmp // MaxOrderCov;
@@ -575,8 +587,10 @@ If[Not@ValueQ@EQpertmetric4,
 	order = 4;
 	tmp = EQmetric;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->4,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
 	EQpertmetric4 = tmp // MaxOrderCov;
@@ -594,8 +608,10 @@ If[Not@ValueQ@EQpertscalar4,
 	order = 4;
 	tmp = EQscalar;
 	tmp = tmp // XcovToScalarcov;
+	tmp = tmp //.$StressEnergyDecomposition // Expand;
 	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->4,Verbose->True];
+	tmp = ChangeCovD[tmp,CD,PD] // Expand;
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
 	EQpertscalar4 = tmp // MaxOrderCov;
