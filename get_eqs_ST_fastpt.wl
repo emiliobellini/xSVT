@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
 (* ::Title:: *)
-(*Equations Scalar-Tensor fourth order (beyond Horndeski)*)
+(*Equations Scalar-Tensor fourth order (Horndeski)*)
 
 
 (* ::Section:: *)
@@ -203,6 +203,7 @@ Stringify[list_?ListQ]:=Module[{tmp},
 MaxOrderCov[expr_]:=MaxOrderCov[expr,0]
 MaxOrderCov[expr_,DeltaLeading_]:=Module[{tmp,tmppert,nPders,nCders,order,typeperts,pos,ismax},
 	tmp = expr // Expand;
+	tmp = tmp // SeparateMetric[metricg] // ToCanonical;
 	tmp = Replace[tmp,Plus->List,{1},Heads->True];
 	If[ToString[Head[tmp]]!="List",tmp = {tmp}];
 	tmppert = tmp //.PD[idx_]@nopert_/;Not@xSVTUtilities`PertQ[nopert]:>nopert;
@@ -231,9 +232,42 @@ PerturbAndMaxOrderCov[expr_,order_]:=Module[{tmp},
 	tmp
 ]
 
+MaxOrder[expr_]:=MaxOrder[expr,0]
+MaxOrder[expr_,DeltaLeading_]:=Module[{tmp,nTders,nSders,tmppert,nPders,nCders,order,typeperts,pos,ismax},
+	tmp = expr // Expand;
+	tmp = tmp // SeparateMetric[metric\[Delta]] // ToCanonical;
+	tmp = Replace[tmp,Plus->List,{1},Heads->True];
+	If[ToString[Head[tmp]]!="List",tmp = {tmp}];
+	nTders = Length[IndicesOf[PD,TangentM1][#]]&/@tmp;
+	nSders = Length[IndicesOf[PD,TangentM3][#]]&/@tmp;
+	order=(nSders+nTders)/2 // Expand;
+	typeperts = Stringify@TypePerts[#]&/@tmp;
+	pos = Position[typeperts,#]&/@DeleteDuplicates@typeperts;
+
+	tmp = Extract[tmp,#]&/@pos;
+	order = Extract[order,#]&/@pos;
+	ismax[list_] := Map[#>=(Max[list]-DeltaLeading) &, list];
+	tmp = tmp*Boole[ismax[#]&/@order];
+	tmp = Flatten@tmp //.List->Plus;
+	tmp = tmp  // SeparateMetric[];
+	tmp
+]
+
 
 (* ::Subsection::Closed:: *)
 (*ToAlphas*)
+
+
+EQdensityS = EQdensityS // NoF5 // NoF4;
+EQpressureS = EQpressureS // NoF5 // NoF4;
+EQmass2 = EQmass2 // NoF5 // NoF4;
+EQalphaK = EQalphaK // NoF5 // NoF4;
+EQalphaB = EQalphaB // NoF5 // NoF4;
+EQalphaT = EQalphaT // NoF5 // NoF4;
+EQalphaKK = EQalphaKK // NoF5 // NoF4;
+EQalphaBB = EQalphaBB // NoF5 // NoF4;
+EQalphaTT = EQalphaTT // NoF5 // NoF4;
+EQalphaMM = EQalphaMM // NoF5 // NoF4;
 
 
 SubX0=MakeRule[{X[],primescalar[]^2/2/scale[]^2}];
@@ -264,10 +298,6 @@ EQprimealphaT=TimeDer[EQalphaT//.SubX0]//.restoreXinG//ToCanonical;
 EQpprimealphaT=TimeDer[EQprimealphaT//.SubX0]//.restoreXinG//ToCanonical;
 
 
-EQprimealphaH=TimeDer[EQalphaH//.SubX0]//.restoreXinG//ToCanonical;
-EQpprimealphaH=TimeDer[EQprimealphaH//.SubX0]//.restoreXinG//ToCanonical;
-
-
 EQprimealphaKK=TimeDer[EQalphaKK//.SubX0]//.restoreXinG//ToCanonical;
 EQpprimealphaKK=TimeDer[EQprimealphaKK//.SubX0]//.restoreXinG//ToCanonical;
 
@@ -282,14 +312,6 @@ EQpprimealphaTT=TimeDer[EQprimealphaTT//.SubX0]//.restoreXinG//ToCanonical;
 
 EQprimealphaMM=TimeDer[EQalphaMM//.SubX0]//.restoreXinG//ToCanonical;
 EQpprimealphaMM=TimeDer[EQprimealphaMM//.SubX0]//.restoreXinG//ToCanonical;
-
-
-EQprimealphaHH=TimeDer[EQalphaHH//.SubX0]//.restoreXinG//ToCanonical;
-EQpprimealphaHH=TimeDer[EQprimealphaHH//.SubX0]//.restoreXinG//ToCanonical;
-
-
-EQprimealphaDEG=TimeDer[EQalphaDEG//.SubX0]//.restoreXinG//ToCanonical;
-EQpprimealphaDEG=TimeDer[EQprimealphaDEG//.SubX0]//.restoreXinG//ToCanonical;
 
 
 RemoveG2fun[expr_]:=Module[{tmp},tmp=expr;
@@ -340,46 +362,12 @@ tmp=tmp//.Flatten[Solve[EQalphaTT==0,Derivative[0,1][G5fun][scalar[],X[]]]];
 tmp]
 
 
-RemoveF4fun[expr_]:=Module[{tmp},tmp=expr;
-tmp=tmp//.Flatten[Solve[EQpprimealphaHH==0,Derivative[2,1][F4fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQpprimealphaH==0,Derivative[2,0][F4fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQprimealphaHH==0,Derivative[1,1][F4fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQprimealphaH==0,Derivative[1,0][F4fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQalphaHH==0,Derivative[0,1][F4fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQalphaH==0,F4fun[scalar[],X[]]]]//Expand;
-tmp]
-
-
-RemoveF5fun[expr_]:=Module[{tmp},tmp=expr;
-tmp=tmp//.Flatten[Solve[EQpprimealphaDEG==0,Derivative[2,0][F5fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQprimealphaDEG==0,Derivative[1,0][F5fun][scalar[],X[]]]]//Expand;
-tmp=tmp//.Flatten[Solve[EQalphaDEG==0,F5fun[scalar[],X[]]]]//Expand;
-tmp]
-
-
-(* ::Subsection::Closed:: *)
-(*Beyond Horndeski degeneracy*)
-
-
-If[D[EQBHdegeneracy,primescalar[]]=!=0,
-	tmp = EQBHdegeneracy;
-	tmp = tmp//RemoveG4fun//Expand;
-	tmp = tmp//RemoveG5fun//Expand;
-	tmp = tmp//RemoveF4fun//Expand;
-	tmp = tmp//RemoveF5fun//Expand;
-	EQBHdegeneracy=8 primescalar[]^5/scale[]^6 hubbleC[]/mass2[]^2 tmp//Expand;
-]
-
-EQBHdegeneracy
-EQBHdegeneracy // SVTExport
-
-
 (* ::Section::Closed:: *)
 (*Covariant Equations of Motion*)
 
 
 If[Or[Not@ValueQ@EQmetric, Not@ValueQ@EQscalar],
-	pertL = Lgravity+Lmatter // SeparateMetric[] // ToCanonical // ReplaceDummies;
+	pertL = Lgravity+Lmatter // NoF5 // NoF4 // SeparateMetric[] // ToCanonical // ReplaceDummies;
 	pertL = ExpandPerturbation[Perturbation[pertL // XcovToScalarcov,1]] // ScalarcovToXcov // NoScalar // ToCanonical;
 ]
 
@@ -421,7 +409,11 @@ If[Not@ValueQ@EQscalar,
 	tmp = tmp // SeparateMetric[] // ToCanonical;
 	tmp = tmp // SortCovDs // ToCanonical;
 	tmp = tmp // ContractMetric // ToCanonical;
-	EQscalar = tmp // SortCovDs // ToCanonical;
+	tmp = tmp // SortCovDs // ToCanonical;
+	tmp = tmp //.CD[-\[Alpha]_]@CD[\[Alpha]_]@CD[\[Beta]_]@scalarcov[]:>CD[\[Beta]]@CD[-\[Alpha]]@CD[\[Alpha]]@scalarcov[]+RicciCD[-\[Alpha],\[Beta]] CD[\[Alpha]]@scalarcov[];
+	tmp = tmp // ToCanonical;
+	tmp = tmp //.RiemannCD[-\[Alpha]_,-\[Gamma]_,-\[Beta]_,-\[Mu]_] CD[\[Mu]_]@CD[\[Gamma]_]@CD[\[Beta]_]@scalarcov[]:>Module[{\[Nu]},-RiemannCD[-\[Alpha],-\[Gamma],-\[Beta],-\[Mu]]/2 (RiemannCD[\[Beta],\[Nu],\[Gamma],\[Mu]]+RiemannCD[\[Beta],\[Gamma],\[Mu],\[Nu]]) CD[-\[Nu]]@scalarcov[]];
+	EQscalar = tmp // ToCanonical;
 	EQscalar // SVTExport;
 	Print["Succesfully computed EQscalar. It has ", Length@EQscalar, " elements!"];,
 	Print["Skipping calculation of EQscalar, imported from external file!"];
@@ -433,6 +425,286 @@ If[Not@ValueQ@EQmatter,
 	EQmatter // SVTExport;
 	Print["Succesfully computed EQmatter. It has ", Length@EQmatter, " elements!"];,
 	Print["Skipping calculation of EQmatter, imported from external file!"];
+]
+
+
+tmp = EQscalar //.CD[_]@CD[_]@CD[_]@scalarcov[]:>0 //.CD[_]@RicciScalarCD[___]:>0 //.CD[_]@RicciCD[___]:>0 //.CD[_]@RiemannCD[___]:>0;
+tmp = EQscalar - tmp // ToCanonical;
+If[tmp!=0, Print["WARNING: Third derivatives appearing in the Scalar field equation of motion!"]];
+
+
+tmp = EQmetric //.CD[_]@CD[_]@CD[_]@scalarcov[]:>0 //.CD[_]@RicciScalarCD[___]:>0 //.CD[_]@RicciCD[___]:>0 //.CD[_]@RiemannCD[___]:>0;
+tmp = EQmetric - tmp // ToCanonical;
+If[tmp!=0, Print["WARNING: Third derivatives appearing in the Scalar field equation of motion!"]];
+
+
+(* ::Section::Closed:: *)
+(*SVTDecomposition Rules*)
+
+
+(* ::Subsection::Closed:: *)
+(*Background*)
+
+
+order=0;
+
+
+SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->True,ListMethod->"SamePerts"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Christoffel*)
+
+
+SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->b,\[Nu]->c},StoreName->ChristoffelCDP[a,-b,-c]];
+
+
+SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->b,\[Nu]->i},StoreName->ChristoffelCDP[a,-b,-i]];
+tmp=ChristoffelCDP[a,-b,-i] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{ChristoffelCDP[a,-i,-b],Evaluate[tmp]}]];
+
+
+SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->i,\[Nu]->j},StoreName->ChristoffelCDP[a,-i,-j]];
+
+
+SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->a,\[Nu]->b},StoreName->ChristoffelCDP[i,-a,-b]];
+
+
+SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->a,\[Nu]->j},StoreName->ChristoffelCDP[i,-a,-j]];
+tmp=ChristoffelCDP[i,-a,-j] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{ChristoffelCDP[i,-j,-a],Evaluate[tmp]}]];
+
+
+SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->j,\[Nu]->k},StoreName->ChristoffelCDP[i,-j,-k]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Riemann*)
+
+
+SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->c,\[Beta]->d},StoreName->RiemannCDP[-a,-b,-c,-d]];
+
+
+SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->c,\[Beta]->i},StoreName->RiemannCDP[-a,-b,-c,-i]];
+tmp=RiemannCDP[-a,-b,-c,-i] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{RiemannCDP[-a,-b,-i,-c],Evaluate[-tmp]}],
+	MakeRule[{RiemannCDP[-c,-i,-a,-b],Evaluate[tmp]}],
+	MakeRule[{RiemannCDP[-i,-c,-a,-b],Evaluate[-tmp]}]];
+
+
+SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->i,\[Alpha]->b,\[Beta]->j},StoreName->RiemannCDP[-a,-i,-b,-j]];
+tmp=RiemannCDP[-a,-i,-b,-j] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{RiemannCDP[-a,-i,-j,-b],Evaluate[-tmp]}],
+	MakeRule[{RiemannCDP[-i,-a,-b,-j],Evaluate[-tmp]}],
+	MakeRule[{RiemannCDP[-i,-a,-j,-b],Evaluate[tmp]}]];
+
+
+SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->i,\[Beta]->j},StoreName->RiemannCDP[-a,-b,-i,-j]];
+tmp=RiemannCDP[-a,-b,-i,-j] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{RiemannCDP[-i,-j,-a,-b],Evaluate[tmp]}]];
+
+
+SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->i,\[Alpha]->j,\[Beta]->k},StoreName->RiemannCDP[-a,-i,-j,-k]];
+tmp=RiemannCDP[-a,-i,-j,-k] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{RiemannCDP[-i,-a,-j,-k],Evaluate[-tmp]}],
+	MakeRule[{RiemannCDP[-j,-k,-a,-i],Evaluate[tmp]}],
+	MakeRule[{RiemannCDP[-j,-k,-i,-a],Evaluate[-tmp]}]];
+
+
+SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->i,\[Nu]->j,\[Alpha]->k,\[Beta]->l},StoreName->RiemannCDP[-i,-j,-k,-l]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Ricci*)
+
+
+SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->a,\[Nu]->b},StoreName->RicciCDP[-a,-b]];
+
+
+SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->a,\[Nu]->i},StoreName->RicciCDP[-a,-i]];
+tmp=RicciCDP[-a,-i] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{RicciCDP[-i,-a],Evaluate[tmp]}]];
+
+
+SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->i,\[Nu]->j},StoreName->RicciCDP[-i,-j]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Ricci Scalar*)
+
+
+SVTDecomposition[metricg[\[Mu],\[Nu]] RicciCDP[-\[Mu],-\[Nu]],order,{},StoreName->RicciScalarCDP[]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*X*)
+
+
+SVTDecomposition[Xcov[] // XcovToScalarcov,order,{},StoreName->piX[]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*DDscalar*)
+
+
+SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->a,\[Nu]->b},StoreName->ddpi[-a,-b]];
+
+
+SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->a,\[Nu]->i},StoreName->ddpi[-a,-i]];
+tmp=ddpi[-a,-i] //.$SVTDecompositionRules[[2]];
+$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+	MakeRule[{ddpi[-i,-a],Evaluate[tmp]}]];
+
+
+SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->i,\[Nu]->j},StoreName->ddpi[-i,-j]];
+
+
+(* ::Subsubsection::Closed:: *)
+(*Scalar field functions*)
+
+
+SVTDecomposition[ddpi[-\[Mu],\[Mu]],order,{},StoreName->pi1[]];
+
+
+SVTDecomposition[ddpi[-\[Mu],-\[Nu]] ddpi[\[Mu],\[Nu]],order,{},StoreName->pi2[]];
+
+
+SVTDecomposition[ddpi[-\[Beta],\[Alpha]] ddpi[-\[Eta],\[Beta]] ddpi[\[Eta],-\[Alpha]],order,{},StoreName->pi3[]];
+
+
+SVTDecomposition[RicciCDP[-\[Mu],-\[Nu]] ddpi[\[Nu],\[Mu]],order,{},StoreName->pi4[]];
+
+
+SVTDecomposition[RiemannCDP[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] ddpi[\[Nu],\[Beta]],order,{},StoreName->pi5[]];
+
+
+SVTDecomposition[RicciCDP[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],order,{},StoreName->pi6[]];
+
+
+SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[\[Beta],\[Alpha]],order,{},StoreName->pi7[]];
+
+
+SVTDecomposition[RicciCDP[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] ddpi[\[Eta],\[Beta]],order,{},StoreName->pi8[]];
+
+
+SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[-\[Eta],\[Alpha]] ddpi[\[Eta],\[Beta]],order,{},StoreName->pi9[]];
+
+
+SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[-\[Eta],\[Alpha]] ddpi[-\[Lambda],\[Beta]] ddpi[\[Lambda],\[Eta]],order,{},StoreName->pi10[]];
+
+
+SetOptions[SVTDecomposition,Verbose->False,StoreResultQ->False,ListMethod->"All"]
+
+
+(* ::Section::Closed:: *)
+(*Background*)
+
+
+order = 0
+
+
+(* ::Subsection::Closed:: *)
+(*Simplification*)
+
+
+If[Or[Not@ValueQ@EQback1, Not@ValueQ@EQback2],
+	tmp = EQmetric// ContractMetric;
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[\[Alpha]]@scalarcov[],-2 piX[]},MetricOn->All];
+	tmp = tmp//.RicciScalarCD[]:>RicciScalarCDP[];
+	tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[\[Mu]]@scalarcov[],pi1[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[] CD[\[Mu]]@CD[\[Nu]]@scalarcov[],pi2[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Beta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@CD[\[Beta]]@scalarcov[] CD[\[Eta]]@CD[-\[Alpha]]@scalarcov[],pi3[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Mu],-\[Nu]] CD[\[Nu]]@CD[\[Mu]]@scalarcov[],pi4[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RiemannCD[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] CD[\[Nu]]@CD[\[Beta]]@scalarcov[],pi5[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],pi6[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[\[Beta]]@CD[\[Alpha]]@scalarcov[],pi7[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi8[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi9[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Lambda]]@CD[\[Beta]]@scalarcov[] CD[\[Lambda]]@CD[\[Eta]]@scalarcov[],pi10[]},MetricOn->All];
+	tmp = tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
+	tmp = tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
+	tmp = tmp//.CD[\[Mu]_]@CD[\[Nu]_]@scalarcov[]:>ddpi[\[Mu],\[Nu]];
+	EQmetrictmp = tmp // ToCanonical // SeparateMetric[];
+]
+
+
+If[Not@ValueQ@EQback4,
+	tmp = EQscalar // ContractMetric;
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[\[Alpha]]@scalarcov[],-2 piX[]},MetricOn->All];
+	tmp = tmp//.RicciScalarCD[]:>RicciScalarCDP[];
+	tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[\[Mu]]@scalarcov[],pi1[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[] CD[\[Mu]]@CD[\[Nu]]@scalarcov[],pi2[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Beta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@CD[\[Beta]]@scalarcov[] CD[\[Eta]]@CD[-\[Alpha]]@scalarcov[],pi3[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Mu],-\[Nu]] CD[\[Nu]]@CD[\[Mu]]@scalarcov[],pi4[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RiemannCD[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] CD[\[Nu]]@CD[\[Beta]]@scalarcov[],pi5[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],pi6[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[\[Beta]]@CD[\[Alpha]]@scalarcov[],pi7[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi8[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi9[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Lambda]]@CD[\[Beta]]@scalarcov[] CD[\[Lambda]]@CD[\[Eta]]@scalarcov[],pi10[]},MetricOn->All];
+	tmp = tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
+	tmp = tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
+	tmp = tmp//.CD[\[Mu]_]@CD[\[Nu]_]@scalarcov[]:>ddpi[\[Mu],\[Nu]];
+	EQscalartmp = tmp//ToCanonical//SeparateMetric[];
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Metric*)
+
+
+If[Not@ValueQ@EQback1,
+	tmp = SVTDecomposition[EQmetrictmp,order,{\[Mu]->a,\[Nu]->b},Verbose->True,ListMethod->"SamePerts"];
+	tmp = -tmp/scale[]^2;
+	EQback1 = tmp // RemoveG2fun //Expand;
+	EQback1 // SVTExport;
+	Print["Succesfully computed EQback1. It has ", Length@EQback1, " elements!"];,
+	Print["Skipping calculation of EQback1, imported from external file!"];
+]
+
+
+If[Not@ValueQ@EQback2,
+	tmp = SVTDecomposition[EQmetrictmp,order,{\[Mu]->i,\[Nu]->j},Verbose->True,ListMethod->"SamePerts"];
+	tmp = metric\[Delta][i,j] tmp/scale[]^2/3;
+	tmp = tmp // SVTExpand // ReplaceDummies;
+	EQback2 = tmp //RemoveG2fun//Expand;
+	EQback2 // SVTExport;
+	Print["Succesfully computed EQback2. It has ", Length@EQback2, " elements!"];,
+	Print["Skipping calculation of EQback2, imported from external file!"];
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Matter*)
+
+
+If[Not@ValueQ@EQback3,
+	tmp = SVTDecomposition[EQmatter,order,{\[Mu]->a},Verbose->True];
+	EQback3 = -tmp //Expand // SVTExpand // ReplaceDummies;
+	EQback3 // SVTExport;
+	Print["Succesfully computed EQback3. It has ", Length@EQback3, " elements!"];,
+	Print["Skipping calculation of EQback3, imported from external file!"];
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Scalar Field*)
+
+
+If[Not@ValueQ@EQback4,
+	tmp = SVTDecomposition[EQscalartmp,order,{},Verbose->True,ListMethod->"SamePerts"];
+	tmp = primescalar[] tmp/2;
+	EQback4 = tmp // RemoveG2fun // Expand;
+	EQback4 // SVTExport;
+	Print["Succesfully computed EQback4. It has ", Length@EQback4, " elements!"];,
+	Print["Skipping calculation of EQback4, imported from external file!"];
 ]
 
 
@@ -449,7 +721,7 @@ If[Not@ValueQ@EQpertmetric1,
 	tmp = EQmetric;
 	tmp = tmp // XcovToScalarcov;
 	tmp = tmp //.$StressEnergyDecomposition // Expand;
-	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->60,Verbose->True];
 	EQpertmetric1 = tmp // MaxOrderCov;
 	EQpertmetric1 // SVTExport;
 	Print["Succesfully computed EQpertmetric1. It has ", Length@EQpertmetric1, " elements!"];,
@@ -466,7 +738,7 @@ If[Not@ValueQ@EQpertscalar1,
 	tmp = EQscalar;
 	tmp = tmp // XcovToScalarcov;
 	tmp = tmp //.$StressEnergyDecomposition // Expand;
-	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->60,Verbose->True];
 	EQpertscalar1 = tmp // MaxOrderCov;
 	EQpertscalar1 // SVTExport;
 	Print["Succesfully computed EQpertscalar1. It has ", Length@EQpertscalar1, " elements!"];,
@@ -483,7 +755,7 @@ If[Not@ValueQ@EQpertmetric2,
 	tmp = EQmetric;
 	tmp = tmp // XcovToScalarcov;
 	tmp = tmp //.$StressEnergyDecomposition // Expand;
-	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->40,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
 	EQpertmetric2 = tmp // MaxOrderCov;
@@ -502,7 +774,7 @@ If[Not@ValueQ@EQpertscalar2,
 	tmp = EQscalar;
 	tmp = tmp // XcovToScalarcov;
 	tmp = tmp //.$StressEnergyDecomposition // Expand;
-	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = Listify[PerturbAndMaxOrderCov, tmp, {order}, ListMethod->"Part",PartLength->40,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->20000,Verbose->True];
 	tmp = Listify[MaxOrderCov, tmp, {}, ListMethod->"Part",PartLength->40000,Verbose->True];
 	EQpertscalar2 = tmp // MaxOrderCov;
@@ -586,3 +858,99 @@ If[Not@ValueQ@EQpertscalar4,
 	Print["Succesfully computed EQpertscalar4. It has ", Length@EQpertscalar4, " elements!"];,
 	Print["Skipping calculation of EQpertscalar4, imported from external file!"];
 ]
+
+
+(* ::Section:: *)
+(*Decompose First-Order*)
+
+
+Exit[]
+
+
+SubBack[expr_] := Module[{tmp},
+	tmp = expr //.Flatten[Solve[TimeDer[TimeDer[EQback4]]==0,ppprimedensityS[]]];
+	tmp = tmp //.Flatten[Solve[TimeDer[TimeDer[EQback2]]==0,pprimepressureS[]]];
+	tmp = tmp //.Flatten[Solve[TimeDer[EQback4]==0,pprimedensityS[]]];
+	tmp = tmp //.Flatten[Solve[TimeDer[EQback2]==0,primepressureS[]]];
+	tmp = tmp //.Flatten[Solve[EQback4==0,primedensityS[]]];
+	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
+	tmp = tmp //.Flatten[Solve[EQback2==0,pressureS[]]];
+	tmp = tmp //.Flatten[Solve[EQback1==0,densityS[]]];
+	tmp]
+
+
+(* ::Subsection:: *)
+(*First-order metric*)
+
+
+(*tmp = EQmetric// ContractMetric;
+tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[\[Alpha]]@scalarcov[],-2 piX[]},MetricOn->All];
+tmp = tmp//.RicciScalarCD[]:>RicciScalarCDP[];
+tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[\[Mu]]@scalarcov[],pi1[]},MetricOn->All];
+tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[] CD[\[Mu]]@CD[\[Nu]]@scalarcov[],pi2[]},MetricOn->All];
+tmp = tmp//.MakeRule[{CD[-\[Beta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@CD[\[Beta]]@scalarcov[] CD[\[Eta]]@CD[-\[Alpha]]@scalarcov[],pi3[]},MetricOn->All];
+tmp = tmp//.MakeRule[{RicciCD[-\[Mu],-\[Nu]] CD[\[Nu]]@CD[\[Mu]]@scalarcov[],pi4[]},MetricOn->All];
+tmp = tmp//.MakeRule[{RiemannCD[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] CD[\[Nu]]@CD[\[Beta]]@scalarcov[],pi5[]},MetricOn->All];
+tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],pi6[]},MetricOn->All];
+tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[\[Beta]]@CD[\[Alpha]]@scalarcov[],pi7[]},MetricOn->All];
+tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi8[]},MetricOn->All];
+tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi9[]},MetricOn->All];
+tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Lambda]]@CD[\[Beta]]@scalarcov[] CD[\[Lambda]]@CD[\[Eta]]@scalarcov[],pi10[]},MetricOn->All];
+tmp = tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
+tmp = tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
+tmp = tmp//.CD[\[Mu]_]@CD[\[Nu]_]@scalarcov[]:>ddpi[\[Mu],\[Nu]];
+EQmetrictmp = tmp // ToCanonical // SeparateMetric[];*)
+
+
+(* ::Subsection:: *)
+(*First-order scalar*)
+
+
+If[Not@ValueQ@EQfirst11,
+	tmp = EQpertscalar1 // ContractMetric;
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[\[Alpha]]@scalarcov[],-2 piX[]},MetricOn->All];
+	tmp = tmp//.RicciScalarCD[]:>RicciScalarCDP[];
+	tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[\[Mu]]@scalarcov[],pi1[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[] CD[\[Mu]]@CD[\[Nu]]@scalarcov[],pi2[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Beta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@CD[\[Beta]]@scalarcov[] CD[\[Eta]]@CD[-\[Alpha]]@scalarcov[],pi3[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Mu],-\[Nu]] CD[\[Nu]]@CD[\[Mu]]@scalarcov[],pi4[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RiemannCD[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] CD[\[Nu]]@CD[\[Beta]]@scalarcov[],pi5[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],pi6[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[\[Beta]]@CD[\[Alpha]]@scalarcov[],pi7[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{RicciCD[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi8[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[\[Eta]]@CD[\[Beta]]@scalarcov[],pi9[]},MetricOn->All];
+	tmp = tmp//.MakeRule[{CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] CD[-\[Eta]]@CD[\[Alpha]]@scalarcov[] CD[-\[Lambda]]@CD[\[Beta]]@scalarcov[] CD[\[Lambda]]@CD[\[Eta]]@scalarcov[],pi10[]},MetricOn->All];
+	tmp = tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
+	tmp = tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
+	tmp = tmp//.CD[\[Mu]_]@CD[\[Nu]_]@scalarcov[]:>ddpi[\[Mu],\[Nu]];
+	EQscalartmp = tmp//ToCanonical//SeparateMetric[];
+]
+
+
+If[Not@ValueQ@EQfirst11,
+	tmp = EQscalartmp;
+	tmp = tmp //.CD[idx_]@tens_:>PD[idx]@tens;
+	tmp = tmp // WeylToRiemann;
+	tmp = tmp // EinsteinToRicci;
+	tmp = tmp // RiemannToChristoffel;
+	tmp = tmp // ChristoffelToGradMetric;
+	tmp = Expand[#]&/@tmp;
+	tmp = xSVTUtilities`ListifyExpr[tmp, "Part", 1, {}];
+	tmp = ToCanonical[#, UseMetricOnVBundle -> None]&/@tmp;
+	tmp = xSVTUtilities`DeListifyExpr[tmp];
+	tmp = Listify[SplitSpaceTime, tmp, {{}}, ListMethod->"Part",PartLength->100,Verbose->True];
+	tmp = Listify[SVTExpand, tmp, {}, ListMethod->"Part",PartLength->400,Verbose->True];
+	tmp = tmp // PertScalarToPertP // SVTExpand;
+	tmp = tmp // RemoveG2fun // Expand;
+	tmp = tmp // RemoveG3fun // Expand;
+	tmp = tmp // RemoveG4fun // Expand;
+	tmp = tmp // RemoveG5fun // Expand;
+	tmp = tmp scale[]^2 primescalar[]/mass2[]/2 // SubBack // SVTExpand;
+	EQfirst11 = tmp // MaxOrder;
+	EQfirst11 // SVTExport;
+	Print["Succesfully computed EQfirst11. It has ", Length@EQfirst11, " elements!"];,
+	Print["Skipping calculation of EQfirst11, imported from external file!"];
+]
+
+
+
