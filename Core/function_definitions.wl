@@ -585,7 +585,7 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DefDerivedTensorsSVT*)
 
 
@@ -780,7 +780,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 (*Manipulation of expressions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Listify*)
 
 
