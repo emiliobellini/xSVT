@@ -864,9 +864,6 @@ If[Not@ValueQ@EQpertscalar4,
 (*Decompose First-Order*)
 
 
-Exit[]
-
-
 SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[TimeDer[EQback4]]==0,ppprimedensityS[]]];
 	tmp = tmp //.Flatten[Solve[TimeDer[TimeDer[EQback2]]==0,pprimepressureS[]]];
@@ -951,6 +948,3 @@ If[Not@ValueQ@EQfirst11,
 	Print["Succesfully computed EQfirst11. It has ", Length@EQfirst11, " elements!"];,
 	Print["Skipping calculation of EQfirst11, imported from external file!"];
 ]
-
-
-
