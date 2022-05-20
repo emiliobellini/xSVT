@@ -438,7 +438,7 @@ tmp = EQmetric - tmp // ToCanonical;
 If[tmp!=0, Print["WARNING: Third derivatives appearing in the Scalar field equation of motion!"]];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*SVTDecomposition Rules*)
 
 
@@ -446,168 +446,86 @@ If[tmp!=0, Print["WARNING: Third derivatives appearing in the Scalar field equat
 (*Background*)
 
 
-(*order=0;*)
-
-
-(*SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->True,ListMethod->"SamePerts"]*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*Christoffel*)
-
-
-(*SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->b,\[Nu]->c},StoreName->ChristoffelCDP[a,-b,-c]];*)
-
-
-(*SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->b,\[Nu]->i},StoreName->ChristoffelCDP[a,-b,-i]];
-tmp=ChristoffelCDP[a,-b,-i] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{ChristoffelCDP[a,-i,-b],Evaluate[tmp]}]];*)
-
-
-(*SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->i,\[Nu]->j},StoreName->ChristoffelCDP[a,-i,-j]];*)
-
-
-(*SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->a,\[Nu]->b},StoreName->ChristoffelCDP[i,-a,-b]];*)
-
-
-(*SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->a,\[Nu]->j},StoreName->ChristoffelCDP[i,-a,-j]];
-tmp=ChristoffelCDP[i,-a,-j] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{ChristoffelCDP[i,-j,-a],Evaluate[tmp]}]];*)
-
-
-(*SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->j,\[Nu]->k},StoreName->ChristoffelCDP[i,-j,-k]];*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*Riemann*)
-
-
-(*SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->c,\[Beta]->d},StoreName->RiemannCDP[-a,-b,-c,-d]];*)
-
-
-(*SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->c,\[Beta]->i},StoreName->RiemannCDP[-a,-b,-c,-i]];
-tmp=RiemannCDP[-a,-b,-c,-i] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{RiemannCDP[-a,-b,-i,-c],Evaluate[-tmp]}],
-	MakeRule[{RiemannCDP[-c,-i,-a,-b],Evaluate[tmp]}],
-	MakeRule[{RiemannCDP[-i,-c,-a,-b],Evaluate[-tmp]}]];*)
-
-
-(*SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->i,\[Alpha]->b,\[Beta]->j},StoreName->RiemannCDP[-a,-i,-b,-j]];
-tmp=RiemannCDP[-a,-i,-b,-j] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{RiemannCDP[-a,-i,-j,-b],Evaluate[-tmp]}],
-	MakeRule[{RiemannCDP[-i,-a,-b,-j],Evaluate[-tmp]}],
-	MakeRule[{RiemannCDP[-i,-a,-j,-b],Evaluate[tmp]}]];*)
-
-
-(*SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->i,\[Beta]->j},StoreName->RiemannCDP[-a,-b,-i,-j]];
-tmp=RiemannCDP[-a,-b,-i,-j] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{RiemannCDP[-i,-j,-a,-b],Evaluate[tmp]}]];*)
-
-
-(*SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->i,\[Alpha]->j,\[Beta]->k},StoreName->RiemannCDP[-a,-i,-j,-k]];
-tmp=RiemannCDP[-a,-i,-j,-k] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{RiemannCDP[-i,-a,-j,-k],Evaluate[-tmp]}],
-	MakeRule[{RiemannCDP[-j,-k,-a,-i],Evaluate[tmp]}],
-	MakeRule[{RiemannCDP[-j,-k,-i,-a],Evaluate[-tmp]}]];*)
-
-
-(*SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->i,\[Nu]->j,\[Alpha]->k,\[Beta]->l},StoreName->RiemannCDP[-i,-j,-k,-l]];*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*Ricci*)
-
-
-(*SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->a,\[Nu]->b},StoreName->RicciCDP[-a,-b]];*)
-
-
-(*SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->a,\[Nu]->i},StoreName->RicciCDP[-a,-i]];
-tmp=RicciCDP[-a,-i] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{RicciCDP[-i,-a],Evaluate[tmp]}]];*)
-
-
-(*SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->i,\[Nu]->j},StoreName->RicciCDP[-i,-j]];*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*Ricci Scalar*)
-
-
-(*SVTDecomposition[metricg[\[Mu],\[Nu]] RicciCDP[-\[Mu],-\[Nu]],order,{},StoreName->RicciScalarCDP[]];*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*X*)
-
-
-(*SVTDecomposition[Xcov[] // XcovToScalarcov,order,{},StoreName->piX[]];*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*DDscalar*)
-
-
-(*SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->a,\[Nu]->b},StoreName->ddpi[-a,-b]];*)
-
-
-(*SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->a,\[Nu]->i},StoreName->ddpi[-a,-i]];
-tmp=ddpi[-a,-i] //.$SVTDecompositionRules[[2]];
-$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
-	MakeRule[{ddpi[-i,-a],Evaluate[tmp]}]];*)
-
-
-(*SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->i,\[Nu]->j},StoreName->ddpi[-i,-j]];*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*Scalar field functions*)
-
-
-(*SVTDecomposition[ddpi[-\[Mu],\[Mu]],order,{},StoreName->pi1[]];*)
-
-
-(*SVTDecomposition[ddpi[-\[Mu],-\[Nu]] ddpi[\[Mu],\[Nu]],order,{},StoreName->pi2[]];*)
-
-
-(*SVTDecomposition[ddpi[-\[Beta],\[Alpha]] ddpi[-\[Eta],\[Beta]] ddpi[\[Eta],-\[Alpha]],order,{},StoreName->pi3[]];*)
-
-
-(*SVTDecomposition[RicciCDP[-\[Mu],-\[Nu]] ddpi[\[Nu],\[Mu]],order,{},StoreName->pi4[]];*)
-
-
-(*SVTDecomposition[RiemannCDP[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] ddpi[\[Nu],\[Beta]],order,{},StoreName->pi5[]];*)
-
-
-(*SVTDecomposition[RicciCDP[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],order,{},StoreName->pi6[]];*)
-
-
-(*SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[\[Beta],\[Alpha]],order,{},StoreName->pi7[]];*)
-
-
-(*SVTDecomposition[RicciCDP[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] ddpi[\[Eta],\[Beta]],order,{},StoreName->pi8[]];*)
-
-
-(*SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[-\[Eta],\[Alpha]] ddpi[\[Eta],\[Beta]],order,{},StoreName->pi9[]];*)
-
-
-(*SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[-\[Eta],\[Alpha]] ddpi[-\[Lambda],\[Beta]] ddpi[\[Lambda],\[Eta]],order,{},StoreName->pi10[]];*)
-
-
-(*SetOptions[SVTDecomposition,Verbose->False,StoreResultQ->False,ListMethod->"All"]*)
-
-
-(* ::Subsection::Closed:: *)
-(*Export*)
-
-
-(*$SVTDecompositionRules // SVTExport*)
+If[Not@ValueQ@$SVTDecompositionRules,
+	order=0;
+	SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->True,ListMethod->"SamePerts"];
+	
+	(* Christoffel *)
+	SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->b,\[Nu]->c},StoreName->ChristoffelCDP[a,-b,-c]];
+	SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->b,\[Nu]->i},StoreName->ChristoffelCDP[a,-b,-i]];
+	tmp=ChristoffelCDP[a,-b,-i] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]], MakeRule[{ChristoffelCDP[a,-i,-b],Evaluate[tmp]}]];
+	SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->a,\[Mu]->i,\[Nu]->j},StoreName->ChristoffelCDP[a,-i,-j]];
+	SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->a,\[Nu]->b},StoreName->ChristoffelCDP[i,-a,-b]];
+	SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->a,\[Nu]->j},StoreName->ChristoffelCDP[i,-a,-j]];
+	tmp=ChristoffelCDP[i,-a,-j] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]], MakeRule[{ChristoffelCDP[i,-j,-a],Evaluate[tmp]}]];
+	SVTDecomposition[ChristoffelCD[\[Alpha],-\[Mu],-\[Nu]],order,{\[Alpha]->i,\[Mu]->j,\[Nu]->k},StoreName->ChristoffelCDP[i,-j,-k]];
+	
+	(* Riemann *)
+	SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->c,\[Beta]->d},StoreName->RiemannCDP[-a,-b,-c,-d]];
+	SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->c,\[Beta]->i},StoreName->RiemannCDP[-a,-b,-c,-i]];
+	tmp=RiemannCDP[-a,-b,-c,-i] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+		MakeRule[{RiemannCDP[-a,-b,-i,-c],Evaluate[-tmp]}],
+		MakeRule[{RiemannCDP[-c,-i,-a,-b],Evaluate[tmp]}],
+		MakeRule[{RiemannCDP[-i,-c,-a,-b],Evaluate[-tmp]}]];
+	SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->i,\[Alpha]->b,\[Beta]->j},StoreName->RiemannCDP[-a,-i,-b,-j]];
+	tmp=RiemannCDP[-a,-i,-b,-j] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+		MakeRule[{RiemannCDP[-a,-i,-j,-b],Evaluate[-tmp]}],
+		MakeRule[{RiemannCDP[-i,-a,-b,-j],Evaluate[-tmp]}],
+		MakeRule[{RiemannCDP[-i,-a,-j,-b],Evaluate[tmp]}]];
+	SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->b,\[Alpha]->i,\[Beta]->j},StoreName->RiemannCDP[-a,-b,-i,-j]];
+	tmp=RiemannCDP[-a,-b,-i,-j] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+		MakeRule[{RiemannCDP[-i,-j,-a,-b],Evaluate[tmp]}]];
+	SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->a,\[Nu]->i,\[Alpha]->j,\[Beta]->k},StoreName->RiemannCDP[-a,-i,-j,-k]];
+	tmp=RiemannCDP[-a,-i,-j,-k] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+		MakeRule[{RiemannCDP[-i,-a,-j,-k],Evaluate[-tmp]}],
+		MakeRule[{RiemannCDP[-j,-k,-a,-i],Evaluate[tmp]}],
+		MakeRule[{RiemannCDP[-j,-k,-i,-a],Evaluate[-tmp]}]];
+	SVTDecomposition[RiemannCD[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],order,{\[Mu]->i,\[Nu]->j,\[Alpha]->k,\[Beta]->l},StoreName->RiemannCDP[-i,-j,-k,-l]];
+	
+	(* Ricci *)
+	SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->a,\[Nu]->b},StoreName->RicciCDP[-a,-b]];
+	SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->a,\[Nu]->i},StoreName->RicciCDP[-a,-i]];
+	tmp=RicciCDP[-a,-i] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+		MakeRule[{RicciCDP[-i,-a],Evaluate[tmp]}]];
+	SVTDecomposition[metricg[\[Alpha],\[Beta]] RiemannCDP[-\[Alpha],-\[Mu],-\[Beta],-\[Nu]],order,{\[Mu]->i,\[Nu]->j},StoreName->RicciCDP[-i,-j]];
+	
+	(* Ricci Scalar *)
+	SVTDecomposition[metricg[\[Mu],\[Nu]] RicciCDP[-\[Mu],-\[Nu]],order,{},StoreName->RicciScalarCDP[]];
+	
+	(* X *)
+	SVTDecomposition[Xcov[] // XcovToScalarcov,order,{},StoreName->piX[]];
+	
+	(* DDscalar *)
+	SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->a,\[Nu]->b},StoreName->ddpi[-a,-b]];
+	SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->a,\[Nu]->i},StoreName->ddpi[-a,-i]];
+	tmp=ddpi[-a,-i] //.$SVTDecompositionRules[[2]];
+	$SVTDecompositionRules[[2]]=Union[$SVTDecompositionRules[[2]],
+		MakeRule[{ddpi[-i,-a],Evaluate[tmp]}]];
+	SVTDecomposition[CD[-\[Mu]]@CD[-\[Nu]]@scalarcov[],order,{\[Mu]->i,\[Nu]->j},StoreName->ddpi[-i,-j]];
+	
+	(* Scalar field functions *)
+	SVTDecomposition[ddpi[-\[Mu],\[Mu]],order,{},StoreName->pi1[]];
+	SVTDecomposition[ddpi[-\[Mu],-\[Nu]] ddpi[\[Mu],\[Nu]],order,{},StoreName->pi2[]];
+	SVTDecomposition[ddpi[-\[Beta],\[Alpha]] ddpi[-\[Eta],\[Beta]] ddpi[\[Eta],-\[Alpha]],order,{},StoreName->pi3[]];
+	SVTDecomposition[RicciCDP[-\[Mu],-\[Nu]] ddpi[\[Nu],\[Mu]],order,{},StoreName->pi4[]];
+	SVTDecomposition[RiemannCDP[-\[Alpha],-\[Beta],-\[Mu],-\[Nu]] CD[\[Alpha]]@scalarcov[] CD[\[Mu]]@scalarcov[] ddpi[\[Nu],\[Beta]],order,{},StoreName->pi5[]];
+	SVTDecomposition[RicciCDP[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[\[Beta]]@scalarcov[],order,{},StoreName->pi6[]];
+	SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[\[Beta],\[Alpha]],order,{},StoreName->pi7[]];
+	SVTDecomposition[RicciCDP[-\[Alpha],-\[Beta]] CD[\[Alpha]]@scalarcov[] CD[-\[Eta]]@scalarcov[] ddpi[\[Eta],\[Beta]],order,{},StoreName->pi8[]];
+	SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[-\[Eta],\[Alpha]] ddpi[\[Eta],\[Beta]],order,{},StoreName->pi9[]];
+	SVTDecomposition[CD[-\[Alpha]]@scalarcov[] CD[-\[Beta]]@scalarcov[] ddpi[-\[Eta],\[Alpha]] ddpi[-\[Lambda],\[Beta]] ddpi[\[Lambda],\[Eta]],order,{},StoreName->pi10[]];
+	
+	(* Export *)
+	SetOptions[SVTDecomposition,Verbose->False,StoreResultQ->False,ListMethod->"All"]
+	$SVTDecompositionRules // SVTExport
+]
 
 
 (* ::Section::Closed:: *)
