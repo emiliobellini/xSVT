@@ -518,7 +518,7 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DefDerivedTensorsSVT*)
 
 
@@ -713,7 +713,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 (*Manipulation of expressions*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Listify*)
 
 
@@ -1108,13 +1108,7 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 					xSVTUtilities`PrintLevel[Row[{ScreenDollarIndices@storename, " \[RuleDelayed] ... (too long expression!)"}], 1];
 				];
 			];
-			SetAttributes[step, HoldAll];
-			step[TT_] := Module[{P},
-				P = (P = Return[#, TraceScan] &) &;
-				TraceScan[P, TT, TraceDepth -> 1]
-			];
-			myUnion[str_String, val_] := step @ Symbol[str] /. _[s_Symbol] :> (s = Insert[s,val,{2,-1}]);
-			myUnion[decrules, rule[[1]]];
+            Function[{lhs}, lhs = Insert[Symbol[decrules], rule[[1]], {2,-1}], HoldAll] @@ MakeExpression[decrules, StandardForm];
 		];
 	];
 
