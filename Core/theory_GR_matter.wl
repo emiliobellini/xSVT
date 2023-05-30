@@ -15,7 +15,7 @@ DefManifold[M3, 3, IndexRange[i, p]]
 DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma], \[Tau], \[Gamma]}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Metric*)
 
 
