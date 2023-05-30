@@ -280,6 +280,73 @@ FourierTAtom[expr_, k_] := Module[{append, ispert, tmp},
 ]
 
 
+FindNonCanonicalIndices[ders_, tan_][expr_] := Module[{tens, idxs, pos,count,can,downidxs,tot, tottan},
+	tot={};
+	pos = Position[Map[IndicesOf[#, tan][expr]&,$Tensors],IndexList[__]] // Flatten;
+	tens = $Tensors[[pos]];
+	For[count=1,count<=Length[tens],count++,
+		idxs = IndicesOf[tens[[count]], AIndex][expr] //.IndexList->List;
+		downidxs = DownIndexQ@#&/@idxs;
+		can = AnyTrue[SlotsOfTensor@tens[[count]], DownIndexQ[#]&];
+		pos = Position[Map[Equal[#, can]&, downidxs], False]  // Flatten;
+		tot=Union[tot,idxs[[pos]]];
+	];
+	For[count=1,count<=Length[ders],count++,
+		idxs = IndicesOf[ders[[count]], tan][expr] //.IndexList->List;
+		downidxs=DownIndexQ@#&/@idxs;
+		pos = Position[downidxs,False] // Flatten;
+		tot = Union[tot, idxs[[pos]]];
+	];
+	tottan = VBundleOfIndex[#]&/@tot;
+	pos = Position[Map[Equal[#, tan]&, tottan], True]  // Flatten;
+	tot[[pos]]
+]
+
+
+mySeparateMetric[ders_, tan_][expr1_+expr2_] := mySeparateMetric[ders, tan][expr1] + mySeparateMetric[ders, tan][expr2]
+mySeparateMetric[ders_, tan_][expr_] := Module[{idxs,tmp,count},
+	tmp=expr;
+	idxs = xSVTUtilities`FindNonCanonicalIndices[ders, tan][expr];
+	For[count=1,count<=Length[idxs],count++,
+		tmp = SeparateMetric[][tmp,idxs[[count]]];
+	];
+	tmp
+]
+
+
+DivTraceFree[expr1_+expr2_] := DivTraceFree[expr1] + DivTraceFree[expr2]
+DivTraceFree[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
+	{
+	tan3 = Tangent@OptionValue@Manifold3D,
+	metric3 = OptionValue@Metric3D,
+	allidx3, tmpexpr, divfree, return
+	},
+	
+	divfree[term1_+term2_] := divfree[term1]+divfree[term2];
+	divfree[term1_*term2_] := divfree[term1]*divfree[term2];
+	divfree[term_] := Module[{head, idxpert, idxPD, commonidx, result},
+		head = Head@Evaluate[term //.PD[__]@smth_:>smth];
+		If[xTensorQ@head && xSVTUtilities`PertQ@term,
+			If[xSVTUtilities`VecQ@head || xSVTUtilities`TensQ@head,
+				idxpert = -#&/@IndicesOf[tan3, head][term];
+				idxPD = IndicesOf[tan3, PD][term];
+				commonidx=Intersection[idxpert, idxPD];
+				If[Length@commonidx>0, result = 0, result = term];
+			];
+		];
+		result
+	];
+	
+	tmpexpr = expr // ContractMetric;
+	If[tmpexpr =!= 0,
+		tmpexpr = tmpexpr // divfree;
+	];
+	
+	If[tmpexpr === 0, return = 0, return = expr];
+	return
+]
+
+
 End[];
 
 
@@ -839,6 +906,91 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 
 
 (* ::Subsection::Closed:: *)
+(*SplitAndExpand*)
+
+
+Options[SplitAndExpand] = {
+	UseDerivedResults   -> True,
+	DecompositionRules  -> "$SVTDecompositionRules",
+	Nsplits   -> "All"
+};
+
+SplitAndExpand[expr_, freeindsrules_, opts : OptionsPattern[{SplitAndExpand, GlobalOptionsSVT}]] := Module[
+	{
+	(** Read options **)
+	verbose = OptionValue@Verbose,
+	tanm1 = Tangent@OptionValue@Manifold1D,
+	tanm3 = Tangent@OptionValue@Manifold3D,
+	tanm4 = Tangent@OptionValue@Manifold4D,
+	metric3 = OptionValue@Metric3D,
+	metric4 = OptionValue@Metric4D,
+	nsplits = OptionValue@Nsplits,
+	usederived = OptionValue@UseDerivedResults,
+	baserules = ToExpression[OptionValue@DecompositionRules][[1]],
+	derivedrules = ToExpression[OptionValue@DecompositionRules][[2]],
+	(** Additional variables **)
+	timevecs, tmpexpr, listall, subs, mod, count
+	},
+
+	(** Check that the input is as expected **)
+	On[Assert];
+	Assert[Head[freeindsrules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@freeindsrules]];
+	Assert[BooleanQ@verbose];
+	Assert[VBundleQ@tanm1 && DimOfVBundle@tanm1==1];
+	Assert[VBundleQ@tanm3 && DimOfVBundle@tanm3==3];
+	Assert[VBundleQ@tanm4 && DimOfVBundle@tanm4==4];
+	Assert[MetricQ@metric4 && VBundleOfMetric@metric4==tanm4];
+	Assert[BooleanQ@usederived];
+	Assert[Head[baserules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@baserules]];
+	Assert[Head[derivedrules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@derivedrules]];
+	Off[Assert];
+
+	If[verbose, xSVTUtilities`PrintLevel["Started SplitAndExpand.", 0]];
+	tmpexpr = expr;
+	
+	(* Indices to split *)
+	listall = IndicesOf[tanm4, Dummy, Up][tmpexpr];
+	If[And[IntegerQ@nsplits, nsplits<Length[listall]],
+		mod = Take[listall, -Mod[Length[listall], nsplits]];
+		listall = Partition[listall, nsplits];
+		If[Length[mod]>0, listall = Append[listall, mod];];,
+		listall = {listall};
+	];
+	
+	If[verbose, xSVTUtilities`PrintLevel["Expanding dummy indices.", 1]];
+	For[count=1, count<=Length[listall], count++,
+		subs = Table[listall[[count]][[col]] -> IndexList[DummyIn[tanm3], DummyIn[tanm1]], {col, Length[listall[[count]]]}];
+		tmpexpr = TraceDummy[tmpexpr, subs];
+		tmpexpr = tmpexpr //.Flatten[baserules] // Expand;
+		If[usederived,
+			tmpexpr = tmpexpr //.Flatten[derivedrules] // Expand // NoScalar;
+		];
+	];
+
+	If[verbose, xSVTUtilities`PrintLevel["Replacing free indices.", 1]];
+	If[Not[freeindsrules===None],
+		tmpexpr = tmpexpr //.freeindsrules;
+	];
+	timevecs = IndicesOf[Free, tanm1][tmpexpr] /.IndexList->List;
+	timevecs = Cases[timevecs,a_:>timevec[-a]];
+	timevecs = timevecs /.List->Times;
+	tmpexpr = tmpexpr timevecs // Expand;
+	tmpexpr = tmpexpr //.Flatten[baserules] // Expand;
+	If[usederived,
+		tmpexpr = tmpexpr //.Flatten[derivedrules] // Expand // NoScalar;
+	];
+
+	If[verbose, xSVTUtilities`PrintLevel["Removing traces and divergences of vectors and tensors.", 1]];
+	tmpexpr = tmpexpr // xSVTUtilities`DivTraceFree;
+	tmpexpr = tmpexpr // ReplaceDummies;
+	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	If[verbose, xSVTUtilities`PrintLevel["Finished SplitAndExpand.", 0]];
+	tmpexpr // NoScalar
+
+]
+
+
+(* ::Subsection::Closed:: *)
 (*SplitSpaceTime*)
 
 
@@ -929,6 +1081,7 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 	usederived = OptionValue@UseDerivedResults,
 	baserules = ToExpression[OptionValue@DecompositionRules][[1]],
 	derivedrules = ToExpression[OptionValue@DecompositionRules][[2]],
+	tanm3 = Tangent@OptionValue@Manifold3D,
 	(** Additional variables **)
 	tmpexpr, time1, time2
 	},
@@ -952,18 +1105,27 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 		tmpexpr = tmpexpr /.SymmetricSpaceRules[CovDOfMetric@metric3, kappa];
 	];
 	If[usederived,
-		tmpexpr = tmpexpr //.Flatten[derivedrules] // Expand // NoScalar;
+		tmpexpr = tmpexpr //.Flatten[derivedrules];
 	];
+
+	tmpexpr = tmpexpr // Expand // NoScalar;
+	tmpexpr = tmpexpr // xSVTUtilities`DivTraceFree;
+	tmpexpr = tmpexpr // ReplaceDummies;
+	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	tmpexpr // NoScalar
+	
+	(*
 	tmpexpr = tmpexpr // Expand // ContractMetric;
 	tmpexpr = tmpexpr // xSVTUtilities`FirstS;
 	tmpexpr = tmpexpr // xSVTUtilities`DivFree;
 	(*tmpexpr = tmpexpr // xSVTUtilities`FirstDummies // NoScalar;*)
 	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
-	tmpexpr = tmpexpr // SeparateMetric[metric3] // Expand;
+	tmpexpr = NoScalar@tmpexpr // xSVTUtilities`mySeparateMetric[{PD,CD}, tanm3] // Expand;
+	(*tmpexpr = tmpexpr // SeparateMetric[metric3] // Expand;*)
 	tmpexpr = tmpexpr // xSVTUtilities`FirstT;
 	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
 	tmpexpr = tmpexpr // ReplaceDummies;
-	tmpexpr // NoScalar
+	tmpexpr // NoScalar*)
 ]
 
 
@@ -1302,7 +1464,7 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 ]*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*GaugeTransformation*)
 
 

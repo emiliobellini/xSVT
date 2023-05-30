@@ -1,0 +1,236 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      8350,        228]
+NotebookOptionsPosition[      6657,        193]
+NotebookOutlinePosition[      7045,        209]
+CellTagsIndexPosition[      7002,        206]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Template", "Title",
+ CellChangeTimes->{{3.77736597696091*^9, 
+  3.777365978175221*^9}},ExpressionUUID->"f34936f4-e28d-45fa-899f-\
+95dfef503a10"],
+
+Cell[CellGroupData[{
+
+Cell["Setup", "Section",
+ CellChangeTimes->{
+  3.7597516274857407`*^9, {3.821537044496251*^9, 
+   3.8215370449430227`*^9}},ExpressionUUID->"e0b58864-b8ce-4602-be2a-\
+3e8dc0cec772"],
+
+Cell[CellGroupData[{
+
+Cell["Global Variables", "Subsection",
+ CellChangeTimes->{{3.810635484614985*^9, 
+  3.810635488760518*^9}},ExpressionUUID->"be6cba17-239f-4a5f-9b3f-\
+d421dad9f289"],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+  "These", " ", "are", " ", "the", " ", "necessary", " ", "global", " ", 
+   "variables", " ", "to", " ", "set", " ", "before", " ", "running", " ", 
+   "the", " ", "code"}], " ", "*)"}]], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"551c00e7-c011-45c1-8169-941ebd050122"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"*", " ", "Paths"}], " ", "**)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"$CodeDirectory", "=", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<..\>\""}], "}"}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"$EquationsDirectory", "=", 
+     RowBox[{
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{"$CodeDirectory", ",", "\"\<Equations\>\""}], "}"}], "]"}], "<>",
+       "$PathnameSeparator"}]}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.818836686141178*^9, 3.818836687642544*^9}, {
+  3.835249254594749*^9, 3.835249274498336*^9}, {3.894429497505562*^9, 
+  3.894429508934091*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"317cc638-2884-4324-a345-e894655f6734"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+     "*", "\[IndentingNewLine]", "Theories", " ", "implemented", " ", 
+      RowBox[{"(", 
+       RowBox[{
+       "all", " ", "of", " ", "them", " ", "include", " ", "a", " ", "metric",
+         " ", "and", " ", "matter"}], ")"}]}], ":", "\[IndentingNewLine]", 
+     " ", 
+     RowBox[{"-", " ", "GR"}], ":", " ", 
+     RowBox[{"General", " ", "Relativity"}]}], ";", "\[IndentingNewLine]", 
+    "  ", 
+    RowBox[{"-", " ", 
+     RowBox[{"ST", ":", " ", 
+      RowBox[{"scalar", "-", 
+       RowBox[{"tensor", " ", 
+        RowBox[{"(", 
+         RowBox[{"beyond", " ", "Horndeski"}], ")"}]}]}]}]}], ";", 
+    "\[IndentingNewLine]", "  ", 
+    RowBox[{"-", " ", 
+     RowBox[{"ALL", ":", " ", 
+      RowBox[{"import", " ", "all", " ", "the", " ", "theories", " ", 
+       RowBox[{"implemented", "."}]}]}]}]}], "\[IndentingNewLine]", "**)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"$Theory", "=", "\"\<GR\>\""}], ";"}]}]], "Input",
+ CellChangeTimes->{{3.818909751813246*^9, 3.818909752051426*^9}, {
+  3.821266113638678*^9, 3.821266113906493*^9}, {3.894429491507656*^9, 
+  3.894429491855299*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"8a9f4a2b-c150-4341-807b-94c48a05a9d6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"*", "\[IndentingNewLine]", "Type", " ", "of", " ", 
+    RowBox[{"metric", ".", " ", "For"}], " ", "now", " ", "only", " ", "FRW", 
+    " ", "Flat", " ", "is", " ", 
+    RowBox[{"implemented", "."}]}], "\[IndentingNewLine]", "**)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"$Metric", "=", "\"\<FRW Flat\>\""}], ";"}]}]], "Input",
+ CellChangeTimes->{{3.8188368512386*^9, 3.818836881152295*^9}},
+ CellLabel->"In[4]:=",ExpressionUUID->"15a55539-f43f-4090-9ea3-01ea74bca10f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"*", " ", "Import", " ", 
+    RowBox[{
+     RowBox[{"scalar", "/", "vector"}], "/", "tensor"}], " ", 
+    "perturbations"}], " ", "**)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"$ScalarPertsQ", "=", "True"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"$VectorPertsQ", "=", "True"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"$TensorPertsQ", "=", "True"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.810635666670603*^9, 3.8106357122520723`*^9}, 
+   3.810635831878718*^9, {3.811072016015664*^9, 3.811072029025297*^9}, {
+   3.848657672696121*^9, 3.848657675429611*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"b069e84a-2d2d-4089-bdba-285614e88227"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "*", "\[IndentingNewLine]", " ", "Import", " ", "decomposition", " ", 
+    "rules", " ", "from", " ", "external", " ", 
+    RowBox[{"file", ".", "\[IndentingNewLine]", "Leave"}], " ", "an", " ", 
+    "empty", " ", "string", " ", "to", " ", "use", " ", "default", " ", 
+    RowBox[{"rules", "."}]}], "\[IndentingNewLine]", "**)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"$ImportDecompositionRules", " ", "=", " ", "\"\<\>\""}], 
+   ";"}]}]], "Input",
+ CellChangeTimes->{{3.8188370039528503`*^9, 3.8188370596527042`*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"c8b16311-0922-42ca-bb0b-27c299995f45"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "*", " ", "Import", " ", "module", " ", "with", " ", "Class", " ", 
+    "definitions", " ", "and", " ", "conversions"}], " ", "**)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"$ToClass", "=", "True"}], ";"}]}]], "Input",
+ CellChangeTimes->{{3.823060232606619*^9, 3.823060262866869*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"4ec89f0e-5ce3-4dce-8285-484aea952880"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Run", "Subsection",
+ CellChangeTimes->{{3.810988467072467*^9, 
+  3.810988468323042*^9}},ExpressionUUID->"b21068e1-cf8d-475f-a305-\
+5a26f22294f6"],
+
+Cell[BoxData[
+ RowBox[{"$HistoryLength", "=", "1"}]], "Input",ExpressionUUID->"a7e66750-c18a-4a34-8e8e-a206bb833863"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{"$CodeDirectory", ",", "\"\<xSVT.wl\>\""}], "}"}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"f981a8f2-890e-47fd-9b22-49991c0e545a"],
+
+Cell[BoxData[
+ RowBox[{"ImportEquations", "[", "$EquationsDirectory", "]"}]], "Input",Expres\
+sionUUID->"52b95e83-67a9-4913-bec6-55e40d86c680"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1395, 852},
+WindowMargins->{{Automatic, 0}, {0, Automatic}},
+FrontEndVersion->"12.3 for Linux x86 (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"cca5897e-6e9d-453c-9291-e32a323e2383"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 150, 3, 98, "Title",ExpressionUUID->"f34936f4-e28d-45fa-899f-95dfef503a10"],
+Cell[CellGroupData[{
+Cell[755, 29, 180, 4, 68, "Section",ExpressionUUID->"e0b58864-b8ce-4602-be2a-3e8dc0cec772"],
+Cell[CellGroupData[{
+Cell[960, 37, 164, 3, 54, "Subsection",ExpressionUUID->"be6cba17-239f-4a5f-9b3f-d421dad9f289"],
+Cell[1127, 42, 321, 6, 29, "Input",ExpressionUUID->"551c00e7-c011-45c1-8169-941ebd050122"],
+Cell[1451, 50, 866, 22, 71, "Input",ExpressionUUID->"317cc638-2884-4324-a345-e894655f6734"],
+Cell[2320, 74, 1263, 32, 154, "Input",ExpressionUUID->"8a9f4a2b-c150-4341-807b-94c48a05a9d6"],
+Cell[3586, 108, 533, 11, 92, "Input",ExpressionUUID->"15a55539-f43f-4090-9ea3-01ea74bca10f"],
+Cell[4122, 121, 710, 17, 92, "Input",ExpressionUUID->"b069e84a-2d2d-4089-bdba-285614e88227"],
+Cell[4835, 140, 664, 14, 113, "Input",ExpressionUUID->"c8b16311-0922-42ca-bb0b-27c299995f45"],
+Cell[5502, 156, 429, 10, 51, "Input",ExpressionUUID->"4ec89f0e-5ce3-4dce-8285-484aea952880"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[5968, 171, 151, 3, 38, "Subsection",ExpressionUUID->"b21068e1-cf8d-475f-a305-5a26f22294f6"],
+Cell[6122, 176, 117, 1, 29, "Input",ExpressionUUID->"a7e66750-c18a-4a34-8e8e-a206bb833863"],
+Cell[6242, 179, 229, 5, 29, "Input",ExpressionUUID->"f981a8f2-890e-47fd-9b22-49991c0e545a"],
+Cell[6474, 186, 143, 2, 29, "Input",ExpressionUUID->"52b95e83-67a9-4913-bec6-55e40d86c680"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

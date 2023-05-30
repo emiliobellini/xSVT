@@ -226,7 +226,7 @@ GRToBuildingBlocks. If True curvature tensor are rewritten as derivatives of the
 metric, otherwise Christoffel symbols.";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*3+1 Decomposition*)
 
 
@@ -248,11 +248,23 @@ SVTExpand::usage =
 Options[SVTExpand] for a full list of available options.";
 
 UseDerivedResults::usage = "UseDerivedResults (boolean, default:True) is an \
-option for SVTExpand. If True it uses both basic and derived rules for the \
-expansion, otherwise only the basic rules.";
+option for SVTExpand and SplitAndExpand. If True it uses both basic and derived \
+rules for the expansion, otherwise only the basic rules.";
 DecompositionRules::usage = "DecompositionRules (string, default \
-$SVTDecompositionRules) is an option for SVTExpand. It contains the name \
-of the variable with the of basic and derived rules used in the decomposition.";
+$SVTDecompositionRules) is an option for SVTExpand and SplitAndExpand. It contains \
+the name of the variable with the of basic and derived rules used in the decomposition.";
+
+
+SplitAndExpand::usage =
+"SplitAndExpand[expr, freeindsrules] applies both SplitSpaceTime and SVTExpand. \
+In some case it can be convenient w.r.t. the individual functions because there \
+is the option to control how many indices are split at time before applying the \
+expansion rules of SVTExpand. Check Options[SplitAndExpand] for a full list of \
+available options.";
+
+Nsplits::usage = "Nsplits (integer, default:All) is an option for SplitAndExpand. \
+It fixes how many dummy indices are split at each step of SplitAndExpand before \
+applying the expansion rules. Setting it to a small value can speed up calculations.";
 
 
 (* ::Subsection::Closed:: *)
