@@ -15,7 +15,7 @@ DefManifold[M3, 3, IndexRange[i, p]]
 DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma], \[Tau], \[Gamma]}]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Metric*)
 
 
@@ -211,7 +211,7 @@ DefTensor[source10[LI[order],-i], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\)
 (*Expansion Rules*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Metric*)
 
 
@@ -234,7 +234,7 @@ Print[Column[{"Metric Decomposition", ScreenDollarIndices[metricrules]}]]
 Clear[metricrules];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Matter*)
 
 
@@ -253,10 +253,13 @@ matterrules = Flatten[{
 	pertpressurecov[LI[order_]] :> pertpressure[LI[order]],
 	MakeRule[{pertvelocitycov[LI[1], a], timevec[a] (pertmetricg[LI[1], -b, -c] timevec[b] timevec[c])/2/scale[]^3}],
 	MakeRule[{pertvelocitycov[LI[2], c], timevec[c] (metric\[Delta][-i, -j]*pertvelocitycov[LI[1], i]*pertvelocitycov[LI[1], j]*scale[] + (2*pertmetricg[LI[1], -i, -a]*pertvelocitycov[LI[1], i]*timevec[a])/scale[]^2 - pertvelocitycov[LI[1], a]*pertvelocitycov[LI[1], b]*scale[]*timevec[-a]*timevec[-b] + (2*pertmetricg[LI[1], -a, -b]*pertvelocitycov[LI[1], a]*timevec[b])/scale[]^2 + (pertmetricg[LI[2], -a, -b]*timevec[a]*timevec[b])/(2*scale[]^3))}],
+	MakeRule[{pertvelocitycov[LI[3], c], timevec[c] (3*pertmetricg[LI[1], -a, -b]*pertvelocitycov[LI[1], a]*pertvelocitycov[LI[1], b]/scale[] + 3*pertmetricg[LI[1], -a, -i]*pertvelocitycov[LI[1], a]*pertvelocitycov[LI[1], i]/scale[] + 3*pertmetricg[LI[1], -i, -a]*pertvelocitycov[LI[1], a]*pertvelocitycov[LI[1], i]/scale[] + 3*pertmetricg[LI[1], -i, -j]*pertvelocitycov[LI[1], i]*pertvelocitycov[LI[1], j]/scale[] + 3*metric\[Delta][-i, -j]*pertvelocitycov[LI[1], i]*pertvelocitycov[LI[2], j]*scale[] + 3*pertmetricg[LI[2], -i, -a]*pertvelocitycov[LI[1], i]*timevec[a]/scale[]^2 + 3*pertmetricg[LI[1], -i, -a]*pertvelocitycov[LI[2], i]*timevec[a]/scale[]^2 - 3*pertvelocitycov[LI[1], a]*pertvelocitycov[LI[2], b]*scale[]*timevec[-a]*timevec[-b] + 3*pertmetricg[LI[2], -a, -b]*pertvelocitycov[LI[1], a]*timevec[b]/scale[]^2 + 3*pertmetricg[LI[1], -a, -b]*pertvelocitycov[LI[2], a]*timevec[b]/scale[]^2 + pertmetricg[LI[3], -a, -b]*timevec[a]*timevec[b]/(2*scale[]^3))}],
 	MakeRule[{pertvelocitycov[LI[1], i], (pertvelocityvec[LI[1], i] + metric\[Delta][i, j] PD[-j]@pertvelocity[LI[1]]-scale[] metric\[Delta][i, j] PD[-j]@pertB[LI[1]])/scale[]^2}],
 	MakeRule[{pertvelocitycov[LI[2], i], (pertvelocityvec[LI[2], i] + metric\[Delta][i, j] PD[-j]@pertvelocity[LI[2]]-scale[] metric\[Delta][i, j] PD[-j]@pertB[LI[2]])/scale[]^2}],
+	MakeRule[{pertvelocitycov[LI[3], i], (pertvelocityvec[LI[3], i] + metric\[Delta][i, j] PD[-j]@pertvelocity[LI[3]]-scale[] metric\[Delta][i, j] PD[-j]@pertB[LI[3]])/scale[]^2}],
 	MakeRule[{pertshearcov[LI[1], -i, -j], (density[] + pressure[]) (pertshearten[LI[1], -i, -j] + PD[-i]@pertshearvec[LI[1], -j] + PD[-j]@pertshearvec[LI[1], -i] + 1/2 PD[-i]@PD[-j]@pertshear[LI[1]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[1]])}],
 	MakeRule[{pertshearcov[LI[2], -i, -j], (density[] + pressure[]) (pertshearten[LI[2], -i, -j] + PD[-i]@pertshearvec[LI[2], -j] + PD[-j]@pertshearvec[LI[2], -i] + 1/2 PD[-i]@PD[-j]@pertshear[LI[2]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[2]])}],
+	MakeRule[{pertshearcov[LI[3], -i, -j], (density[] + pressure[]) (pertshearten[LI[3], -i, -j] + PD[-i]@pertshearvec[LI[3], -j] + PD[-j]@pertshearvec[LI[3], -i] + 1/2 PD[-i]@PD[-j]@pertshear[LI[3]] - 1/2 metric\[Delta][-i, -j] metric\[Delta][k, l] PD[-k]@PD[-l]@pertshear[LI[3]])}],
 	pertshearcov[LI[order_], -a_?TangentM1`Q, -b_?TangentM1`Q] :> 0,
 	pertshearcov[LI[order_], -a_?TangentM1`Q, -i_?TangentM3`Q] :> 0,
 	pertshearcov[LI[order_], -i_?TangentM3`Q, -a_?TangentM1`Q] :> 0

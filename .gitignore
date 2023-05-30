@@ -1,3 +1,5 @@
 Equations/
+Notebooks/*
+!Notebooks/Template.nb
 logs/
 *.sh
