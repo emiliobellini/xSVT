@@ -220,6 +220,9 @@ order=0
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
 
 
+$SVTDecompositionRules=SVTDecompositionRules;
+
+
 SVTDecomposition[EQmetric,order,{\[Mu]->a,\[Nu]->b},Verbose->True];
 EQback1=-%/scale[]^2 //Expand // SVTExpand // ReplaceDummies
 EQback1 // SVTExport
@@ -247,6 +250,9 @@ SubBack[expr_] := Module[{tmp},
 
 
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+
+
+$SVTDecompositionRules=SVTDecompositionRules;
 
 
 tmp=EQmetric //.$StressEnergyDecomposition;
@@ -626,6 +632,9 @@ SubBack[expr_] := Module[{tmp},
 
 
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+
+
+$SVTDecompositionRules=SVTDecompositionRules;
 
 
 tmp=EQmetric //.$StressEnergyDecomposition;
@@ -1073,6 +1082,9 @@ SubBack[expr_] := Module[{tmp},
 
 
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+
+
+$SVTDecompositionRules=SVTDecompositionRules;
 
 
 tmp=EQmetric //.$StressEnergyDecomposition;
