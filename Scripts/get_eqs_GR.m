@@ -346,7 +346,8 @@ tmpT=SVTPerturbation[tmpT,order]
 
 
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
-EQgaugefirstDm=tmp/density[] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;
+EQgaugefirstDm=tmp/density[] // SVTExpand;
+(*EQgaugefirstDm=tmp/density[] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
 CollectPerts[EQgaugefirstDm,{},Factor]
 
 
@@ -355,7 +356,8 @@ tmpT=SVTPerturbation[tmpT,order]
 
 
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
-EQgaugefirstPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;
+EQgaugefirstPm=tmp // SVTExpand;
+(*EQgaugefirstPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
 CollectPerts[EQgaugefirstPm,{},Factor]
 
 
@@ -501,7 +503,8 @@ tmpT=SVTPerturbation[tmpT,order]
 
 
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
-EQgaugesecDm=tmp/density[] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;
+EQgaugesecDm=tmp/density[] // SVTExpand;
+(*EQgaugesecDm=tmp/density[] //.Flatten@Solve[TimeDer@EQback3==0,pprimedensity[]] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
 CollectPerts[EQgaugesecDm //._[LI[1],___]:>0,{},Factor]
 
 
@@ -510,7 +513,8 @@ tmpT=SVTPerturbation[tmpT,order]
 
 
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
-EQgaugesecPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;
+EQgaugesecPm=tmp // SVTExpand;
+(*EQgaugesecPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
 CollectPerts[EQgaugesecPm //._[LI[1],___]:>0,{},Factor]
 
 
@@ -637,7 +641,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
 
 
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSi=tmp // ReplaceDummies;
 
@@ -705,7 +711,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp4=tmp // ReplaceDummies;
 
 
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp2/4-tmp1/4],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp2/4-tmp1/4,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdPhi=tmp // ReplaceDummies;
 
@@ -713,7 +721,9 @@ EQgaugethirdPhi=tmp // ReplaceDummies;
 CollectPerts[EQgaugethirdPhi //._[LI[1],___]:>0,{},Factor]
 
 
-{time,tmp}=Timing[Listify[SVTExpand,Expand[3/4 tmp2-tmp1/4],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,3/4 tmp2-tmp1/4,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdE=tmp // ReplaceDummies;
 
@@ -728,7 +738,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 ditmp2=tmp // ReplaceDummies;
 
 
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp3-ditmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp3-ditmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdFi=tmp // ReplaceDummies;
 
@@ -774,7 +786,8 @@ djtmp3=tmp // ReplaceDummies;
 ditmp3=Evaluate[djtmp3 //.-i->-k //.-j->-i //.-k->-j];
 
 
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp4+dijtmp2/2+dijtmp1/2+mijtmp2/2-mijtmp1/2-djtmp3-ditmp3],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp4+dijtmp2/2+dijtmp1/2+mijtmp2/2-mijtmp1/2-djtmp3-ditmp3,{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdHij=tmp // ReplaceDummies;
 
@@ -803,7 +816,8 @@ tmpT=SVTPerturbation[tmpT,order]
 
 
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
-EQgaugethirdDm=tmp/density[] //.Flatten@Solve[TimeDer@TimeDer@EQback3==0,ppprimedensity[]] //.Flatten@Solve[TimeDer@EQback3==0,pprimedensity[]] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;
+EQgaugethirdDm=tmp/density[] // SVTExpand;
+(*EQgaugethirdDm=tmp/density[] //.Flatten@Solve[TimeDer@TimeDer@EQback3==0,ppprimedensity[]] //.Flatten@Solve[TimeDer@EQback3==0,pprimedensity[]] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
 CollectPerts[EQgaugethirdDm //._[LI[1],___]:>0,{},Factor]
 
 
@@ -812,7 +826,8 @@ tmpT=SVTPerturbation[tmpT,order]
 
 
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
-EQgaugethirdPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;
+EQgaugethirdPm=tmp // SVTExpand;
+(*EQgaugethirdPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
 CollectPerts[EQgaugethirdPm //._[LI[1],___]:>0,{},Factor]
 
 
@@ -844,7 +859,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp=tmp // ReplaceDummies;
 
 
-{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,Expand[tmp+EQB],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp+EQB,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdVm=tmp // ReplaceDummies;
 
@@ -873,7 +890,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
 
 
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1-tmp2-EQS],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1-tmp2-EQS,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdVim=tmp // ReplaceDummies;
 
@@ -924,7 +943,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp3=tmp // ReplaceDummies;
 
 
-{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,Expand[-tmp1/(density[]+pressure[])],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,-tmp1/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSigmam=tmp // ReplaceDummies;
 
@@ -932,7 +953,9 @@ EQgaugethirdSigmam=tmp // ReplaceDummies;
 CollectPerts[EQgaugethirdSigmam //._[LI[1],___]:>0,{},Factor]
 
 
-{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,Expand[tmp2/(density[]+pressure[])],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp2/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSigmaim=tmp // ReplaceDummies;
 
@@ -964,7 +987,8 @@ djtmp2=tmp // ReplaceDummies;
 ditmp2=Evaluate[djtmp2 //.-i->-k //.-j->-i //.-k->-j];
 
 
-{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,Expand[(tmp3-mijtmp1/2+dijtmp1/2-djtmp2-ditmp2)/(density[]+pressure[])],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,(tmp3-mijtmp1/2+dijtmp1/2-djtmp2-ditmp2)/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSigmaijm=tmp // ReplaceDummies;
 
@@ -987,12 +1011,12 @@ Print["\n--- RUNNING FIRST-ORDER ---\n"];
 order=1
 
 
-SubBack[expr_] := Module[{tmp},
+(*SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
 	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]
+	tmp]*)
 
 
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
@@ -1037,7 +1061,7 @@ EQmetric100 // SVTExport
 
 
 tmp=-tmp/2/Mpl^2;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1064,7 +1088,7 @@ EQmetric10i // SVTExport
 
 
 tmp=tmp/Mpl^2;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1095,7 +1119,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQfirst2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQfirst5}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQfirst5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst5];
 
 
@@ -1124,7 +1150,7 @@ EQmetric1ij // SVTExport
 
 
 tmp=tmp/2/Mpl^2;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1225,7 +1251,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst3];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[3 # &,divdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQfirst4}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQfirst4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst4];
 
 
@@ -1233,7 +1261,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst4];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,graddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQfirst6}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQfirst6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst6];
 
 
@@ -1241,7 +1271,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst6];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1249,7 +1281,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1257,7 +1291,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1265,7 +1301,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1273,7 +1311,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1281,7 +1321,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQfirst7}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQfirst7}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst7];
 
 
@@ -1319,7 +1361,7 @@ EQmatter10 // SVTExport
 
 
 tmp=-tmp;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1341,7 +1383,7 @@ EQmatter1i // SVTExport
 
 
 tmp=-tmp;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1372,7 +1414,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst9];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQfirst9]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQfirst10}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQfirst10}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst10];
 
 
@@ -1390,12 +1434,12 @@ Print["\n--- RUNNING SECOND-ORDER ---\n"];
 order=2
 
 
-SubBack[expr_] := Module[{tmp},
+(*SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
 	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]
+	tmp]*)
 
 
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
@@ -1439,7 +1483,8 @@ EQmetric200=tmp;
 EQmetric200 // SVTExport
 
 
-{time,tmp}=Timing[Map[SubBack[-#/2/Mpl^2] &,tmp]];
+(*{time,tmp}=Timing[Map[SubBack[-#/2/Mpl^2] &,tmp]];*)
+{time,tmp}=Timing[Map[-#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -1472,7 +1517,8 @@ EQmetric20i=tmp;
 EQmetric20i // SVTExport
 
 
-{time,tmp}=Timing[Map[SubBack[#/Mpl^2] &,tmp]];
+(*{time,tmp}=Timing[Map[SubBack[#/Mpl^2] &,tmp]];*)
+{time,tmp}=Timing[Map[#/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -1504,7 +1550,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQsec2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQsec5}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQsec5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec5];
 
 
@@ -1546,7 +1594,8 @@ EQmetric2ij=tmp;
 EQmetric2ij // SVTExport
 
 
-{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];
+(*{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];*)
+{time,tmp}=Timing[Map[#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -1648,7 +1697,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec3];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[3 # &,divdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQsec4}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQsec4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec4];
 
 
@@ -1656,7 +1707,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec4];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,graddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQsec6}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQsec6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec6];
 
 
@@ -1664,7 +1717,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec6];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1672,7 +1727,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1680,7 +1737,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1688,7 +1747,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1696,7 +1757,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -1704,7 +1767,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQsec7}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQsec7}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec7];
 
 
@@ -1770,7 +1835,7 @@ EQmatter20 // SVTExport
 
 
 tmp=-tmp;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1798,7 +1863,7 @@ EQmatter2i // SVTExport
 
 
 tmp=-tmp;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -1829,7 +1894,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec9];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQsec9]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQsec10}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQsec10}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec10];
 
 
@@ -1861,12 +1928,12 @@ Print["\n--- RUNNING THIRD-ORDER ---\n"];
 order=3
 
 
-SubBack[expr_] := Module[{tmp},
+(*SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
 	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]
+	tmp]*)
 
 
 SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
@@ -1910,7 +1977,8 @@ EQmetric300=tmp;
 EQmetric300 // SVTExport
 
 
-{time,tmp}=Timing[Map[SubBack[-#/2/Mpl^2] &,tmp]];
+(*{time,tmp}=Timing[Map[SubBack[-#/2/Mpl^2] &,tmp]];*)
+{time,tmp}=Timing[Map[-#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -1943,7 +2011,8 @@ EQmetric30i=tmp;
 EQmetric30i // SVTExport
 
 
-{time,tmp}=Timing[Map[SubBack[#/Mpl^2] &,tmp]];
+(*{time,tmp}=Timing[Map[SubBack[#/Mpl^2] &,tmp]];*)
+{time,tmp}=Timing[Map[#/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -1975,7 +2044,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQthird2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQthird5}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQthird5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird5];
 
 
@@ -2017,7 +2088,8 @@ EQmetric3ij=tmp;
 EQmetric3ij // SVTExport
 
 
-{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];
+(*{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];*)
+{time,tmp}=Timing[Map[#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -2119,7 +2191,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird3];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[3 # &,divdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQthird4}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQthird4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird4];
 
 
@@ -2127,7 +2201,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird4];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,graddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQthird6}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQthird6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird6];
 
 
@@ -2135,7 +2211,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird6];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -2143,7 +2221,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -2151,7 +2231,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -2159,7 +2241,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -2167,7 +2251,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,tmp}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 
 
@@ -2175,7 +2261,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQthird7}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQthird7}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird7];
 
 
@@ -2241,7 +2329,7 @@ EQmatter30 // SVTExport
 
 
 tmp=-tmp;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -2269,7 +2357,7 @@ EQmatter3i // SVTExport
 
 
 tmp=-tmp;
-tmp=tmp // SubBack // Expand;
+(*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
 tmp // Length
 
@@ -2300,7 +2388,9 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird9];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQthird9]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
-{time,EQthird10}=Timing[Listify[SVTExpand,Expand[tmp1+tmp2],{},ListMethod->"SamePerts",Verbose->True]];
+{time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,EQthird10}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird10];
 
 
@@ -2324,6 +2414,3 @@ EQtource9 //SVTExport
 
 EQthird10 //SVTExport
 EQtource10 //SVTExport
-
-
-
