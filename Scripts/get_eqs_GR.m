@@ -90,6 +90,151 @@ DefTensor[RiemannCDP[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],{M1,M3,M4}]
 DefTensorPerturbation[pertRiemannCDP[LI[order],-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],RiemannCDP[-\[Mu],-\[Nu],-\[Alpha],-\[Beta]],{M1,M3,M4}]
 
 
+runEQmetric=Not@ValueQ@EQmetric;
+runEQmatter=Not@ValueQ@EQmatter;
+runcovariant=runEQmetric || runEQmatter;
+
+
+runEQback1=Not@ValueQ@EQback1;
+runEQback2=Not@ValueQ@EQback2;
+runEQback3=Not@ValueQ@EQback3;
+runbackmetric = runEQback1 || EQback2;
+runbackmatter = runEQback3;
+
+
+runEQgaugefirstPsi=Not@ValueQ@EQgaugefirstPsi;
+runEQgaugefirstB=Not@ValueQ@EQgaugefirstB;
+runEQgaugefirstSi=Not@ValueQ@EQgaugefirstSi;
+runEQgaugefirstPhi=Not@ValueQ@EQgaugefirstPhi;
+runEQgaugefirstE=Not@ValueQ@EQgaugefirstE;
+runEQgaugefirstFi=Not@ValueQ@EQgaugefirstFi;
+runEQgaugefirstHij=Not@ValueQ@EQgaugefirstHij;
+rungaugefirstmetric = runEQgaugefirstPsi || runEQgaugefirstB || runEQgaugefirstSi || runEQgaugefirstPhi || runEQgaugefirstE || runEQgaugefirstFi || runEQgaugefirstHij;
+
+
+runEQgaugefirstDm=Not@ValueQ@EQgaugefirstDm;
+runEQgaugefirstPm=Not@ValueQ@EQgaugefirstPm;
+runEQgaugefirstVm=Not@ValueQ@EQgaugefirstVm;
+runEQgaugefirstVim=Not@ValueQ@EQgaugefirstVim;
+runEQgaugefirstSigmam=Not@ValueQ@EQgaugefirstSigmam;
+runEQgaugefirstSigmaim=Not@ValueQ@EQgaugefirstSigmaim;
+runEQgaugefirstSigmaijm=Not@ValueQ@EQgaugefirstSigmaijm;
+rungaugefirstmatter = runEQgaugefirstDm || runEQgaugefirstPm || runEQgaugefirstVm || runEQgaugefirstVim || runEQgaugefirstSigmam || runEQgaugefirstSigmaim || runEQgaugefirstSigmaijm;
+
+
+runEQgaugesecPsi=Not@ValueQ@EQgaugesecPsi;
+runEQgaugesecB=Not@ValueQ@EQgaugesecB;
+runEQgaugesecSi=Not@ValueQ@EQgaugesecSi;
+runEQgaugesecPhi=Not@ValueQ@EQgaugesecPhi;
+runEQgaugesecE=Not@ValueQ@EQgaugesecE;
+runEQgaugesecFi=Not@ValueQ@EQgaugesecFi;
+runEQgaugesecHij=Not@ValueQ@EQgaugesecHij;
+rungaugesecmetric = runEQgaugesecPsi || runEQgaugesecB || runEQgaugesecSi || runEQgaugesecPhi || runEQgaugesecE || runEQgaugesecFi || runEQgaugesecHij;
+
+
+runEQgaugesecDm=Not@ValueQ@EQgaugesecDm;
+runEQgaugesecPm=Not@ValueQ@EQgaugesecPm;
+runEQgaugesecVm=Not@ValueQ@EQgaugesecVm;
+runEQgaugesecVim=Not@ValueQ@EQgaugesecVim;
+runEQgaugesecSigmam=Not@ValueQ@EQgaugesecSigmam;
+runEQgaugesecSigmaim=Not@ValueQ@EQgaugesecSigmaim;
+runEQgaugesecSigmaijm=Not@ValueQ@EQgaugesecSigmaijm;
+rungaugesecmatter = runEQgaugesecDm || runEQgaugesecPm || runEQgaugesecVm || runEQgaugesecVim || runEQgaugesecSigmam || runEQgaugesecSigmaim || runEQgaugesecSigmaijm;
+
+
+runEQgaugethirdPsi=Not@ValueQ@EQgaugethirdPsi;
+runEQgaugethirdB=Not@ValueQ@EQgaugethirdB;
+runEQgaugethirdSi=Not@ValueQ@EQgaugethirdSi;
+runEQgaugethirdPhi=Not@ValueQ@EQgaugethirdPhi;
+runEQgaugethirdE=Not@ValueQ@EQgaugethirdE;
+runEQgaugethirdFi=Not@ValueQ@EQgaugethirdFi;
+runEQgaugethirdHij=Not@ValueQ@EQgaugethirdHij;
+rungaugethirdmetric = runEQgaugethirdPsi || runEQgaugethirdB || runEQgaugethirdSi || runEQgaugethirdPhi || runEQgaugethirdE || runEQgaugethirdFi || runEQgaugethirdHij;
+
+
+runEQgaugethirdDm=Not@ValueQ@EQgaugethirdDm;
+runEQgaugethirdPm=Not@ValueQ@EQgaugethirdPm;
+runEQgaugethirdVm=Not@ValueQ@EQgaugethirdVm;
+runEQgaugethirdVim=Not@ValueQ@EQgaugethirdVim;
+runEQgaugethirdSigmam=Not@ValueQ@EQgaugethirdSigmam;
+runEQgaugethirdSigmaim=Not@ValueQ@EQgaugethirdSigmaim;
+runEQgaugethirdSigmaijm=Not@ValueQ@EQgaugethirdSigmaijm;
+rungaugethirdmatter = runEQgaugethirdDm || runEQgaugethirdPm || runEQgaugethirdVm || runEQgaugethirdVim || runEQgaugethirdSigmam || runEQgaugethirdSigmaim || runEQgaugethirdSigmaijm;
+
+
+runEQmetric100=Not@ValueQ@EQmetric100;
+runEQmetric200=Not@ValueQ@EQmetric200;
+runEQmetric300=Not@ValueQ@EQmetric300;
+
+
+runEQmetric10i=Not@ValueQ@EQmetric10i;
+runEQmetric20i=Not@ValueQ@EQmetric20i;
+runEQmetric30i=Not@ValueQ@EQmetric30i;
+
+
+runEQmetric1ij=Not@ValueQ@EQmetric1ij;
+runEQmetric2ij=Not@ValueQ@EQmetric2ij;
+runEQmetric3ij=Not@ValueQ@EQmetric3ij;
+
+
+runEQmatter10=Not@ValueQ@EQmatter10;
+runEQmatter20=Not@ValueQ@EQmatter20;
+runEQmatter30=Not@ValueQ@EQmatter30;
+
+
+runEQmatter1i=Not@ValueQ@EQmatter1i;
+runEQmatter2i=Not@ValueQ@EQmatter2i;
+runEQmatter3i=Not@ValueQ@EQmatter3i;
+
+
+runEQfirst1=Not@ValueQ@EQfirst1;
+runEQfirst2=Not@ValueQ@EQfirst2;
+runEQfirst3=Not@ValueQ@EQfirst3;
+runEQfirst4=Not@ValueQ@EQfirst4;
+runEQfirst5=Not@ValueQ@EQfirst5;
+runEQfirst6=Not@ValueQ@EQfirst6;
+runEQfirst7=Not@ValueQ@EQfirst7;
+runEQfirst8=Not@ValueQ@EQfirst8;
+runEQfirst9=Not@ValueQ@EQfirst9;
+runEQfirst10=Not@ValueQ@EQfirst10;
+
+
+runfirstmetric=runEQmetric100 || runEQmetric10i || runEQmetric1ij || runEQfirst1 || runEQfirst2 || runEQfirst3 || runEQfirst4 || runEQfirst5 || runEQfirst6 || runEQfirst7;
+runfirstmatter=runEQmatter10 || runEQmatter1i || runEQfirst8 || runEQfirst9 || runEQfirst10;
+
+
+runEQsec1=Not@ValueQ@EQsec1;
+runEQsec2=Not@ValueQ@EQsec2;
+runEQsec3=Not@ValueQ@EQsec3;
+runEQsec4=Not@ValueQ@EQsec4;
+runEQsec5=Not@ValueQ@EQsec5;
+runEQsec6=Not@ValueQ@EQsec6;
+runEQsec7=Not@ValueQ@EQsec7;
+runEQsec8=Not@ValueQ@EQsec8;
+runEQsec9=Not@ValueQ@EQsec9;
+runEQsec10=Not@ValueQ@EQsec10;
+
+
+runsecmetric=runEQmetric200 || runEQmetric20i || runEQmetric2ij || runEQsec1 || runEQsec2 || runEQsec3 || runEQsec4 || runEQsec5 || runEQsec6 || runEQsec7;
+runsecmatter=runEQmatter20 || runEQmatter2i || runEQsec8 || runEQsec9 || runEQsec10;
+
+
+runEQthird1=Not@ValueQ@EQthird1;
+runEQthird2=Not@ValueQ@EQthird2;
+runEQthird3=Not@ValueQ@EQthird3;
+runEQthird4=Not@ValueQ@EQthird4;
+runEQthird5=Not@ValueQ@EQthird5;
+runEQthird6=Not@ValueQ@EQthird6;
+runEQthird7=Not@ValueQ@EQthird7;
+runEQthird8=Not@ValueQ@EQthird8;
+runEQthird9=Not@ValueQ@EQthird9;
+runEQthird10=Not@ValueQ@EQthird10;
+
+
+runthirdmetric=runEQmetric300 || runEQmetric30i || runEQmetric3ij || runEQthird1 || runEQthird2 || runEQthird3 || runEQthird4 || runEQthird5 || runEQthird6 || runEQthird7;
+runthirdmatter=runEQmatter30 || runEQmatter3i || runEQthird8 || runEQthird9 || runEQthird10;
+
+
 Print["\n--- RUNNING TIME COMPONENT OF MATTER VELOCITY ---\n"];
 
 
@@ -124,20 +269,29 @@ tmp=tmp/2/scale[] //.$SVTDecompositionRules[[1]][[{15,16,17,18,31}]] // Expand;
 Print[tmp]
 
 
-Print["\n--- RUNNING COVARIANT EQUATIONS OF MOTION ---\n"];
+If[runcovariant,
+Print["\n--- RUNNING COVARIANT EQUATIONS OF MOTION ---\n"];,
+Print["\n--- SKIPPING COVARIANT EQUATIONS OF MOTION ---\n"];
+];
 
 
+If[runEQmetric,
 tmp=Lgravity+Lmatter // SeparateMetric[] // ToCanonical // ReplaceDummies;
 tmp=ExpandPerturbation[Perturbation[tmp,1]] // NoScalar // ToCanonical;
+];
 
 
+If[runEQmetric,
 tmp=-2 VarD[pertmetricg[LI[1],\[Mu],\[Nu]],CD][tmp]/Sqrt[-Detmetricg[]] //.delta[-LI[1],LI[1]]:>1;
-EQmetric=tmp+EQmattertoscalar // ToCanonical // SeparateMetric[]
-EQmetric // SVTExport
+EQmetric=tmp+EQmattertoscalar // ToCanonical // SeparateMetric[];
+EQmetric // SVTExport;
+];
 
 
-EQmatter = CD[-\[Nu]]@stressenergy[-\[Mu], \[Nu]] // ToCanonical // SeparateMetric[]
-EQmatter // SVTExport
+If[runEQmatter,
+EQmatter = CD[-\[Nu]]@stressenergy[-\[Mu], \[Nu]] // ToCanonical // SeparateMetric[];
+EQmatter // SVTExport;
+];
 
 
 Print["\n--- RUNNING SVTDECOMPOSITION RULES ---\n"];
@@ -230,891 +384,1389 @@ SVTDecomposition[metricg[\[Mu],\[Nu]] RicciCDP[-\[Mu],-\[Nu]],order,{},StoreName
 (*SVTDecompositionRules // SVTExport*)
 
 
-Print["\n--- RUNNING BACKGROUND ---\n"];
+If[runbackmetric || runbackmatter,
+Print["\n--- RUNNING BACKGROUND ---\n"];,
+Print["\n--- SKIPPING BACKGROUND ---\n"];
+];
 
 
-order=0
+If[runbackmetric || runbackmatter,
+order=0;
+SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"];
+];
 
 
-SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+If[runbackmetric,
+Print["\n--- RUNNING BACKGROUND METRIC ---\n"];,
+Print["\n--- SKIPPING BACKGROUND METRIC ---\n"];
+];
 
 
-Print["\n--- RUNNING BACKGROUND METRIC ---\n"];
-
-
+If[runEQback1,
 tmp=SVTDecomposition[EQmetric,order,{\[Mu]->a,\[Nu]->b},Verbose->True];
-EQback1=-tmp/scale[]^2 //Expand // SVTExpand // ReplaceDummies
-EQback1 // SVTExport
+EQback1=-tmp/scale[]^2 //Expand // SVTExpand // ReplaceDummies;
+EQback1 // SVTExport;
+];
 
 
+If[runEQback2,
 tmp=SVTDecomposition[EQmetric,order,{\[Mu]->i,\[Nu]->j},Verbose->True];
-EQback2=metric\[Delta][i,j] tmp/scale[]^2/3 //Expand // SVTExpand // ReplaceDummies
-EQback2 // SVTExport
+EQback2=metric\[Delta][i,j] tmp/scale[]^2/3 //Expand // SVTExpand // ReplaceDummies;
+EQback2 // SVTExport;
+];
 
 
-Print["\n--- RUNNING BACKGROUND MATTER ---\n"];
+If[runbackmatter,
+Print["\n--- RUNNING BACKGROUND MATTER ---\n"];,
+Print["\n--- SKIPPING BACKGROUND MATTER ---\n"];
+];
 
 
+If[runEQback3,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->a},Verbose->True];
-EQback3=-tmp //Expand // SVTExpand // ReplaceDummies
-EQback3 // SVTExport
+EQback3=-tmp //Expand // SVTExpand // ReplaceDummies;
+EQback3 // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - FIRST-ORDER ---\n"];
+If[rungaugefirstmetric || rungaugefirstmatter,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - FIRST-ORDER ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - FIRST-ORDER ---\n"];
+];
 
 
-order=1
+If[rungaugefirstmetric || rungaugefirstmatter,
+order=1;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - FIRST-ORDER METRIC ---\n"];
+If[rungaugefirstmetric,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - FIRST-ORDER METRIC ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - FIRST-ORDER METRIC ---\n"];
+];
 
 
+If[rungaugefirstmetric,
 tmpM=metricg[-\[Mu],-\[Nu]];
-tmpM=SVTPerturbation[tmpM,order]
+tmpM=SVTPerturbation[tmpM,order];
+];
 
 
+If[runEQgaugefirstPsi,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->a,\[Nu]->b}];
 EQgaugefirstPsi=-tmp/2/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugefirstPsi,{},Factor]
+Print@CollectPerts[EQgaugefirstPsi,{},Factor];
+];
 
 
+If[runEQgaugefirstB || runEQgaugefirstSi,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->a,\[Nu]->i}];
 tmpi=tmp // ReplaceDummies;
 tmpij=PD[-j]@tmpi // SVTExpand // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugefirstB,
 tmp=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugefirstB=tmp/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugefirstB,{},Factor]
+Print@CollectPerts[EQgaugefirstB,{},Factor];
+];
 
 
+If[runEQgaugefirstSi,
 tmp1=metric\[Delta][j,k] tmpijk // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugefirstSi=-(tmp1-PD[-i]@tmp2)/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugefirstSi,{},Factor]
+Print@CollectPerts[EQgaugefirstSi,{},Factor];
+];
 
 
+If[runEQgaugefirstPhi || runEQgaugefirstE || runEQgaugefirstFi || runEQgaugefirstHij,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->i,\[Nu]->j}];
 tmpij=tmp // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
 tmpijkl=PD[-l]@tmpijk // SVTExpand // ReplaceDummies;
 tmpijklm=PD[-m]@tmpijkl // SVTExpand // ReplaceDummies;
 tmpijklmn=PD[-n]@tmpijklm // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugefirstPhi || runEQgaugefirstE || runEQgaugefirstFi || runEQgaugefirstHij,
 tmp1=metric\[Delta][i,j] metric\[Delta][k,l] tmpijkl // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][i,k] metric\[Delta][j,l] tmpijkl // SVTExpand // ReplaceDummies;
 tmp3=metric\[Delta][j,k] metric\[Delta][l,m] tmpijklm // SVTExpand // ReplaceDummies;
 tmp4=metric\[Delta][k,l] metric\[Delta][m,n] tmpijklmn // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugefirstPhi,
 EQgaugefirstPhi=(tmp2-tmp1)/4/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugefirstPhi,{},Factor]
+Print@CollectPerts[EQgaugefirstPhi,{},Factor];
+];
 
 
+If[runEQgaugefirstE,
 EQgaugefirstE=(3 tmp2-tmp1)/4/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugefirstE,{},Factor]
+Print@CollectPerts[EQgaugefirstE,{},Factor];
+];
 
 
+If[runEQgaugefirstFi,
 EQgaugefirstFi= (tmp3-PD[-i]@tmp2)/scale[]^2 // SVTExpand // ReplaceDummies;
-CollectPerts[EQgaugefirstFi,{},Factor]
+Print@CollectPerts[EQgaugefirstFi,{},Factor];
+];
 
 
+If[runEQgaugefirstHij,
 EQgaugefirstHij=(tmp4-PD[-i]@PD[-j]@(3 tmp2-tmp1)/2+metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@(tmp2-tmp1)/2-PD[-j]@(tmp3-PD[-i]@tmp2)-PD[-i]@Evaluate[tmp3-PD[-i]@tmp2 //.-i->-j])/scale[]^2 // SVTExpand // ReplaceDummies;
-CollectPerts[EQgaugefirstHij,{},Factor]
+Print@CollectPerts[EQgaugefirstHij,{},Factor];
+];
 
 
-EQgaugefirstPsi // SVTExport
-EQgaugefirstB // SVTExport
-EQgaugefirstSi // SVTExport
-EQgaugefirstPhi // SVTExport
-EQgaugefirstE // SVTExport
-EQgaugefirstFi // SVTExport
-EQgaugefirstHij // SVTExport
+If[runEQgaugefirstPsi,
+EQgaugefirstPsi // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - FIRST-ORDER MATTER ---\n"];
+If[runEQgaugefirstB,
+EQgaugefirstB // SVTExport;
+];
 
 
+If[runEQgaugefirstSi,
+EQgaugefirstSi // SVTExport;
+];
+
+
+If[runEQgaugefirstPhi,
+EQgaugefirstPhi // SVTExport;
+];
+
+
+If[runEQgaugefirstE,
+EQgaugefirstE // SVTExport;
+];
+
+
+If[runEQgaugefirstFi,
+EQgaugefirstFi // SVTExport;
+];
+
+
+If[runEQgaugefirstHij,
+EQgaugefirstHij // SVTExport;
+];
+
+
+If[rungaugefirstmatter,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - FIRST-ORDER MATTER ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - FIRST-ORDER MATTER ---\n"];
+];
+
+
+If[runEQgaugefirstVm || runEQgaugefirstVim,
 EQB=EQgaugefirstB;
 EQS=EQgaugefirstSi;
+];
 
 
+If[runEQgaugefirstDm,
 tmpT=densitycov[];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugefirstDm,
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
 EQgaugefirstDm=tmp/density[] // SVTExpand;
 (*EQgaugefirstDm=tmp/density[] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
-CollectPerts[EQgaugefirstDm,{},Factor]
+Print@CollectPerts[EQgaugefirstDm,{},Factor];
+];
 
 
+If[runEQgaugefirstPm,
 tmpT=pressurecov[];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugefirstPm,
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
 EQgaugefirstPm=tmp // SVTExpand;
 (*EQgaugefirstPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
-CollectPerts[EQgaugefirstPm,{},Factor]
+Print@CollectPerts[EQgaugefirstPm,{},Factor];
+];
 
 
+If[runEQgaugefirstVm || runEQgaugefirstVim,
 tmpT=velocitycov[\[Mu]];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugefirstVm || runEQgaugefirstVim,
 tmpi=ReplaceDummies@SVTExpand[metric\[Delta][-i,-j] GaugeTransformation[tmpT,pertgauge,{\[Mu]->i}]] //.-j->-i;
 tmpij=PD[-j]@tmpi // SVTExpand // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugefirstVm,
 tmp=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugefirstVm=scale[] tmp+EQB // SVTExpand // Simplify // Expand;
-CollectPerts[EQgaugefirstVm,{},Factor]
+Print@CollectPerts[EQgaugefirstVm,{},Factor];
+];
 
 
+If[runEQgaugefirstVim,
 tmp1=metric\[Delta][j,k] tmpijk // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugefirstVim=scale[] (tmp1-PD[-i]@tmp2)-EQS // SVTExpand // Simplify // Expand;
-CollectPerts[EQgaugefirstVim,{},Factor]
+Print@CollectPerts[EQgaugefirstVim,{},Factor];
+];
 
 
+If[runEQgaugefirstSigmam || runEQgaugefirstSigmaim || runEQgaugefirstSigmaijm,
 tmpT=shearcov[-\[Mu],-\[Nu]];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugefirstSigmam || runEQgaugefirstSigmaim || runEQgaugefirstSigmaijm,
 tmp=GaugeTransformation[tmpT,pertgauge,{\[Mu]->i,\[Nu]->j}];
 tmpij=tmp // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
 tmpijkl=PD[-l]@tmpijk // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugefirstSigmam || runEQgaugefirstSigmaim || runEQgaugefirstSigmaijm,
 tmp1=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][j,k] tmpijk // SVTExpand // ReplaceDummies;
 tmp3=metric\[Delta][k,l] tmpijkl // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugefirstSigmam,
 EQgaugefirstSigmam=-tmp1/(density[]+pressure[]) // SVTExpand // Simplify // Expand;
-CollectPerts[EQgaugefirstSigmam,{},Factor]
+Print@CollectPerts[EQgaugefirstSigmam,{},Factor];
+];
 
 
- EQgaugefirstSigmaim=tmp2/(density[]+pressure[]) // SVTExpand // Simplify // Expand;
-CollectPerts[ EQgaugefirstSigmaim,{},Factor]
+ If[runEQgaugefirstSigmaim,
+EQgaugefirstSigmaim=tmp2/(density[]+pressure[]) // SVTExpand // Simplify // Expand;
+Print@CollectPerts[ EQgaugefirstSigmaim,{},Factor];
+];
 
 
+If[runEQgaugefirstSigmaijm,
 EQgaugefirstSigmaijm=(tmp3-(metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@tmp1-PD[-i]@PD[-j]@tmp1)/2-PD[-j]@tmp2-PD[-i]@Evaluate[tmp2 //.-i->-j])/(density[]+pressure[]) // SVTExpand // ReplaceDummies // Simplify // Expand;
-CollectPerts[EQgaugefirstSigmaijm,{},Factor]
+Print@CollectPerts[EQgaugefirstSigmaijm,{},Factor];
+];
 
 
-EQgaugefirstDm // SVTExport
-EQgaugefirstVm // SVTExport
-EQgaugefirstVim // SVTExport
-EQgaugefirstPm // SVTExport
-EQgaugefirstSigmam // SVTExport
-EQgaugefirstSigmaim // SVTExport
-EQgaugefirstSigmaijm // SVTExport
+If[runEQgaugefirstDm,
+EQgaugefirstDm // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - SECOND-ORDER ---\n"];
+If[runEQgaugefirstPm,
+EQgaugefirstPm // SVTExport;
+];
 
 
-order=2
+If[runEQgaugefirstVm,
+EQgaugefirstVm // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - SECOND-ORDER METRIC ---\n"];
+If[runEQgaugefirstVim,
+EQgaugefirstVim // SVTExport;
+];
 
 
+If[runEQgaugefirstSigmam,
+EQgaugefirstSigmam // SVTExport;
+];
+
+
+If[runEQgaugefirstSigmaim,
+EQgaugefirstSigmaim // SVTExport;
+];
+
+
+If[runEQgaugefirstSigmaijm,
+EQgaugefirstSigmaijm // SVTExport;
+];
+
+
+If[rungaugesecmetric || rungaugesecmatter,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - SECOND-ORDER ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - SECOND-ORDER ---\n"];
+];
+
+
+If[rungaugesecmetric || rungaugesecmatter,
+order=2;
+];
+
+
+If[rungaugesecmetric,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - SECOND-ORDER METRIC ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - SECOND-ORDER METRIC ---\n"];
+];
+
+
+If[rungaugesecmetric,
 tmpM=metricg[-\[Mu],-\[Nu]];
-tmpM=SVTPerturbation[tmpM,order]
+tmpM=SVTPerturbation[tmpM,order];
+];
 
 
+If[runEQgaugesecPsi,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->a,\[Nu]->b}];
 EQgaugesecPsi=-tmp/2/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugesecPsi //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecPsi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecB || runEQgaugesecSi,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->a,\[Nu]->i}];
 tmpi=tmp // ReplaceDummies;
 tmpij=PD[-j]@tmpi // SVTExpand // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugesecB,
 tmp=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugesecB=tmp/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugesecB //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecB //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecSi,
 tmp1=metric\[Delta][j,k] tmpijk // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugesecSi=-(tmp1-PD[-i]@tmp2)/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugesecSi //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecSi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecPhi || runEQgaugesecE || runEQgaugesecFi || runEQgaugesecHij,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->i,\[Nu]->j}];
 tmpij=tmp // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
 tmpijkl=PD[-l]@tmpijk // SVTExpand // ReplaceDummies;
 tmpijklm=PD[-m]@tmpijkl // SVTExpand // ReplaceDummies;
 tmpijklmn=PD[-n]@tmpijklm // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugesecPhi || runEQgaugesecE || runEQgaugesecFi || runEQgaugesecHij,
 tmp1=metric\[Delta][i,j] metric\[Delta][k,l] tmpijkl // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][i,k] metric\[Delta][j,l] tmpijkl // SVTExpand // ReplaceDummies;
 tmp3=metric\[Delta][j,k] metric\[Delta][l,m] tmpijklm // SVTExpand // ReplaceDummies;
 tmp4=metric\[Delta][k,l] metric\[Delta][m,n] tmpijklmn // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugesecPhi,
 EQgaugesecPhi=(tmp2-tmp1)/4/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugesecPhi //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecPhi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecE,
 EQgaugesecE=(3 tmp2-tmp1)/4/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugesecE //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecE //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecFi,
 EQgaugesecFi= (tmp3-PD[-i]@tmp2)/scale[]^2 // SVTExpand // ReplaceDummies;
-CollectPerts[EQgaugesecFi //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecFi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecHij,
 EQgaugesecHij=(tmp4-PD[-i]@PD[-j]@(3 tmp2-tmp1)/2+metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@(tmp2-tmp1)/2-PD[-j]@(tmp3-PD[-i]@tmp2)-PD[-i]@Evaluate[tmp3-PD[-i]@tmp2 //.-i->-j])/scale[]^2 // SVTExpand // ReplaceDummies;
-CollectPerts[EQgaugesecHij //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecHij //._[LI[1],___]:>0,{},Factor];
+];
 
 
-EQgaugesecPsi // SVTExport
-EQgaugesecB // SVTExport
-EQgaugesecSi // SVTExport
-EQgaugesecPhi // SVTExport
-EQgaugesecE // SVTExport
-EQgaugesecFi // SVTExport
-EQgaugesecHij // SVTExport
+If[runEQgaugesecPsi,
+EQgaugesecPsi // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - SECOND-ORDER MATTER ---\n"];
+If[runEQgaugesecB,
+EQgaugesecB // SVTExport;
+];
 
 
+If[runEQgaugesecSi,
+EQgaugesecSi // SVTExport;
+];
+
+
+If[runEQgaugesecPhi,
+EQgaugesecPhi // SVTExport;
+];
+
+
+If[runEQgaugesecE,
+EQgaugesecE // SVTExport;
+];
+
+
+If[runEQgaugesecFi,
+EQgaugesecFi // SVTExport;
+];
+
+
+If[runEQgaugesecHij,
+EQgaugesecHij // SVTExport;
+];
+
+
+If[rungaugesecmatter,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - SECOND-ORDER MATTER ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - SECOND-ORDER MATTER ---\n"];
+];
+
+
+If[runEQgaugesecVm || runEQgaugesecVim,
 EQB=EQgaugesecB;
 EQS=EQgaugesecSi;
+];
 
 
+If[runEQgaugesecDm,
 tmpT=densitycov[];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugesecDm,
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
 EQgaugesecDm=tmp/density[] // SVTExpand;
 (*EQgaugesecDm=tmp/density[] //.Flatten@Solve[TimeDer@EQback3==0,pprimedensity[]] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
-CollectPerts[EQgaugesecDm //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecDm //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecPm,
 tmpT=pressurecov[];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugesecPm,
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
 EQgaugesecPm=tmp // SVTExpand;
 (*EQgaugesecPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
-CollectPerts[EQgaugesecPm //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecPm //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecVm || runEQgaugesecVim,
 tmpT=velocitycov[\[Mu]];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugesecVm || runEQgaugesecVim,
 tmpi=ReplaceDummies@SVTExpand[metric\[Delta][-i,-j] GaugeTransformation[tmpT,pertgauge,{\[Mu]->i}]] //.-j->-i;
 tmpij=PD[-j]@tmpi // SVTExpand // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugesecVm,
 tmp=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugesecVm=scale[] tmp+EQB // SVTExpand // Simplify // Expand;
-CollectPerts[EQgaugesecVm //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecVm //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecVim,
 tmp1=metric\[Delta][j,k] tmpijk // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 EQgaugesecVim=scale[] (tmp1-PD[-i]@tmp2)-EQS // SVTExpand // Simplify // Expand;
-CollectPerts[EQgaugesecVim //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecVim //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecSigmam || runEQgaugesecSigmaim || runEQgaugesecSigmaijm,
 tmpT=shearcov[-\[Mu],-\[Nu]];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugesecSigmam || runEQgaugesecSigmaim || runEQgaugesecSigmaijm,
 tmp=GaugeTransformation[tmpT,pertgauge,{\[Mu]->i,\[Nu]->j}];
 tmpij=tmp // ReplaceDummies;
 tmpijk=PD[-k]@tmpij // SVTExpand // ReplaceDummies;
 tmpijkl=PD[-l]@tmpijk // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugesecSigmam || runEQgaugesecSigmaim || runEQgaugesecSigmaijm,
 tmp1=metric\[Delta][i,j] tmpij // SVTExpand // ReplaceDummies;
 tmp2=metric\[Delta][j,k] tmpijk // SVTExpand // ReplaceDummies;
 tmp3=metric\[Delta][k,l] tmpijkl // SVTExpand // ReplaceDummies;
+];
 
 
+If[runEQgaugesecSigmam,
 EQgaugesecSigmam=-tmp1/(density[]+pressure[]) // SVTExpand // Simplify // Expand;
-CollectPerts[EQgaugesecSigmam //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecSigmam //._[LI[1],___]:>0,{},Factor];
+];
 
 
- EQgaugesecSigmaim=tmp2/(density[]+pressure[]) // SVTExpand // Simplify // Expand;
-CollectPerts[ EQgaugesecSigmaim //._[LI[1],___]:>0,{},Factor]
+ If[runEQgaugesecSigmaim,
+EQgaugesecSigmaim=tmp2/(density[]+pressure[]) // SVTExpand // Simplify // Expand;
+Print@CollectPerts[ EQgaugesecSigmaim //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugesecSigmaijm,
 EQgaugesecSigmaijm=(tmp3-(metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@tmp1-PD[-i]@PD[-j]@tmp1)/2-PD[-j]@tmp2-PD[-i]@Evaluate[tmp2 //.-i->-j])/(density[]+pressure[]) // SVTExpand // ReplaceDummies // Simplify // Expand;
-CollectPerts[EQgaugesecSigmaijm //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugesecSigmaijm //._[LI[1],___]:>0,{},Factor];
+];
 
 
-EQgaugesecDm // SVTExport
-EQgaugesecVm // SVTExport
-EQgaugesecVim // SVTExport
-EQgaugesecPm // SVTExport
-EQgaugesecSigmam // SVTExport
-EQgaugesecSigmaim // SVTExport
-EQgaugesecSigmaijm // SVTExport
+If[runEQgaugesecDm,
+EQgaugesecDm // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - THIRD-ORDER ---\n"];
+If[runEQgaugesecPm,
+EQgaugesecPm // SVTExport;
+];
 
 
-order=3
+If[runEQgaugesecVm,
+EQgaugesecVm // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - THIRD-ORDER METRIC ---\n"];
+If[runEQgaugesecVim,
+EQgaugesecVim // SVTExport;
+];
 
 
+If[runEQgaugesecSigmam,
+EQgaugesecSigmam // SVTExport;
+];
+
+
+If[runEQgaugesecSigmaim,
+EQgaugesecSigmaim // SVTExport;
+];
+
+
+If[runEQgaugesecSigmaijm,
+EQgaugesecSigmaijm // SVTExport;
+];
+
+
+If[rungaugethirdmetric || rungaugethirdmatter,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - THIRD-ORDER ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - THIRD-ORDER ---\n"];
+];
+
+
+If[rungaugethirdmetric || rungaugethirdmatter,
+order=3;
+];
+
+
+If[rungaugethirdmetric,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - THIRD-ORDER METRIC ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - THIRD-ORDER METRIC ---\n"];
+];
+
+
+If[rungaugethirdmetric,
 tmpM=metricg[-\[Mu],-\[Nu]];
-tmpM=SVTPerturbation[tmpM,order]
+tmpM=SVTPerturbation[tmpM,order];
+];
 
 
+If[runEQgaugethirdPsi,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->a,\[Nu]->b}];
 EQgaugethirdPsi=-tmp/2/scale[]^2 // SVTExpand;
-CollectPerts[EQgaugethirdPsi //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugethirdPsi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdB || runEQgaugethirdSi,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->a,\[Nu]->i}];
 tmpi=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdB || runEQgaugethirdSi,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpij=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSi,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijk=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdB,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] #/scale[]^2 &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdB=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdB //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdB,
+Print@CollectPerts[EQgaugethirdB //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdSi,
 {time,tmp}=Timing[Map[-metric\[Delta][j,k] #/scale[]^2 &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSi,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] #/scale[]^2 &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSi,
 {time,tmp}=Timing[Map[PD[-i]@# &,tmp2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSi,
 {time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSi=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdSi //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdSi,
+Print@CollectPerts[EQgaugethirdSi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdPhi || runEQgaugethirdE || runEQgaugethirdFi || runEQgaugethirdHij,
 tmp=GaugeTransformation[tmpM,pertgauge,{\[Mu]->i,\[Nu]->j}];
 tmpij=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdPhi || runEQgaugethirdE || runEQgaugethirdFi || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijk=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdPhi || runEQgaugethirdE || runEQgaugethirdFi || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-l]@# &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijkl=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdFi || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-m]@# &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijklm=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-n]@# &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijklmn=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdPhi || runEQgaugethirdE || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] #/scale[]^2 &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdPhi || runEQgaugethirdE || runEQgaugethirdFi || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] #/scale[]^2 &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdFi || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[metric\[Delta][j,k] metric\[Delta][l,m] #/scale[]^2 &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp3=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[metric\[Delta][k,l] metric\[Delta][m,n] #/scale[]^2 &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp4=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdPhi,
 {time,tmp}=Timing[Listify[Expand,tmp2/4-tmp1/4,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdPhi=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdPhi //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdPhi,
+Print@CollectPerts[EQgaugethirdPhi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdE,
 {time,tmp}=Timing[Listify[Expand,3/4 tmp2-tmp1/4,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdE=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdE //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdE,
+Print@CollectPerts[EQgaugethirdE //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdFi || runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-i]@# &,tmp2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 ditmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdFi,
 {time,tmp}=Timing[Listify[Expand,tmp3-ditmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdFi=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdFi //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdFi,
+Print@CollectPerts[EQgaugethirdFi //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-j]@# &,ditmp2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 dijtmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-j]@PD[-i]@# &,tmp1]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 dijtmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@# &,tmp1]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 mijtmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@# &,tmp2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 mijtmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmp3]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 djtmp3=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdHij,
 ditmp3=Evaluate[djtmp3 //.-i->-k //.-j->-i //.-k->-j];
+];
 
 
+If[runEQgaugethirdHij,
 {time,tmp}=Timing[Listify[Expand,tmp4+dijtmp2/2+dijtmp1/2+mijtmp2/2-mijtmp1/2-djtmp3-ditmp3,{},ListMethod->"SamePerts",Verbose->True]];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdHij=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdHij //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdHij,
+Print@CollectPerts[EQgaugethirdHij //._[LI[1],___]:>0,{},Factor];
+];
 
 
-EQgaugethirdPsi // SVTExport
-EQgaugethirdB // SVTExport
-EQgaugethirdSi // SVTExport
-EQgaugethirdPhi // SVTExport
-EQgaugethirdE // SVTExport
-EQgaugethirdFi // SVTExport
-EQgaugethirdHij // SVTExport
+If[runEQgaugethirdPsi,
+EQgaugethirdPsi // SVTExport;
+];
 
 
-Print["\n--- RUNNING GAUGE TRANSFORMATIONS - THIRD-ORDER MATTER ---\n"];
+If[runEQgaugethirdB,
+EQgaugethirdB // SVTExport;
+];
 
 
+If[runEQgaugethirdSi,
+EQgaugethirdSi // SVTExport;
+];
+
+
+If[runEQgaugethirdPhi,
+EQgaugethirdPhi // SVTExport;
+];
+
+
+If[runEQgaugethirdE,
+EQgaugethirdE // SVTExport;
+];
+
+
+If[runEQgaugethirdFi,
+EQgaugethirdFi // SVTExport;
+];
+
+
+If[runEQgaugethirdHij,
+EQgaugethirdHij // SVTExport;
+];
+
+
+If[rungaugethirdmatter,
+Print["\n--- RUNNING GAUGE TRANSFORMATIONS - THIRD-ORDER MATTER ---\n"];,
+Print["\n--- SKIPPING GAUGE TRANSFORMATIONS - THIRD-ORDER MATTER ---\n"];
+];
+
+
+If[runEQgaugethirdVm || runEQgaugethirdVim,
 EQB=EQgaugethirdB;
 EQS=EQgaugethirdSi;
+];
 
 
+If[runEQgaugethirdDm,
 tmpT=densitycov[];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugethirdDm,
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
 EQgaugethirdDm=tmp/density[] // SVTExpand;
 (*EQgaugethirdDm=tmp/density[] //.Flatten@Solve[TimeDer@TimeDer@EQback3==0,ppprimedensity[]] //.Flatten@Solve[TimeDer@EQback3==0,pprimedensity[]] //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
-CollectPerts[EQgaugethirdDm //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugethirdDm //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdPm,
 tmpT=pressurecov[];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
+If[runEQgaugethirdPm,
 tmp=GaugeTransformation[tmpT,pertgauge,{}];
 EQgaugethirdPm=tmp // SVTExpand;
 (*EQgaugethirdPm=tmp //.Flatten@Solve[EQback3==0,primedensity[]] // SVTExpand;*)
-CollectPerts[EQgaugethirdPm //._[LI[1],___]:>0,{},Factor]
+Print@CollectPerts[EQgaugethirdPm //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdVm || runEQgaugethirdVim,
 tmpT=velocitycov[\[Mu]];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
-tmpi=ReplaceDummies@SVTExpand[metric\[Delta][-i,-j] GaugeTransformation[tmpT,pertgauge,{\[Mu]->i}]] //.-j->-i;
+If[runEQgaugethirdVm || runEQgaugethirdVim,tmpi=ReplaceDummies@SVTExpand[metric\[Delta][-i,-j] GaugeTransformation[tmpT,pertgauge,{\[Mu]->i}]] //.-j->-i;
+];
 
 
+If[runEQgaugethirdVm || runEQgaugethirdVim,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpij=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdVim,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijk=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdVm,
 {time,tmp}=Timing[Map[scale[] metric\[Delta][i,j] # &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdVm,
 {time,tmp}=Timing[Listify[Expand,tmp+EQB,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdVm=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdVm //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdVm,
+Print@CollectPerts[EQgaugethirdVm //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdVim,
 {time,tmp}=Timing[Map[scale[] metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdVim,
 {time,tmp}=Timing[Map[scale[] metric\[Delta][i,j] # &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdVim,
 {time,tmp}=Timing[Map[PD[-i]@# &,tmp2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdVim,
 {time,tmp}=Timing[Listify[Expand,tmp1-tmp2-EQS,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdVim=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdVim //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdVim,
+Print@CollectPerts[EQgaugethirdVim //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdSigmam || runEQgaugethirdSigmaim || runEQgaugethirdSigmaijm,
 tmpT=shearcov[-\[Mu],-\[Nu]];
-tmpT=SVTPerturbation[tmpT,order]
+tmpT=SVTPerturbation[tmpT,order];
+];
 
 
-tmp=GaugeTransformation[tmpT,pertgauge,{\[Mu]->i,\[Nu]->j}];
+If[runEQgaugethirdSigmam || runEQgaugethirdSigmaim || runEQgaugethirdSigmaijm,tmp=GaugeTransformation[tmpT,pertgauge,{\[Mu]->i,\[Nu]->j}];
 tmpij=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaim || runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijk=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[PD[-l]@# &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmpijkl=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmam || runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] # &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaim || runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[metric\[Delta][k,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 tmp3=tmp // ReplaceDummies;
+];
 
 
-{time,tmp}=Timing[Listify[Expand,-tmp1/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
+If[runEQgaugethirdSigmam,{time,tmp}=Timing[Listify[Expand,-tmp1/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSigmam=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdSigmam //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdSigmam,
+Print@CollectPerts[EQgaugethirdSigmam //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdSigmaim,
 {time,tmp}=Timing[Listify[Expand,tmp2/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSigmaim=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[ EQgaugethirdSigmaim //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdSigmaim,
+Print@CollectPerts[ EQgaugethirdSigmaim //._[LI[1],___]:>0,{},Factor];
+];
 
 
+If[runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[metric\[Delta][-i,-j] metric\[Delta][k,l] PD[-k]@PD[-l]@# &,tmp1]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 mijtmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[PD[-i]@PD[-j]@# &,tmp1]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 dijtmp1=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmp2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 djtmp2=tmp // ReplaceDummies;
+];
 
 
+If[runEQgaugethirdSigmaijm,
 ditmp2=Evaluate[djtmp2 //.-i->-k //.-j->-i //.-k->-j];
+];
 
 
+If[runEQgaugethirdSigmaijm,
 {time,tmp}=Timing[Listify[Expand,(tmp3-mijtmp1/2+dijtmp1/2-djtmp2-ditmp2)/(density[]+pressure[]),{},ListMethod->"SamePerts",Verbose->True]];
 {time,tmp}=Timing[Listify[Expand@Simplify@SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 EQgaugethirdSigmaijm=tmp // ReplaceDummies;
+];
 
 
-CollectPerts[EQgaugethirdSigmaijm //._[LI[1],___]:>0,{},Factor]
+If[runEQgaugethirdSigmaijm,
+Print@CollectPerts[EQgaugethirdSigmaijm //._[LI[1],___]:>0,{},Factor];
+];
 
 
-EQgaugethirdDm // SVTExport
-EQgaugethirdVm // SVTExport
-EQgaugethirdVim // SVTExport
-EQgaugethirdPm // SVTExport
-EQgaugethirdSigmam // SVTExport
-EQgaugethirdSigmaim // SVTExport
-EQgaugethirdSigmaijm // SVTExport
+If[runEQgaugethirdDm,
+EQgaugethirdDm // SVTExport;
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER ---\n"];
+If[runEQgaugethirdPm,
+EQgaugethirdPm // SVTExport;
+];
 
 
-order=1
+If[runEQgaugethirdVm,
+EQgaugethirdVm // SVTExport;
+];
 
 
-(*SubBack[expr_] := Module[{tmp},
+If[runEQgaugethirdVim,
+EQgaugethirdVim // SVTExport;
+];
+
+
+If[runEQgaugethirdSigmam,
+EQgaugethirdSigmam // SVTExport;
+];
+
+
+If[runEQgaugethirdSigmaim,
+EQgaugethirdSigmaim // SVTExport;
+];
+
+
+If[runEQgaugethirdSigmaijm,
+EQgaugethirdSigmaijm // SVTExport;
+];
+
+
+If[runfirstmetric || runfirstmatter,
+Print["\n--- RUNNING FIRST-ORDER ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER ---\n"];
+];
+
+
+If[runfirstmetric || runfirstmatter,
+order=1;
+];
+
+
+(*If[runfirstmetric || runfirstmatter,
+SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
 	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]*)
+	tmp]
+];*)
 
 
-SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+If[runfirstmetric || runfirstmatter,
+SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"];
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER METRIC COMMON ---\n"];
+If[runfirstmetric,
+Print["\n--- RUNNING FIRST-ORDER METRIC COMMON ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER METRIC COMMON ---\n"];
+];
 
 
+If[runfirstmetric,
 tmp=EQmetric //.$StressEnergyDecomposition;
 tmp=Listify[SVTPerturbation, tmp, {order}, ListMethod->"Part",PartLength->1,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runfirstmetric,
 tmp=tmp;
 tmp=Listify[GRToBuildingBlocks, tmp, {CD,{ToMetric->False}}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runfirstmetric,
 tmp=tmp//ContractMetric;
 tmp=tmp//.RicciScalarCD[]:>RicciScalarCDP[];
 tmp=tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
 tmp=tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
 tmp=tmp//.ChristoffelCD[\[Mu]_,\[Nu]_,\[Alpha]_]:>ChristoffelCDP[\[Mu],\[Nu],\[Alpha]];
 EQmetrictmp=ToCanonical[tmp,UseMetricOnVBundle->{metric\[Delta]}] //SeparateMetric[];
-EQmetrictmp // Length
+Print[EQmetrictmp // Length];
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER METRIC 00 ---\n"];
+If[runEQmetric100 || runEQfirst1,
+Print["\n--- RUNNING FIRST-ORDER METRIC 00 ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER METRIC 00 ---\n"];
+];
 
 
+If[runEQmetric100,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->a,\[Nu]->b},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric100,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric100,
 EQmetric100=tmp;
-EQmetric100 // SVTExport
+EQmetric100 // SVTExport;,
+tmp=EQmetric100;
+];
 
 
+If[runEQfirst1,
 tmp=-tmp/2/Mpl^2;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQfirst1,
 EQfirst1=tmp;
-CollectPerts[EQfirst1,{},Factor]
-EQfirst1 // SVTExport
+Print@CollectPerts[EQfirst1,{},Factor];
+EQfirst1 // SVTExport;
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER METRIC 0i ---\n"];
+If[runEQmetric10i || runEQfirst2 || runEQfirst5,
+Print["\n--- RUNNING FIRST-ORDER METRIC 0i ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER METRIC 0i ---\n"];
+];
 
 
+If[runEQmetric10i,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->a,\[Nu]->i},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric10i,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric10i,
 EQmetric10i=tmp;
-EQmetric10i // SVTExport
+EQmetric10i // SVTExport;,
+tmp=EQmetric10i;
+];
 
 
+If[runEQfirst2 || runEQfirst5,
 tmp=tmp/Mpl^2;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQfirst2 || runEQfirst5,
 tmpi=tmp;
-tmpi // Length
+Print[tmpi // Length];
+];
 
 
+If[runEQfirst2 || runEQfirst5,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpij}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpij];
+];
 
 
+If[runEQfirst5,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQfirst2,
 {time,tmp}=Timing[Map[metric\[Delta][i,j]# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst2}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst2];
+];
 
 
+If[runEQfirst5,
 {time,tmp1}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQfirst2]];
@@ -1123,130 +1775,180 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst5];
+];
 
 
-CollectPerts[EQfirst2,{},Factor]
-EQfirst2 // SVTExport
+If[runEQfirst2,
+Print@CollectPerts[EQfirst2,{},Factor];
+EQfirst2 // SVTExport;
+];
 
 
-CollectPerts[EQfirst5,{},Factor]
-EQfirst5 // SVTExport
+If[runEQfirst5,
+Print@CollectPerts[EQfirst5,{},Factor];
+EQfirst5 // SVTExport;
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER METRIC ij ---\n"];
+If[runEQmetric1ij || runEQfirst3 || runEQfirst4 || runEQfirst6 || runEQfirst7,
+Print["\n--- RUNNING FIRST-ORDER METRIC ij ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER METRIC ij ---\n"];
+];
 
 
+If[runEQmetric1ij,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->i,\[Nu]->j},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric1ij,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric1ij,
 EQmetric1ij=tmp;
-EQmetric1ij // SVTExport
+EQmetric1ij // SVTExport;,
+tmp=EQmetric1ij;
+];
 
 
+If[runEQfirst3 || runEQfirst4 || runEQfirst6 || runEQfirst7,
 tmp=tmp/2/Mpl^2;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQfirst3 || runEQfirst4 || runEQfirst6 || runEQfirst7,
 tmpij=tmp;
-tmpij // Length
+Print[tmpij // Length];
+];
 
 
+If[runEQfirst3 || runEQfirst4 || runEQfirst6 || runEQfirst7,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQfirst3 || runEQfirst4 || runEQfirst6 || runEQfirst7,
 {time,tmp}=Timing[Map[PD[-l]@# &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijkl}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijkl];
+];
 
 
+If[runEQfirst6 || runEQfirst7,
 {time,tmp}=Timing[Map[PD[-m]@# &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijklm}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklm];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[PD[-n]@# &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijklmn}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklmn];
+];
 
 
+If[runEQfirst3 || runEQfirst4 || runEQfirst6 || runEQfirst7,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,divdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@divdiv];
+];
 
 
+If[runEQfirst4 || runEQfirst7,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laptrace];
+];
 
 
+If[runEQfirst6 || runEQfirst7,
 {time,tmp}=Timing[Map[metric\[Delta][j,k] metric\[Delta][l,m] # &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,lapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdiv];
+];
 
 
+If[runEQfirst6 || runEQfirst7,
 {time,tmp}=Timing[Map[PD[-i]@# &,divdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,graddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@graddivdiv];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[metric\[Delta][k,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laplap}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplap];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,lapdivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdivdiv];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laplaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplaptrace];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[PD[-i]@PD[-j]@# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradgradlaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgradlaptrace];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[PD[-j]@# &,graddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradgraddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgraddivdiv];
+];
 
 
+If[runEQfirst7,
 {time,tmp}=Timing[Map[PD[-j]@# &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradlapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradlapdiv];
+];
 
 
+If[runEQfirst3,
 {time,EQfirst3}=Timing[Listify[SVTExpand,divdiv,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst3];
+];
 
 
+If[runEQfirst4,
 {time,tmp1}=Timing[Map[-# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[3 # &,divdiv]];
@@ -1255,8 +1957,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst4];
+];
 
 
+If[runEQfirst6,
 {time,tmp1}=Timing[Map[4 # &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,graddivdiv]];
@@ -1265,8 +1969,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst6];
+];
 
 
+If[runEQfirst7,
 {time,tmp1}=Timing[Map[4 # &,laplap]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
@@ -1275,8 +1981,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQfirst7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
@@ -1285,8 +1993,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQfirst7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
@@ -1295,8 +2005,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQfirst7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
@@ -1305,8 +2017,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQfirst7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
@@ -1315,8 +2029,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQfirst7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
@@ -1325,91 +2041,136 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst7}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst7];
+];
 
 
-CollectPerts[EQfirst3,{},Factor]
-EQfirst3 // SVTExport
+If[runEQfirst3,
+Print@CollectPerts[EQfirst3,{},Factor];
+EQfirst3 // SVTExport;
+];
 
 
-CollectPerts[EQfirst4,{},Factor]
-EQfirst4 // SVTExport
+If[runEQfirst4,
+Print@CollectPerts[EQfirst4,{},Factor];
+EQfirst4 // SVTExport;
+];
 
 
-CollectPerts[EQfirst6,{},Factor]
-EQfirst6 // SVTExport
+If[runEQfirst6,
+Print@CollectPerts[EQfirst6,{},Factor];
+EQfirst6 // SVTExport;
+];
 
 
-CollectPerts[EQfirst7,{},Factor]
-EQfirst7 // SVTExport
+If[runEQfirst7,
+Print@CollectPerts[EQfirst7,{},Factor];
+EQfirst7 // SVTExport;
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER MATTER ---\n"];
+If[runfirstmatter,
+Print["\n--- RUNNING FIRST-ORDER MATTER ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER MATTER ---\n"];
+];
 
 
-SetOptions[SVTDecomposition,SVTPerturbationQ->True,GRToBuildingBlocksQ->True,ListMethod->"SamePerts",Verbose->True]
+If[runfirstmatter,
+SetOptions[SVTDecomposition,SVTPerturbationQ->True,GRToBuildingBlocksQ->True,ListMethod->"SamePerts",Verbose->True];
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER MATTER 0 ---\n"];
+If[runEQmatter10 || runEQfirst8,
+Print["\n--- RUNNING FIRST-ORDER MATTER 0 ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER MATTER 0 ---\n"];
+];
 
 
+If[runEQmatter10,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->a},Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmatter10,
 EQmatter10=tmp;
-EQmatter10 // SVTExport
+EQmatter10 // SVTExport;,
+tmp=EQmatter10;
+];
 
 
+If[runEQfirst8,
 tmp=-tmp;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQfirst8,
 EQfirst8=tmp;
-CollectPerts[EQfirst8,{},Factor]
-EQfirst8 // SVTExport
+Print@CollectPerts[EQfirst8,{},Factor];
+EQfirst8 // SVTExport;
+];
 
 
-Print["\n--- RUNNING FIRST-ORDER MATTER i ---\n"];
+If[runEQmatter1i || runEQfirst9 || runEQfirst10,
+Print["\n--- RUNNING FIRST-ORDER MATTER i ---\n"];,
+Print["\n--- SKIPPING FIRST-ORDER MATTER i ---\n"];
+];
 
 
+If[runEQmatter1i,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->i},Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmatter1i,
 EQmatter1i=tmp;
-EQmatter1i // SVTExport
+EQmatter1i // SVTExport;,
+tmp=EQmatter1i;
+];
 
 
+If[runEQfirst9 || runEQfirst10,
 tmp=-tmp;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQfirst9 || runEQfirst10,
 tmpi=tmp;
-tmpi // Length
+Print[tmpi // Length]
+];
 
 
+If[runEQfirst9 || runEQfirst10,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpij}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpij];
+];
 
 
+If[runEQfirst10,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQfirst9,
 {time,tmp}=Timing[Map[metric\[Delta][i,j]# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst9}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst9];
+];
 
 
+If[runEQfirst10,
 {time,tmp1}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQfirst9]];
@@ -1418,134 +2179,194 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQfirst10}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQfirst10];
+];
 
 
-CollectPerts[EQfirst9,{},Factor]
-EQfirst9 // SVTExport
+If[runEQfirst9,
+Print@CollectPerts[EQfirst9,{},Factor];
+EQfirst9 // SVTExport;
+];
 
 
-CollectPerts[EQfirst10,{},Factor]
-EQfirst10 // SVTExport
+If[runEQfirst10,
+Print@CollectPerts[EQfirst10,{},Factor];
+EQfirst10 // SVTExport;
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER ---\n"];
+If[runsecmetric || runsecmatter,
+Print["\n--- RUNNING SECOND-ORDER ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER ---\n"];
+];
 
 
-order=2
+If[runsecmetric || runsecmatter,
+order=2;
+];
 
 
-(*SubBack[expr_] := Module[{tmp},
+(*If[runsecmetric || runsecmatter,
+SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
 	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]*)
+	tmp]
+];*)
 
 
-SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+If[runsecmetric || runsecmatter,
+SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"];
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER METRIC COMMON ---\n"];
+If[runsecmetric,
+Print["\n--- RUNNING SECOND-ORDER METRIC COMMON ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER METRIC COMMON ---\n"];
+];
 
 
+If[runsecmetric,
 tmp=EQmetric //.$StressEnergyDecomposition;
 tmp=Listify[SVTPerturbation, tmp, {order}, ListMethod->"Part",PartLength->1,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runsecmetric,
 tmp=tmp;
 tmp=Listify[GRToBuildingBlocks, tmp, {CD,{ToMetric->False}}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runsecmetric,
 tmp=tmp//ContractMetric;
 tmp=tmp//.RicciScalarCD[]:>RicciScalarCDP[];
 tmp=tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
 tmp=tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
 tmp=tmp//.ChristoffelCD[\[Mu]_,\[Nu]_,\[Alpha]_]:>ChristoffelCDP[\[Mu],\[Nu],\[Alpha]];
 EQmetrictmp=ToCanonical[tmp,UseMetricOnVBundle->{metric\[Delta]}] //SeparateMetric[];
-EQmetrictmp // Length
+Print[EQmetrictmp // Length];
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER METRIC 00 ---\n"];
+If[runEQmetric200 || runEQsec1,
+Print["\n--- RUNNING SECOND-ORDER METRIC 00 ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER METRIC 00 ---\n"];
+];
 
 
+If[runEQmetric200,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->a,\[Nu]->b},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric200,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric200,
 EQmetric200=tmp;
-EQmetric200 // SVTExport
+EQmetric200 // SVTExport;,
+tmp=EQmetric200;
+];
 
 
+If[runEQsec1,
 (*{time,tmp}=Timing[Map[SubBack[-#/2/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[-#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec1,
 EQsource1=-source1[LI[2]]-Evaluate[tmp//.pert_[LI[2],___]:>0];
 EQsec1=-source1[LI[2]]+Evaluate[tmp//.pert_[LI[1],___]:>0];
-EQsec1 // CollectPerts
-EQsec1//Length
-EQsource1//Length
+Print@CollectPerts[EQsec1,{},Factor];
+Print[EQsec1//Length];
+Print[EQsource1//Length];
+];
 
 
-EQsec1 // SVTExport
-EQsource1 // SVTExport
+If[runEQsec1,
+EQsec1 // SVTExport;
+EQsource1 // SVTExport;
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER METRIC 0i ---\n"];
+If[runEQmetric20i || runEQsec2 || runEQsec5,
+Print["\n--- RUNNING SECOND-ORDER METRIC 0i ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER METRIC 0i ---\n"];
+];
 
 
+If[runEQmetric20i,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->a,\[Nu]->i},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric20i,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric20i,
 EQmetric20i=tmp;
-EQmetric20i // SVTExport
+EQmetric20i // SVTExport;,
+tmp=EQmetric20i;
+];
 
 
+If[runEQsec2 || runEQsec5,
 (*{time,tmp}=Timing[Map[SubBack[#/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[#/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec2 || runEQsec5,
 tmpi=tmp;
-tmpi // Length
+Print[tmpi // Length];
+];
 
 
+If[runEQsec2 || runEQsec5,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpij}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpij];
+];
 
 
+If[runEQsec5,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQsec2,
 {time,tmp}=Timing[Map[metric\[Delta][i,j]# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec2}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec2];
+];
 
 
+If[runEQsec5,
 {time,tmp1}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQsec2]];
@@ -1554,145 +2375,199 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec5];
+];
 
 
+If[runEQsec2,
 EQsource2=-source2[LI[2]]-Evaluate[EQsec2//.pert_[LI[2],___]:>0];
 EQsec2=-source2[LI[2]]+Evaluate[EQsec2//.pert_[LI[1],___]:>0];
-CollectPerts[EQsec2,{},Factor]
-EQsec2//Length
-EQsource2//Length
+Print@CollectPerts[EQsec2,{},Factor];
+Print[EQsec2//Length];
+Print[EQsource2//Length];
+];
 
 
+If[runEQsec5,
 EQsource5=-source5[LI[2],-i]-Evaluate[EQsec5//.pert_[LI[2],___]:>0];
 EQsec5=-source5[LI[2],-i]+Evaluate[EQsec5//.pert_[LI[1],___]:>0];
-CollectPerts[EQsec5,{},Factor]
-EQsec5//Length
-EQsource5//Length
+Print@CollectPerts[EQsec5,{},Factor];
+Print[EQsec5//Length];
+Print[EQsource5//Length];
+];
 
 
-EQsec2 // SVTExport
-EQsource2 // SVTExport
+If[runEQsec2,
+EQsec2 // SVTExport;
+EQsource2 // SVTExport;
+];
 
 
-EQsec5 // SVTExport
-EQsource5 // SVTExport
+If[runEQsec5,
+EQsec5 // SVTExport;
+EQsource5 // SVTExport;
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER METRIC ij ---\n"];
+If[runEQmetric2ij || runEQsec3 || runEQsec4 || runEQsec6 || runEQsec7,
+Print["\n--- RUNNING SECOND-ORDER METRIC ij ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER METRIC ij ---\n"];
+];
 
 
+If[runEQmetric2ij,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->i,\[Nu]->j},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric2ij,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric2ij,
 EQmetric2ij=tmp;
-EQmetric2ij // SVTExport
+EQmetric2ij // SVTExport;,
+tmp=EQmetric2ij;
+];
 
 
+If[runEQsec3 || runEQsec4 || runEQsec6 || runEQsec7,
 (*{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec3 || runEQsec4 || runEQsec6 || runEQsec7,
 tmpij=tmp;
-tmpij // Length
+Print[tmpij // Length];
+];
 
 
+If[runEQsec3 || runEQsec4 || runEQsec6 || runEQsec7,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQsec3 || runEQsec4 || runEQsec6 || runEQsec7,
 {time,tmp}=Timing[Map[PD[-l]@# &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijkl}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijkl];
+];
 
 
+If[runEQsec6 || runEQsec7,
 {time,tmp}=Timing[Map[PD[-m]@# &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijklm}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklm];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[PD[-n]@# &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijklmn}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklmn];
+];
 
 
+If[runEQsec3 || runEQsec4 || runEQsec6 || runEQsec7,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,divdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@divdiv];
+];
 
 
+If[runEQsec4 || runEQsec7,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laptrace];
+];
 
 
+If[runEQsec6 || runEQsec7,
 {time,tmp}=Timing[Map[metric\[Delta][j,k] metric\[Delta][l,m] # &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,lapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdiv];
+];
 
 
+If[runEQsec6 || runEQsec7,
 {time,tmp}=Timing[Map[PD[-i]@# &,divdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,graddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@graddivdiv];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[metric\[Delta][k,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laplap}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplap];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,lapdivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdivdiv];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laplaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplaptrace];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[PD[-i]@PD[-j]@# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradgradlaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgradlaptrace];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[PD[-j]@# &,graddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradgraddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgraddivdiv];
+];
 
 
+If[runEQsec7,
 {time,tmp}=Timing[Map[PD[-j]@# &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradlapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradlapdiv];
+];
 
 
+If[runEQsec3,
 {time,EQsec3}=Timing[Listify[SVTExpand,divdiv,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec3];
+];
 
 
+If[runEQsec4,
 {time,tmp1}=Timing[Map[-# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[3 # &,divdiv]];
@@ -1701,8 +2576,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec4];
+];
 
 
+If[runEQsec6,
 {time,tmp1}=Timing[Map[4 # &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,graddivdiv]];
@@ -1711,8 +2588,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec6];
+];
 
 
+If[runEQsec7,
 {time,tmp1}=Timing[Map[4 # &,laplap]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
@@ -1721,8 +2600,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
@@ -1731,8 +2612,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
@@ -1741,8 +2624,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
@@ -1751,8 +2636,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
@@ -1761,8 +2648,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQsec7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
@@ -1771,125 +2660,180 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec7}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec7];
+];
 
 
+If[runEQsec3,
 EQsource3=-source3[LI[2]]-Evaluate[EQsec3//.pert_[LI[2],___]:>0];
 EQsec3=-source3[LI[2]]+Evaluate[EQsec3//.pert_[LI[1],___]:>0];
-CollectPerts[EQsec3,{},Factor]
-EQsec3//Length
-EQsource3//Length
+Print@CollectPerts[EQsec3,{},Factor];
+Print[EQsec3//Length];
+Print[EQsource3//Length];
+];
 
 
+If[runEQsec4,
 EQsource4=-source4[LI[2]]-Evaluate[EQsec4//.pert_[LI[2],___]:>0];
 EQsec4=-source4[LI[2]]+Evaluate[EQsec4//.pert_[LI[1],___]:>0];
-CollectPerts[EQsec4,{},Factor]
-EQsec4//Length
-EQsource4//Length
+Print@CollectPerts[EQsec4,{},Factor];
+Print[EQsec4//Length];
+Print[EQsource4//Length];
+];
 
 
+If[runEQsec6,
 EQsource6=-source6[LI[2],-i]-Evaluate[EQsec6//.pert_[LI[2],___]:>0];
 EQsec6=-source6[LI[2],-i]+Evaluate[EQsec6//.pert_[LI[1],___]:>0];
-CollectPerts[EQsec6,{},Factor]
-EQsec6//Length
-EQsource6//Length
+Print@CollectPerts[EQsec6,{},Factor];
+Print[EQsec6//Length];
+Print[EQsource6//Length];
+];
 
 
+If[runEQsec7,
 EQsource7=-source7[LI[2],-i,-j]-Evaluate[EQsec7//.pert_[LI[2],___]:>0];
 EQsec7=-source7[LI[2],-i,-j]+Evaluate[EQsec7//.pert_[LI[1],___]:>0];
-CollectPerts[EQsec7,{},Factor]
-EQsec7//Length
-EQsource7//Length
+Print@CollectPerts[EQsec7,{},Factor];
+Print[EQsec7//Length];
+Print[EQsource7//Length];
+];
 
 
-EQsec3 // SVTExport
-EQsource3 // SVTExport
+If[runEQsec3,
+EQsec3 // SVTExport;
+EQsource3 // SVTExport;
+];
 
 
-EQsec4 // SVTExport
-EQsource4 // SVTExport
+If[runEQsec4,
+EQsec4 // SVTExport;
+EQsource4 // SVTExport;
+];
 
 
-EQsec6 // SVTExport
-EQsource6 // SVTExport
+If[runEQsec6,
+EQsec6 // SVTExport;
+EQsource6 // SVTExport;
+];
 
 
-EQsec7 // SVTExport
-EQsource7 // SVTExport
+If[runEQsec7,
+EQsec7 // SVTExport;
+EQsource7 // SVTExport;
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER MATTER ---\n"];
+If[runsecmatter,
+Print["\n--- RUNNING SECOND-ORDER MATTER ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER MATTER ---\n"];
+];
 
 
-SetOptions[SVTDecomposition,SVTPerturbationQ->True,GRToBuildingBlocksQ->True,ListMethod->"SamePerts",Verbose->True]
+If[runsecmatter,
+SetOptions[SVTDecomposition,SVTPerturbationQ->True,GRToBuildingBlocksQ->True,ListMethod->"SamePerts",Verbose->True];
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER MATTER 0 ---\n"];
+If[runEQmatter20 || runEQsec8,
+Print["\n--- RUNNING SECOND-ORDER MATTER 0 ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER MATTER 0 ---\n"];
+];
 
 
+If[runEQmatter20,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->a},Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmatter20,
 EQmatter20=tmp;
-EQmatter20 // SVTExport
+EQmatter20 // SVTExport;,
+tmp=EQmatter20;
+];
 
 
+If[runEQsec8,
 tmp=-tmp;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQsec8,
 EQsource8=-source8[LI[2]]-Evaluate[tmp //.pert_[LI[2],___]:>0];
 EQsec8=-source8[LI[2]]+Evaluate[tmp //.pert_[LI[1],___]:>0];
-EQsec8 // CollectPerts
-EQsec8 //Length
-EQsource8 //Length
+Print@CollectPerts[EQsec8,{},Factor];
+Print[EQsec8 //Length];
+Print[EQsource8 //Length];
+];
 
 
-EQsec8 //SVTExport
-EQsource8 //SVTExport
+If[runEQsec8,
+EQsec8 //SVTExport;
+EQsource8 //SVTExport;
+];
 
 
-Print["\n--- RUNNING SECOND-ORDER MATTER i ---\n"];
+If[runEQmatter2i || runEQsec9 || runEQsec10,
+Print["\n--- RUNNING SECOND-ORDER MATTER i ---\n"];,
+Print["\n--- SKIPPING SECOND-ORDER MATTER i ---\n"];
+];
 
 
+If[runEQmatter2i,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->i},Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmatter2i,
 EQmatter2i=tmp;
-EQmatter2i // SVTExport
+EQmatter2i // SVTExport;,
+tmp=EQmatter2i;
+];
 
 
+If[runEQsec9 || runEQsec10,
 tmp=-tmp;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQsec9 || runEQsec10,
 tmpi=tmp;
-tmpi // Length
+Print[tmpi // Length];
+];
 
 
+If[runEQsec9 || runEQsec10,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpij}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpij];
+];
 
 
+If[runEQsec10,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQsec9,
 {time,tmp}=Timing[Map[metric\[Delta][i,j]# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec9}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec9];
+];
 
 
+If[runEQsec10,
 {time,tmp1}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQsec9]];
@@ -1898,148 +2842,212 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQsec10}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQsec10];
+];
 
 
+If[runEQsec9,
 EQsource9=-source9[LI[2]]-Evaluate[EQsec9//.pert_[LI[2],___]:>0];
 EQsec9=-source9[LI[2]]+Evaluate[EQsec9//.pert_[LI[1],___]:>0];
-EQsec9// CollectPerts
-EQsec9//Length
-EQsource9//Length
+Print@CollectPerts[EQsec9,{},Factor];
+Print[EQsec9//Length];
+Print[EQsource9//Length];
+];
 
 
+If[runEQsec10,
 EQsource10=-source10[LI[2],-i]-Evaluate[EQsec10//.pert_[LI[2],___]:>0];
 EQsec10=-source10[LI[2],-i]+Evaluate[EQsec10//.pert_[LI[1],___]:>0];
-EQsec10// CollectPerts
-EQsec10//Length
-EQsource10//Length
+Print@CollectPerts[EQsec10,{},Factor];
+Print[EQsec10//Length];
+Print[EQsource10//Length];
+];
 
 
-EQsec9 //SVTExport
-EQsource9 //SVTExport
+If[runEQsec9,
+EQsec9 //SVTExport;
+EQsource9 //SVTExport;
+];
 
 
-EQsec10 //SVTExport
-EQsource10 //SVTExport
+If[runEQsec10,
+EQsec10 //SVTExport;
+EQsource10 //SVTExport;
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER ---\n"];
+If[runthirdmetric || runthirdmatter,
+Print["\n--- RUNNING THIRD-ORDER ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER ---\n"];
+];
 
 
-order=3
+If[runthirdmetric || runthirdmatter,
+order=3;
+];
 
 
-(*SubBack[expr_] := Module[{tmp},
+(*If[runthirdmetric || runthirdmatter,
+SubBack[expr_] := Module[{tmp},
 	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
 	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
 	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]*)
+	tmp]
+];*)
 
 
-SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"]
+If[runthirdmetric || runthirdmatter,
+SetOptions[SVTDecomposition,Verbose->True,StoreResultQ->False,ListMethod->"SamePerts"];
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER METRIC COMMON ---\n"];
+If[runthirdmetric,
+Print["\n--- RUNNING THIRD-ORDER METRIC COMMON ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER METRIC COMMON ---\n"];
+];
 
 
+If[runthirdmetric,
 tmp=EQmetric //.$StressEnergyDecomposition;
 tmp=Listify[SVTPerturbation, tmp, {order}, ListMethod->"Part",PartLength->1,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runthirdmetric,
 tmp=tmp;
 tmp=Listify[GRToBuildingBlocks, tmp, {CD,{ToMetric->False}}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runthirdmetric,
 tmp=tmp//ContractMetric;
 tmp=tmp//.RicciScalarCD[]:>RicciScalarCDP[];
 tmp=tmp//.RicciCD[\[Mu]_,\[Nu]_]:>RicciCDP[\[Mu],\[Nu]];
 tmp=tmp//.RiemannCD[\[Mu]_,\[Nu]_,\[Alpha]_,\[Beta]_]:>RiemannCDP[\[Mu],\[Nu],\[Alpha],\[Beta]];
 tmp=tmp//.ChristoffelCD[\[Mu]_,\[Nu]_,\[Alpha]_]:>ChristoffelCDP[\[Mu],\[Nu],\[Alpha]];
 EQmetrictmp=ToCanonical[tmp,UseMetricOnVBundle->{metric\[Delta]}] //SeparateMetric[];
-EQmetrictmp // Length
+Print[EQmetrictmp // Length];
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER METRIC 00 ---\n"];
+If[runEQmetric300 || runEQthird1,
+Print["\n--- RUNNING THIRD-ORDER METRIC 00 ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER METRIC 00 ---\n"];
+];
 
 
+If[runEQmetric300,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->a,\[Nu]->b},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric300,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric300,
 EQmetric300=tmp;
-EQmetric300 // SVTExport
+EQmetric300 // SVTExport;,
+tmp=EQmetric300;
+];
 
 
+If[runEQthird1,
 (*{time,tmp}=Timing[Map[SubBack[-#/2/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[-#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird1,
 EQtource1=-source1[LI[3]]-Evaluate[tmp//.pert_[LI[3],___]:>0];
 EQthird1=-source1[LI[3]]+Evaluate[tmp//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-EQthird1 // CollectPerts
-EQthird1//Length
-EQtource1//Length
+Print@CollectPerts[EQthird1,{},Factor];
+Print[EQthird1//Length];
+Print[EQtource1//Length];
+];
 
 
-EQthird1 // SVTExport
-EQtource1 // SVTExport
+If[runEQthird1,
+EQthird1 // SVTExport;
+EQtource1 // SVTExport;
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER METRIC 0i ---\n"];
+If[runEQmetric30i || runEQthird2 || runEQthird5,
+Print["\n--- RUNNING THIRD-ORDER METRIC 0i ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER METRIC 0i ---\n"];
+];
 
 
+If[runEQmetric30i,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->a,\[Nu]->i},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric30i,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric30i,
 EQmetric30i=tmp;
-EQmetric30i // SVTExport
+EQmetric30i // SVTExport;,
+tmp=EQmetric30i;
+];
 
 
+If[runEQthird2 || runEQthird5,
 (*{time,tmp}=Timing[Map[SubBack[#/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[#/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird2 || runEQthird5,
 tmpi=tmp;
-tmpi // Length
+Print[tmpi // Length];
+];
 
 
+If[runEQthird2 || runEQthird5,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpij}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpij];
+];
 
 
+If[runEQthird5,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQthird2,
 {time,tmp}=Timing[Map[metric\[Delta][i,j]# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird2}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird2];
+];
 
 
+If[runEQthird5,
 {time,tmp1}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQthird2]];
@@ -2048,145 +3056,199 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird5];
+];
 
 
+If[runEQthird2,
 EQtource2=-source2[LI[3]]-Evaluate[EQthird2//.pert_[LI[3],___]:>0];
 EQthird2=-source2[LI[3]]+Evaluate[EQthird2//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-CollectPerts[EQthird2,{},Factor]
-EQthird2//Length
-EQtource2//Length
+Print@CollectPerts[EQthird2,{},Factor];
+Print[EQthird2//Length];
+Print[EQtource2//Length];
+];
 
 
+If[runEQthird5,
 EQtource5=-source5[LI[3],-i]-Evaluate[EQthird5//.pert_[LI[3],___]:>0];
 EQthird5=-source5[LI[3],-i]+Evaluate[EQthird5//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-CollectPerts[EQthird5,{},Factor]
-EQthird5//Length
-EQtource5//Length
+Print@CollectPerts[EQthird5,{},Factor];
+Print[EQthird5//Length];
+Print[EQtource5//Length];
+];
 
 
-EQthird2 // SVTExport
-EQtource2 // SVTExport
+If[runEQthird2,
+EQthird2 // SVTExport;
+EQtource2 // SVTExport;
+];
 
 
-EQthird5 // SVTExport
-EQtource5 // SVTExport
+If[runEQthird5,
+EQthird5 // SVTExport;
+EQtource5 // SVTExport;
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER METRIC ij ---\n"];
+If[runEQmetric3ij || runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
+Print["\n--- RUNNING THIRD-ORDER METRIC ij ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER METRIC ij ---\n"];
+];
 
 
+If[runEQmetric3ij,
 tmp=EQmetrictmp;
 tmp=Listify[SplitAndExpand, tmp, {{\[Mu]->i,\[Nu]->j},Nsplits->1}, ListMethod->"Part",PartLength->10,Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric3ij,
 tmp=Listify[SVTExpand, tmp, {}, ListMethod->"SamePerts",Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmetric3ij,
 EQmetric3ij=tmp;
-EQmetric3ij // SVTExport
+EQmetric3ij // SVTExport;,
+tmp=EQmetric3ij;
+];
 
 
+If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
 (*{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
 tmpij=tmp;
-tmpij // Length
+Print[tmpij // Length];
+];
 
 
+If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
 {time,tmp}=Timing[Map[PD[-l]@# &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijkl}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijkl];
+];
 
 
+If[runEQthird6 || runEQthird7,
 {time,tmp}=Timing[Map[PD[-m]@# &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijklm}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklm];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[PD[-n]@# &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijklmn}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklmn];
+];
 
 
+If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,divdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@divdiv];
+];
 
 
+If[runEQthird4 || runEQthird7,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laptrace];
+];
 
 
+If[runEQthird6 || runEQthird7,
 {time,tmp}=Timing[Map[metric\[Delta][j,k] metric\[Delta][l,m] # &,tmpijklm]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,lapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdiv];
+];
 
 
+If[runEQthird6 || runEQthird7,
 {time,tmp}=Timing[Map[PD[-i]@# &,divdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,graddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@graddivdiv];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[metric\[Delta][k,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laplap}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplap];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,lapdivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdivdiv];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] metric\[Delta][m,n] # &,tmpijklmn]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,laplaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplaptrace];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[PD[-i]@PD[-j]@# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradgradlaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgradlaptrace];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[PD[-j]@# &,graddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradgraddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgraddivdiv];
+];
 
 
+If[runEQthird7,
 {time,tmp}=Timing[Map[PD[-j]@# &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,gradlapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradlapdiv];
+];
 
 
+If[runEQthird3,
 {time,EQthird3}=Timing[Listify[SVTExpand,divdiv,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird3];
+];
 
 
+If[runEQthird4,
 {time,tmp1}=Timing[Map[-# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[3 # &,divdiv]];
@@ -2195,8 +3257,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird4];
+];
 
 
+If[runEQthird6,
 {time,tmp1}=Timing[Map[4 # &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,graddivdiv]];
@@ -2205,8 +3269,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird6];
+];
 
 
+If[runEQthird7,
 {time,tmp1}=Timing[Map[4 # &,laplap]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
@@ -2215,8 +3281,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
@@ -2225,8 +3293,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
@@ -2235,8 +3305,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
@@ -2245,8 +3317,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
@@ -2255,8 +3329,10 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+];
 
 
+If[runEQthird7,
 {time,tmp1}=Timing[Map[# &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
@@ -2265,125 +3341,179 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird7}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird7];
+];
 
 
+If[runEQthird3,
 EQtource3=-source3[LI[3]]-Evaluate[EQthird3//.pert_[LI[3],___]:>0];
 EQthird3=-source3[LI[3]]+Evaluate[EQthird3//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-CollectPerts[EQthird3,{},Factor]
-EQthird3//Length
-EQtource3//Length
+Print@CollectPerts[EQthird3,{},Factor];
+Print[EQthird3//Length];
+Print[EQtource3//Length];
+];
 
 
+If[runEQthird4,
 EQtource4=-source4[LI[3]]-Evaluate[EQthird4//.pert_[LI[3],___]:>0];
 EQthird4=-source4[LI[3]]+Evaluate[EQthird4//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-CollectPerts[EQthird4,{},Factor]
-EQthird4//Length
-EQtource4//Length
+Print@CollectPerts[EQthird4,{},Factor];
+Print[EQthird4//Length];
+Print[EQtource4//Length];
+];
 
 
+If[runEQthird6,
 EQtource6=-source6[LI[3],-i]-Evaluate[EQthird6//.pert_[LI[3],___]:>0];
 EQthird6=-source6[LI[3],-i]+Evaluate[EQthird6//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-CollectPerts[EQthird6,{},Factor]
-EQthird6//Length
-EQtource6//Length
+Print@CollectPerts[EQthird6,{},Factor];
+Print[EQthird6//Length];
+Print[EQtource6//Length];
+];
 
 
+If[runEQthird7,
 EQtource7=-source7[LI[3],-i,-j]-Evaluate[EQthird7//.pert_[LI[3],___]:>0];
 EQthird7=-source7[LI[3],-i,-j]+Evaluate[EQthird7//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-CollectPerts[EQthird7,{},Factor]
-EQthird7//Length
-EQtource7//Length
+Print@CollectPerts[EQthird7,{},Factor];
+Print[EQthird7//Length];
+Print[EQtource7//Length];
+];
 
 
-EQthird3 // SVTExport
-EQtource3 // SVTExport
+If[runEQthird3,
+EQthird3 // SVTExport;
+EQtource3 // SVTExport;
+];
 
 
-EQthird4 // SVTExport
-EQtource4 // SVTExport
+If[runEQthird4,
+EQthird4 // SVTExport;
+EQtource4 // SVTExport;
+];
 
 
-EQthird6 // SVTExport
-EQtource6 // SVTExport
+If[runEQthird6,
+EQthird6 // SVTExport;
+EQtource6 // SVTExport;
+];
 
 
-EQthird7 // SVTExport
-EQtource7 // SVTExport
+If[runEQthird7,
+EQthird7 // SVTExport;
+EQtource7 // SVTExport;
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER MATTER ---\n"];
+If[runthirdmatter,
+Print["\n--- RUNNING THIRD-ORDER MATTER ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER MATTER ---\n"];
+];
 
 
-SetOptions[SVTDecomposition,SVTPerturbationQ->True,GRToBuildingBlocksQ->True,ListMethod->"SamePerts",Verbose->True]
+If[runthirdmatter,
+SetOptions[SVTDecomposition,SVTPerturbationQ->True,GRToBuildingBlocksQ->True,ListMethod->"SamePerts",Verbose->True];
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER MATTER 0 ---\n"];
+If[runEQmatter30 || runEQthird8,
+Print["\n--- RUNNING THIRD-ORDER MATTER 0 ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER MATTER 0 ---\n"];];
 
 
+If[runEQmatter30,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->a},Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmatter30,
 EQmatter30=tmp;
-EQmatter30 // SVTExport
+EQmatter30 // SVTExport;,
+tmp=EQmatter30;
+];
 
 
+If[runEQthird8,
 tmp=-tmp;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQthird8,
 EQtource8=-source8[LI[3]]-Evaluate[tmp //.pert_[LI[3],___]:>0];
 EQthird8=-source8[LI[3]]+Evaluate[tmp //.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-EQthird8 // CollectPerts
-EQthird8 //Length
-EQtource8 //Length
+Print@CollectPerts[EQthird8,{},Factor];
+Print[EQthird8 //Length];
+Print[EQtource8 //Length];
+];
 
 
-EQthird8 //SVTExport
-EQtource8 //SVTExport
+If[runEQthird8,
+EQthird8 //SVTExport;
+EQtource8 //SVTExport;
+];
 
 
-Print["\n--- RUNNING THIRD-ORDER MATTER i ---\n"];
+If[runEQmatter3i || runEQthird9 || runEQthird10,
+Print["\n--- RUNNING THIRD-ORDER MATTER i ---\n"];,
+Print["\n--- SKIPPING THIRD-ORDER MATTER i ---\n"];
+];
 
 
+If[runEQmatter3i,
 tmp=SVTDecomposition[EQmatter,order,{\[Mu]->i},Verbose->True];
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQmatter3i,
 EQmatter3i=tmp;
-EQmatter3i // SVTExport
+EQmatter3i // SVTExport;,
+tmp=EQmatter3i;
+];
 
 
+If[runEQthird9 || runEQthird10,
 tmp=-tmp;
 (*tmp=tmp // SubBack // Expand;*)
 tmp=tmp // SVTExpand;
-tmp // Length
+Print[tmp // Length];
+];
 
 
+If[runEQthird9 || runEQthird10,
 tmpi=tmp;
-tmpi // Length
+Print[tmpi // Length];
+];
 
 
+If[runEQthird9 || runEQthird10,
 {time,tmp}=Timing[Map[PD[-j]@# &,tmpi]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpij}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpij];
+];
 
 
+If[runEQthird10,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+];
 
 
+If[runEQthird9,
 {time,tmp}=Timing[Map[metric\[Delta][i,j]# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird9}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird9];
+];
 
 
+If[runEQthird10,
 {time,tmp1}=Timing[Map[metric\[Delta][j,k] # &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-PD[-i]@# &,EQthird9]];
@@ -2392,25 +3522,34 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird10}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird10];
+];
 
 
+If[runEQthird9,
 EQtource9=-source9[LI[3]]-Evaluate[EQthird9//.pert_[LI[3],___]:>0];
 EQthird9=-source9[LI[3]]+Evaluate[EQthird9//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-EQthird9// CollectPerts
-EQthird9//Length
-EQtource9//Length
+Print@CollectPerts[EQthird9,{},Factor];
+Print[EQthird9//Length];
+Print[EQtource9//Length];
+];
 
 
+If[runEQthird10,
 EQtource10=-source10[LI[3],-i]-Evaluate[EQthird10//.pert_[LI[3],___]:>0];
 EQthird10=-source10[LI[3],-i]+Evaluate[EQthird10//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-EQthird10// CollectPerts
-EQthird10//Length
-EQtource10//Length
+Print@CollectPerts[EQthird10,{},Factor];
+Print[EQthird10//Length];
+Print[EQtource10//Length];
+];
 
 
-EQthird9 //SVTExport
-EQtource9 //SVTExport
+If[runEQthird9,
+EQthird9 //SVTExport;
+EQtource9 //SVTExport;
+];
 
 
-EQthird10 //SVTExport
-EQtource10 //SVTExport
+If[runEQthird10,
+EQthird10 //SVTExport;
+EQtource10 //SVTExport;
+];
