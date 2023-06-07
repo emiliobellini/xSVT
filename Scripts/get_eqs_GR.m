@@ -1617,11 +1617,17 @@ order=1;
 
 (*If[runfirstmetric || runfirstmatter,
 SubBack[expr_] := Module[{tmp},
-	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
-	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
-	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
-	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]
+tmp = expr;
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@TimeDer@EQback3==0,pppprimedensity[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@EQback3==0,ppprimedensity[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@EQback3==0,pprimedensity[]]];
+tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
+tmp = tmp //.Flatten[Solve[EQback1==0,density[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@TimeDer@EQback2==0,ppprimepressure[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@EQback2==0,pprimepressure[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@EQback2==0,primepressure[]]];
+tmp = tmp //.Flatten[Solve[EQback2==0,pressure[]]];
+tmp]
 ];*)
 
 
@@ -2207,11 +2213,17 @@ order=2;
 
 (*If[runsecmetric || runsecmatter,
 SubBack[expr_] := Module[{tmp},
-	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
-	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
-	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
-	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]
+tmp = expr;
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@TimeDer@EQback3==0,pppprimedensity[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@EQback3==0,ppprimedensity[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@EQback3==0,pprimedensity[]]];
+tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
+tmp = tmp //.Flatten[Solve[EQback1==0,density[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@TimeDer@EQback2==0,ppprimepressure[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@EQback2==0,pprimepressure[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@EQback2==0,primepressure[]]];
+tmp = tmp //.Flatten[Solve[EQback2==0,pressure[]]];
+tmp]
 ];*)
 
 
@@ -2888,11 +2900,17 @@ order=3;
 
 (*If[runthirdmetric || runthirdmatter,
 SubBack[expr_] := Module[{tmp},
-	tmp = expr //.Flatten[Solve[TimeDer[EQback2]==0,pprimehubbleC[]]];
-	tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
-	tmp = tmp //.Flatten[Solve[EQback2==0,primehubbleC[]]];
-	tmp = tmp //.Flatten[Solve[EQback1==0,Lambda]];
-	tmp]
+tmp = expr;
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@TimeDer@EQback3==0,pppprimedensity[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@EQback3==0,ppprimedensity[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@EQback3==0,pprimedensity[]]];
+tmp = tmp //.Flatten[Solve[EQback3==0,primedensity[]]];
+tmp = tmp //.Flatten[Solve[EQback1==0,density[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@TimeDer@EQback2==0,ppprimepressure[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@TimeDer@EQback2==0,pprimepressure[]]];
+tmp = tmp //.Flatten[Solve[TimeDer@EQback2==0,primepressure[]]];
+tmp = tmp //.Flatten[Solve[EQback2==0,pressure[]]];
+tmp]
 ];*)
 
 
@@ -3248,6 +3266,21 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird3];
 ];
 
 
+If[runEQthird3,
+EQtource3=-source3[LI[3]]-Evaluate[EQthird3//.pert_[LI[3],___]:>0];
+EQthird3=-source3[LI[3]]+Evaluate[EQthird3//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
+Print@CollectPerts[EQthird3,{},Factor];
+Print[EQthird3//Length];
+Print[EQtource3//Length];
+];
+
+
+If[runEQthird3,
+EQthird3 // SVTExport;
+EQtource3 // SVTExport;
+];
+
+
 If[runEQthird4,
 {time,tmp1}=Timing[Map[-# &,laptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
@@ -3260,6 +3293,21 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird4];
 ];
 
 
+If[runEQthird4,
+EQtource4=-source4[LI[3]]-Evaluate[EQthird4//.pert_[LI[3],___]:>0];
+EQthird4=-source4[LI[3]]+Evaluate[EQthird4//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
+Print@CollectPerts[EQthird4,{},Factor];
+Print[EQthird4//Length];
+Print[EQtource4//Length];
+];
+
+
+If[runEQthird4,
+EQthird4 // SVTExport;
+EQtource4 // SVTExport;
+];
+
+
 If[runEQthird6,
 {time,tmp1}=Timing[Map[4 # &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
@@ -3269,6 +3317,21 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,EQthird6}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird6];
+];
+
+
+If[runEQthird6,
+EQtource6=-source6[LI[3],-i]-Evaluate[EQthird6//.pert_[LI[3],___]:>0];
+EQthird6=-source6[LI[3],-i]+Evaluate[EQthird6//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
+Print@CollectPerts[EQthird6,{},Factor];
+Print[EQthird6//Length];
+Print[EQtource6//Length];
+];
+
+
+If[runEQthird6,
+EQthird6 // SVTExport;
+EQtource6 // SVTExport;
 ];
 
 
@@ -3344,57 +3407,12 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@EQthird7];
 ];
 
 
-If[runEQthird3,
-EQtource3=-source3[LI[3]]-Evaluate[EQthird3//.pert_[LI[3],___]:>0];
-EQthird3=-source3[LI[3]]+Evaluate[EQthird3//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-Print@CollectPerts[EQthird3,{},Factor];
-Print[EQthird3//Length];
-Print[EQtource3//Length];
-];
-
-
-If[runEQthird4,
-EQtource4=-source4[LI[3]]-Evaluate[EQthird4//.pert_[LI[3],___]:>0];
-EQthird4=-source4[LI[3]]+Evaluate[EQthird4//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-Print@CollectPerts[EQthird4,{},Factor];
-Print[EQthird4//Length];
-Print[EQtource4//Length];
-];
-
-
-If[runEQthird6,
-EQtource6=-source6[LI[3],-i]-Evaluate[EQthird6//.pert_[LI[3],___]:>0];
-EQthird6=-source6[LI[3],-i]+Evaluate[EQthird6//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
-Print@CollectPerts[EQthird6,{},Factor];
-Print[EQthird6//Length];
-Print[EQtource6//Length];
-];
-
-
 If[runEQthird7,
 EQtource7=-source7[LI[3],-i,-j]-Evaluate[EQthird7//.pert_[LI[3],___]:>0];
 EQthird7=-source7[LI[3],-i,-j]+Evaluate[EQthird7//.pert_[LI[1],___]:>0//.pert_[LI[2],___]:>0];
 Print@CollectPerts[EQthird7,{},Factor];
 Print[EQthird7//Length];
 Print[EQtource7//Length];
-];
-
-
-If[runEQthird3,
-EQthird3 // SVTExport;
-EQtource3 // SVTExport;
-];
-
-
-If[runEQthird4,
-EQthird4 // SVTExport;
-EQtource4 // SVTExport;
-];
-
-
-If[runEQthird6,
-EQthird6 // SVTExport;
-EQtource6 // SVTExport;
 ];
 
 
