@@ -911,6 +911,8 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 
 Options[SplitAndExpand] = {
 	UseDerivedResults   -> True,
+	CheckDivTraceFree -> True,
+	FullExpand -> True,
 	DecompositionRules  -> "$SVTDecompositionRules",
 	Nsplits   -> "All"
 };
@@ -919,6 +921,8 @@ SplitAndExpand[expr_, freeindsrules_, opts : OptionsPattern[{SplitAndExpand, Glo
 	{
 	(** Read options **)
 	verbose = OptionValue@Verbose,
+	checkdivtracefree = OptionValue@CheckDivTraceFree,
+	fullexpand = OptionValue@FullExpand,
 	tanm1 = Tangent@OptionValue@Manifold1D,
 	tanm3 = Tangent@OptionValue@Manifold3D,
 	tanm4 = Tangent@OptionValue@Manifold4D,
@@ -936,6 +940,8 @@ SplitAndExpand[expr_, freeindsrules_, opts : OptionsPattern[{SplitAndExpand, Glo
 	On[Assert];
 	Assert[Head[freeindsrules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@freeindsrules]];
 	Assert[BooleanQ@verbose];
+	Assert[BooleanQ@checkdivtracefree];
+	Assert[BooleanQ@fullexpand];
 	Assert[VBundleQ@tanm1 && DimOfVBundle@tanm1==1];
 	Assert[VBundleQ@tanm3 && DimOfVBundle@tanm3==3];
 	Assert[VBundleQ@tanm4 && DimOfVBundle@tanm4==4];
@@ -981,9 +987,13 @@ SplitAndExpand[expr_, freeindsrules_, opts : OptionsPattern[{SplitAndExpand, Glo
 	];
 
 	If[verbose, xSVTUtilities`PrintLevel["Removing traces and divergences of vectors and tensors.", 1]];
-	tmpexpr = tmpexpr // xSVTUtilities`DivTraceFree;
-	tmpexpr = tmpexpr // ReplaceDummies;
-	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	If[checkdivtracefree,
+		tmpexpr = tmpexpr // xSVTUtilities`DivTraceFree;
+	];
+	If[fullexpand,
+		tmpexpr = tmpexpr // ReplaceDummies;
+		tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	];
 	If[verbose, xSVTUtilities`PrintLevel["Finished SplitAndExpand.", 0]];
 	tmpexpr // NoScalar
 
@@ -1070,6 +1080,8 @@ SVTPerturbation[expr_, order_, opts : OptionsPattern[{SVTPerturbation, GlobalOpt
 
 Options[SVTExpand] = {
 	UseDerivedResults   -> True,
+	CheckDivTraceFree -> True,
+	FullExpand -> True,
 	DecompositionRules  -> "$SVTDecompositionRules"
 };
 
@@ -1081,6 +1093,8 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 	usederived = OptionValue@UseDerivedResults,
 	baserules = ToExpression[OptionValue@DecompositionRules][[1]],
 	derivedrules = ToExpression[OptionValue@DecompositionRules][[2]],
+	checkdivtracefree = OptionValue@CheckDivTraceFree,
+	fullexpand = OptionValue@FullExpand,
 	tanm3 = Tangent@OptionValue@Manifold3D,
 	(** Additional variables **)
 	tmpexpr, time1, time2
@@ -1090,6 +1104,8 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 	On[Assert];
 	Assert[BooleanQ@verbose];
 	Assert[BooleanQ@usederived];
+	Assert[BooleanQ@checkdivtracefree];
+	Assert[BooleanQ@fullexpand];
 	Assert[Head[baserules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@baserules]];
 	Assert[Head[derivedrules]==List && Apply[And, Or[Head[#]===Rule,Head[#]===RuleDelayed]&/@derivedrules]];
 	Off[Assert];
@@ -1108,10 +1124,14 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 		tmpexpr = tmpexpr //.Flatten[derivedrules];
 	];
 
-	tmpexpr = tmpexpr // Expand // NoScalar;
-	tmpexpr = tmpexpr // xSVTUtilities`DivTraceFree;
-	tmpexpr = tmpexpr // ReplaceDummies;
-	tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	If[checkdivtracefree,
+		tmpexpr = tmpexpr // Expand;
+		tmpexpr = tmpexpr // xSVTUtilities`DivTraceFree;
+	];
+	If[fullexpand,
+		tmpexpr = tmpexpr // NoScalar // ReplaceDummies;
+		tmpexpr = ToCanonical[tmpexpr, UseMetricOnVBundle->{metric3}];
+	];
 	tmpexpr // NoScalar
 	
 	(*

@@ -253,6 +253,12 @@ rules for the expansion, otherwise only the basic rules.";
 DecompositionRules::usage = "DecompositionRules (string, default \
 $SVTDecompositionRules) is an option for SVTExpand and SplitAndExpand. It contains \
 the name of the variable with the of basic and derived rules used in the decomposition.";
+CheckDivTraceFree::usage = "CheckDivTraceFree (boolean, default:True) is an \
+option for SVTExpand and SplitAndExpand. If True it checks every term if it is the \
+divergence or trace of vectors or tensors.";
+FullExpand::usage = "FullExpand (boolean, default:True) is an \
+option for SVTExpand and SplitAndExpand. If True it runs ToCanonical and ReplaceDummies. \
+It is much faster without them, but the result may be not fully simplified.";
 
 
 SplitAndExpand::usage =
