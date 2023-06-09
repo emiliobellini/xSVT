@@ -3133,7 +3133,7 @@ tmp=EQmetric3ij;
 ];
 
 
-If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
+If[(runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7) && Not@ValueQ@tmpij,
 (*{time,tmp}=Timing[Map[SubBack[#/2/Mpl^2] &,tmp]];*)
 {time,tmp}=Timing[Map[#/2/Mpl^2 &,tmp]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
@@ -3142,121 +3142,37 @@ Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 ];
 
 
-If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
+If[(runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7) && Not@ValueQ@tmpij,
 tmpij=tmp;
 Print[tmpij // Length];
+tmpij // SVTExport;
 ];
 
 
-If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
+If[(runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7) && Not@ValueQ@tmpijk,
 {time,tmp}=Timing[Map[PD[-k]@# &,tmpij]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijk}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijk];
+tmpijk // SVTExport;
 ];
 
 
-If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
+If[(runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7) && Not@ValueQ@tmpijkl,
 {time,tmp}=Timing[Map[PD[-l]@# &,tmpijk]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,tmpijkl}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijkl];
+tmpijkl // SVTExport;
 ];
 
 
-(*If[runEQthird6 || runEQthird7,
-{time,tmp}=Timing[Map[PD[-m]@# &,tmpijkl]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmpijklm}=Timing[Listify[SVTExpand,tmp,{},ListMethod\[Rule]"SamePerts",Verbose\[Rule]True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklm];
-];*)
-
-
-(*If[runEQthird7,
-{time,tmp}=Timing[Map[PD[-n]@# &,tmpijklm]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmpijklmn}=Timing[Listify[SVTExpand,tmp,{},ListMethod\[Rule]"SamePerts",Verbose\[Rule]True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpijklmn];
-];*)
-
-
-If[runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7,
+If[(runEQthird3 || runEQthird4 || runEQthird6 || runEQthird7) && Not@ValueQ@divdiv,
 {time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] # &,tmpijkl]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
 {time,divdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@divdiv];
-];
-
-
-If[runEQthird4 || runEQthird7,
-{time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] # &,tmpijkl]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,laptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laptrace];
-];
-
-
-If[runEQthird6 || runEQthird7,
-{time,tmp}=Timing[Map[metric\[Delta][j,k] metric\[Delta][l,m] PD[-m]@# &,tmpijkl]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,lapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdiv];
-];
-
-
-If[runEQthird6 || runEQthird7,
-{time,tmp}=Timing[Map[PD[-i]@# &,divdiv]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,graddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@graddivdiv];
-];
-
-
-If[runEQthird7,
-{time,tmp}=Timing[Map[metric\[Delta][k,l] metric\[Delta][m,n] PD[-n]@PD[-m]@# &,tmpijkl]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,laplap}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplap];
-];
-
-
-If[runEQthird7,
-{time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] metric\[Delta][m,n] PD[-n]@PD[-m]@# &,tmpijkl]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,lapdivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdivdiv];
-];
-
-
-If[runEQthird7,
-{time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] metric\[Delta][m,n] PD[-n]@PD[-m]@# &,tmpijkl]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,laplaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplaptrace];
-];
-
-
-If[runEQthird7,
-{time,tmp}=Timing[Map[PD[-i]@PD[-j]@# &,laptrace]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,gradgradlaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgradlaptrace];
-];
-
-
-If[runEQthird7,
-{time,tmp}=Timing[Map[PD[-j]@# &,graddivdiv]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,gradgraddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgraddivdiv];
-];
-
-
-If[runEQthird7,
-{time,tmp}=Timing[Map[PD[-j]@# &,lapdiv]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,gradlapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradlapdiv];
+divdiv // SVTExport;
 ];
 
 
@@ -3278,6 +3194,15 @@ Print[EQtource3//Length];
 If[runEQthird3,
 EQthird3 // SVTExport;
 EQtource3 // SVTExport;
+];
+
+
+If[(runEQthird4 || runEQthird7) && Not@ValueQ@laptrace,
+{time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] # &,tmpijkl]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,laptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laptrace];
+laptrace // SVTExport;
 ];
 
 
@@ -3308,6 +3233,24 @@ EQtource4 // SVTExport;
 ];
 
 
+If[(runEQthird6 || runEQthird7) && Not@ValueQ@lapdiv,
+{time,tmp}=Timing[Map[metric\[Delta][j,k] metric\[Delta][l,m] PD[-m]@# &,tmpijkl]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,lapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdiv];
+lapdiv // SVTExport;
+];
+
+
+If[(runEQthird6 || runEQthird7) && Not@ValueQ@graddivdiv,
+{time,tmp}=Timing[Map[PD[-i]@# &,divdiv]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,graddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@graddivdiv];
+graddivdiv // SVTExport;
+];
+
+
 If[runEQthird6,
 {time,tmp1}=Timing[Map[4 # &,lapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
@@ -3335,68 +3278,127 @@ EQtource6 // SVTExport;
 ];
 
 
-If[runEQthird7,
+If[runEQthird7 && Not@ValueQ@laplap,
+{time,tmp}=Timing[Map[metric\[Delta][k,l] metric\[Delta][m,n] PD[-n]@PD[-m]@# &,tmpijkl]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,laplap}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplap];
+laplap // SVTExport;
+];
+
+
+If[runEQthird7 && Not@ValueQ@lapdivdiv,
+{time,tmp}=Timing[Map[metric\[Delta][i,k] metric\[Delta][j,l] metric\[Delta][m,n] PD[-n]@PD[-m]@# &,tmpijkl]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,lapdivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@lapdivdiv];
+lapdivdiv // SVTExport;
+];
+
+
+If[runEQthird7 && Not@ValueQ@laplaptrace,
+{time,tmp}=Timing[Map[metric\[Delta][i,j] metric\[Delta][k,l] metric\[Delta][m,n] PD[-n]@PD[-m]@# &,tmpijkl]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,laplaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@laplaptrace];
+laplaptrace // SVTExport;
+];
+
+
+If[runEQthird7 && Not@ValueQ@gradgradlaptrace,
+{time,tmp}=Timing[Map[PD[-i]@PD[-j]@# &,laptrace]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,gradgradlaptrace}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgradlaptrace];
+gradgradlaptrace // SVTExport;
+];
+
+
+If[runEQthird7 && Not@ValueQ@gradgraddivdiv,
+{time,tmp}=Timing[Map[PD[-j]@# &,graddivdiv]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,gradgraddivdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradgraddivdiv];
+gradgraddivdiv // SVTExport;
+];
+
+
+If[runEQthird7 && Not@ValueQ@gradlapdiv,
+{time,tmp}=Timing[Map[PD[-j]@# &,lapdiv]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,gradlapdiv}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@gradlapdiv];
+gradlapdiv // SVTExport;
+];
+
+
+If[runEQthird7 && Not@ValueQ@tmpEQthird7step1,
 {time,tmp1}=Timing[Map[4 # &,laplap]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 metric\[Delta][-i,-j] # &,lapdivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 {time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmpEQthird7step1}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpEQthird7step1];
+tmpEQthird7step1 // SVTExport;
 ];
 
 
-If[runEQthird7,
-{time,tmp1}=Timing[Map[# &,tmp]];
+If[runEQthird7 && Not@ValueQ@tmpEQthird7step2,
+{time,tmp1}=Timing[Map[# &,tmpEQthird7step1]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-2 metric\[Delta][-i,-j] # &,laplaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 {time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmpEQthird7step2}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpEQthird7step2];
+tmpEQthird7step2 // SVTExport;
 ];
 
 
-If[runEQthird7,
-{time,tmp1}=Timing[Map[# &,tmp]];
+If[runEQthird7 && Not@ValueQ@tmpEQthird7step3,
+{time,tmp1}=Timing[Map[# &,tmpEQthird7step2]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgradlaptrace]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 {time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmpEQthird7step3}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpEQthird7step3];
+tmpEQthird7step3 // SVTExport;
 ];
 
 
-If[runEQthird7,
-{time,tmp1}=Timing[Map[# &,tmp]];
+If[runEQthird7 && Not@ValueQ@tmpEQthird7step4,
+{time,tmp1}=Timing[Map[# &,tmpEQthird7step3]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[2 # &,gradgraddivdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 {time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmpEQthird7step4}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpEQthird7step4];
+tmpEQthird7step4 // SVTExport;
 ];
 
 
-If[runEQthird7,
-{time,tmp1}=Timing[Map[# &,tmp]];
+If[runEQthird7 && Not@ValueQ@tmpEQthird7step5,
+{time,tmp1}=Timing[Map[# &,tmpEQthird7step4]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,gradlapdiv]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
 {time,tmp}=Timing[Listify[Expand,tmp1+tmp2,{},ListMethod->"SamePerts",Verbose->True]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
-{time,tmp}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
-Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp];
+{time,tmpEQthird7step5}=Timing[Listify[SVTExpand,tmp,{},ListMethod->"SamePerts",Verbose->True]];
+Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmpEQthird7step5];
+tmpEQthird7step5 // SVTExport;
 ];
 
 
 If[runEQthird7,
-{time,tmp1}=Timing[Map[# &,tmp]];
+{time,tmp1}=Timing[Map[# &,tmpEQthird7step5]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp1];
 {time,tmp2}=Timing[Map[-4 # &,Evaluate[gradlapdiv //.-i->-k //.-j->-i //.-k->-j]]];
 Print["Time: "<>ToString@time<>" sec. Elements: "<>ToString@Length@tmp2];
