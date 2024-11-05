@@ -192,7 +192,7 @@ DefTensorSVT[Dslip[], M1, PrintAs -> "\[Delta]\[Eta]", BackgroundQ->True]
 DefTensorSVT[DGlight[], M1, PrintAs->"\[Delta]\[CapitalSigma]", BackgroundQ->True]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Functions*)
 
 
@@ -252,7 +252,7 @@ HubbleToClass[expr_] := Module[{tmp}, tmp = expr;
 ]
 
 
-ClassSolve[expr_, var_] := Expand[Flatten[Solve[expr == 0, var]] //. List[elems___] /; Length[List[elems]] == 1 :> elems //. Rule -> Equal]
+ClassSolve[expr_, var_] := Expand[Flatten[Solve[expr == 0, var, Reals]] //. List[elems___] /; Length[List[elems]] == 1 :> elems //. Rule -> Equal]
 
 
 ScalarToXsync[expr_]:=Module[{tmp},
