@@ -224,9 +224,12 @@ scalar field, ..). Check Options[GRToBuildingBlocks] for a full list of availabl
 ToMetric::usage = "ToMetric (boolean, default: True) is an option for \
 GRToBuildingBlocks. If True curvature tensor are rewritten as derivatives of the \
 metric, otherwise Christoffel symbols.";
+AvoidToCanonical::usage = "AvoidToCanonical (boolean, default: False) is an option for \
+GRToBuildingBlocks. If True avoid using ToCanonical, to save time and avoid the code to \
+crash when there are too many indices.";
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*3+1 Decomposition*)
 
 
@@ -349,7 +352,14 @@ collects all the variables addvar. The argument options includes all the options
 of the Collect function.";
 
 
-(* ::Section::Closed:: *)
+HighlightSVT::usage =
+"HighlightSVT[expr, terms, colors] highlights a list of terms in expr. \
+The optional argument colors should be a single defined color or a list \
+of colors, one each term. If left empty it uses the default color of the \
+Highlighted function.";
+
+
+(* ::Section:: *)
 (*Useful functions*)
 
 
@@ -363,3 +373,17 @@ the Fourier transform up to second order in perturbation theory. In this case, t
 output is not the Fourier transform itself, but its integrand. This is to say that, \
 if F is the Fourier transform, the output will be f, where \
 F(k)=Integral[d^3p d^3q delta(k-p-q) f(k,p,q)].";
+
+
+QuasiStatic::usage =
+"QuasiStatic[expr, DeltaLeading] applies the Quasi Static approximation to expr. \
+If DeltaLeading=0 (or left unspecified) it retains only leading order contributions, \
+otherwise it keeps all the terms up to DeltaLeading (spatial derivatives count 1/2 \
+and time derivatives 0). It does not assume any relation between the perturbations. \
+In order to assume hierarchy between perturbations use the QuasiStaticSoft function.";
+
+
+QuasiStaticSoft::usage =
+"QuasiStaticSoft[expr, DeltaLeading] works as QuasiStatic, but it applies relations \
+between perturbations to further reduce the number of terms. For now we impose that \
+\[CapitalPsi]~\[CapitalPhi]~\[Pi], while matter is independent.";

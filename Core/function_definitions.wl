@@ -590,7 +590,7 @@ AutomaticRulesSVT[tensor_, opts:OptionsPattern[{AutomaticRulesSVT, GlobalOptions
 
 
 Options[DefDerivedTensorsSVT] = Join[{
-	MaxTimeDerivatives -> 4,
+	MaxTimeDerivatives -> 6,
 	AutomaticRulesSVTQ -> True
 }, Options[AutomaticRulesSVT]];
 
@@ -846,7 +846,8 @@ SortRiemannIndices[expr_, cd_?CovDQ] := Module[
 
 
 Options[GRToBuildingBlocks] = {
-	ToMetric -> True
+	ToMetric -> True,
+	AvoidToCanonical -> False
 };
 
 GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, GlobalOptionsSVT}]] := Module[
@@ -854,6 +855,7 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 	(** Read options **)
 	verbose = OptionValue@Verbose,
 	tometric = OptionValue@ToMetric,
+	dotocanonical = Not@OptionValue@AvoidToCanonical,
 	(** Additional variables **)
 	metric = MetricOfCovD@cd,
 	tan = Tangent@ManifoldOfCovD@cd,
@@ -871,7 +873,9 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 	tmp = expr // WeylToRiemann;
 	tmp = tmp // EinsteinToRicci;
 	tmp = tmp // NoScalar // Expand;
-	tmp = ToCanonical[tmp, UseMetricOnVBundle->{tan}];
+	If[dotocanonical,
+		tmp = ToCanonical[tmp, UseMetricOnVBundle->{tan}];
+	];
 
 	If[verbose, xSVTUtilities`PrintLevel["Sorting covariant derivatives.", 1]];
 	tmp = tmp // SortCovDs;
@@ -892,9 +896,13 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 	tmp = tmp // NoScalar;
 	tmp = Expand[#]&/@tmp;
 	tmp = xSVTUtilities`ListifyExpr[tmp, "Part", 1, {}];
-	tmp = ToCanonical[#, UseMetricOnVBundle -> None]&/@tmp;
+	If[dotocanonical,
+		tmp = ToCanonical[#, UseMetricOnVBundle -> None]&/@tmp;
+	];
 	tmp = xSVTUtilities`DeListifyExpr[tmp];
-	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
+	If[dotocanonical,
+		tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
+	];
 	If[verbose, xSVTUtilities`PrintLevel["Finished GRToBuildingBlocks.", 0]];
 
 	tmp
@@ -1319,6 +1327,16 @@ Lap[expr1_ + expr2_] := Lap[expr1] + Lap[expr2]
 Lap[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := expr1 * Lap[expr2]
 
 
+DefInertHead[invLap, ContractThrough -> {delta, g}, PrintAs -> "\!\(\*SuperscriptBox[\(\[Del]\), \(-2\)]\)"]
+invLap[expr1_ + expr2_] := invLap[expr1] + invLap[expr2]
+invLap[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := expr1 * invLap[expr2]
+
+
+invLap[Lap[expr_]] := expr
+(*invLap[expr1_*Lap[expr2_]] := expr1*expr2/2-invLap[PD[-i]@expr1 PD[i]@expr2]
+invLap[PD[-i_?TangentM3`Q]@expr1_*PD[i_?TangentM3`Q]@expr2_] := expr1*expr2/2-invLap[Lap[expr1] expr2]/2-invLap[Lap[expr2] expr1]/2*)
+
+
 ToLaplacian[bigexpr_] := If[ToString[bigexpr] == ToString[0] || Length[IndicesOf[PD][bigexpr]]<2, 
       bigexpr, If[Length[IndicesOf[TangentM3, PD, Dummy][bigexpr]] > 0, 
         Nest[Lap, Level[bigexpr //.PD[i_?TangentM3`pmQ]@PD[j_?TangentM3`pmQ]@expr_ /; (MemberQ[IndicesOf[TangentM3, Dummy][bigexpr], j] && 
@@ -1342,10 +1360,10 @@ PrintWell[expr_] := Module[{tmp},
 
 UnPrintWell[expr_]:= Module[{tmp}, tmp = expr;
 	tmp = tmp //.Lap[tens_]:>Module[{i=DummyIn[TangentM3]},PD[-i]@PD[i]@tens] // ToCanonical // ReplaceDummies;
-	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"pp*ime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]^n]];
-	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"pp*ime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]];
-	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"prime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]^n]];
-	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"prime*"] :>Scalar[Module[{a=DummyIn[TangentM1]}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]];
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"pp*ime*"] :>PutScalar[Module[{a=DummyIn[TangentM1]}, PutScalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]^n]];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"pp*ime*"] :>PutScalar[Module[{a=DummyIn[TangentM1]}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],1]][LI[order],inds]]];
+	tmp = tmp //.tens_[LI[order_],inds___]^n_/; StringMatchQ[ToString[tens],"prime*"] :>PutScalar[Module[{a=DummyIn[TangentM1]}, Scalar[timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]^n]];
+	tmp = tmp //.tens_[LI[order_],inds___]/; StringMatchQ[ToString[tens],"prime*"] :>PutScalar[Module[{a=DummyIn[TangentM1]}, timevec[a] PD[-a]@ToExpression[StringDrop[ToString[tens],5]][LI[order],inds]]];
 	tmp = tmp // SeparateMetric[] // NoScalar
 ]
 
@@ -1372,6 +1390,31 @@ CollectPerts[expr_, {more___}, options___] := Module[{FindPerts, expr1, expr2, t
 	order = Ordering@order;
 	tens = Reverse@tens[[order]];
 	Collect[tmp, Join[tens, {more}], options]
+]
+
+
+(* ::Subsection::Closed:: *)
+(*HighlightSVT*)
+
+
+HighlightSVT[terms_][expr_]:=HighlightSVT[expr, terms, None]
+(*HighlightSVT[terms_, colors_][expr_]:=HighlightSVT[expr, terms, colors]*)
+HighlightSVT[expr_, terms_]:=HighlightSVT[expr, terms, None]
+HighlightSVT[expr_, terms_, colors_]:=Module[{tmp, cols, count},
+	tmp=expr;
+
+	If[Not@ListQ@colors,
+		cols = Table[colors, {i, Length@terms}];,
+		cols = colors;
+	];
+
+	For[count=1, count<=Length@terms, count++,
+		If[cols[[count]]===None,
+			tmp=tmp /.terms[[count]]:>Highlighted[terms[[count]]];,
+			tmp=tmp /.terms[[count]]:>Highlighted[terms[[count]], Background->cols[[count]]];
+		];
+	];
+	tmp
 ]
 
 
@@ -1421,6 +1464,7 @@ FourierT[expr_] := Module[{tmp, ispert, back, pert},
 
 
 Coeff[Times[expr1_, expr2_]] /;xSVTUtilities`PertQ[expr2] := Coeff[expr1]*expr2
+Coeff[Power[expr1_, n_]] /;xSVTUtilities`PertQ[expr1] := Coeff[1]*expr1^n
 Coeff[Times[expr1_, Power[expr2_,n_]]] /;xSVTUtilities`PertQ[expr2] := Coeff[expr1]*expr2^n
 Coeff[expr1_ + expr2_] := Coeff[expr1] + Coeff[expr2]
 Coeff[expr_] /;xSVTUtilities`PertQ[expr] := Coeff[1] expr
@@ -1504,4 +1548,158 @@ GaugeTransformation[ten_, gen_, inds___] := Module[{FindPerts,tmpL,tmpR,ruleL},
 	ruleL = MapThread[Rule,{ruleL,ToExpression[ToString[#]<>"G"]&/@ruleL}];
 	tmpL = tmpL //.ruleL;
 	-tmpL+tmpR
+]
+
+
+(* ::Subsection::Closed:: *)
+(*QuasiStatic*)
+
+
+QuasiStatic[expr_] := QuasiStatic[expr, 0]
+QuasiStatic[expr_, DeltaLeading_] := Module[
+	{
+	tmp,
+	nTders, nSders, orderders,
+	perts, pertsunique, pos, max,
+	ismax,
+	wT = 0,
+	wS = 1/2
+	},
+	
+	(* Listify sums in expr *)
+	tmp = expr // Expand;
+	tmp = Replace[tmp, Plus->List, {1}, Heads->True];
+	If[ToString[Head[tmp]]!="List", tmp = {tmp}];
+
+	(* Count number of derivatives and weight them *)
+	nTders = Length[IndicesOf[PD,TangentM1][#]]&/@tmp;
+	nSders = Length[IndicesOf[PD,TangentM3][#]]&/@tmp;
+	orderders = wT*nTders+wS*nSders;
+
+	(* Get perturbations for each term and delete duplicates *)
+	perts = Coeff[#]&/@tmp //.Coeff[__]:>1 //.PD[_]@smth_:>smth;
+	pertsunique = DeleteDuplicates@perts;
+
+	(* Get maximum derivatives for each unique set of perturbations *)
+	pos = Position[perts, #]&/@pertsunique;
+	max = Extract[orderders, #]&/@pos;
+	max = Max[#]&/@max;
+
+	(* Create filter for max order *)
+	ismax[pert_, val_] := val >= Evaluate[pert //.MapThread[Rule, {pertsunique, max}]] - DeltaLeading;
+	tmp = tmp*Boole[MapThread[ismax, {perts, orderders}]];
+
+	tmp //.List->Plus
+]
+
+
+(*QuasiStaticSoft[expr_] := QuasiStaticSoft[expr, 0]
+QuasiStaticSoft[expr_, DeltaLeading_] := Module[
+	{
+	tmp,
+	nTders, nSders, orderders,
+	perts, pertsunique, pos, max,
+	ismax,
+	wT = 0,
+	wS = 1/2
+	},
+	
+	(* Listify sums in expr *)
+	tmp = expr // Expand;
+	tmp = Replace[tmp, Plus->List, {1}, Heads->True];
+	If[ToString[Head[tmp]]!="List", tmp = {tmp}];
+
+	(* Count number of derivatives and weight them *)
+	nTders = Length[IndicesOf[PD,TangentM1][#]]&/@tmp;
+	nSders = Length[IndicesOf[PD,TangentM3][#]]&/@tmp;
+	orderders = wT*nTders+wS*nSders;
+
+	(* Get perturbations for each term and delete duplicates *)
+	perts = Coeff[#]&/@tmp //.Coeff[__]:>1 //.PD[_]@smth_:>smth;
+
+	(* Fix relations between perturbations *)
+	perts = perts //.pertpsi[LI[order_]]:>pertphi[LI[order]];
+	perts = perts //.pertP[LI[order_]]:>pertphi[LI[order]];
+	pertsunique = DeleteDuplicates@perts;
+
+	(* Get maximum derivatives for each unique set of perturbations *)
+	pos = Position[perts, #]&/@pertsunique;
+	max = Extract[orderders, #]&/@pos;
+	max = Max[#]&/@max;
+
+	(* Create filter for max order *)
+	ismax[pert_, val_] := val >= Evaluate[pert //.MapThread[Rule, {pertsunique, max}]] - DeltaLeading;
+	tmp = tmp*Boole[MapThread[ismax, {perts, orderders}]];
+
+	tmp //.List->Plus
+]*)
+
+
+QuasiStaticSoft[expr_] := QuasiStaticSoft[expr, 0]
+QuasiStaticSoft[expr_, DeltaLeading_] := Module[
+	{
+	tmp,
+	perts, order, orderperts, pertsunique, pos, max, ismax
+	},
+	
+	orderperts[term_] := Module[{pertslist, nSders, count},
+		
+		(* Get number of derivatives and list of perturbations *)
+		nSders = Length[IndicesOf[PD,TangentM3][term]];
+		pertslist = term //.PD[i_]@smth_:>smth;
+
+		(* Listify perturbations *)
+		pertslist = Replace[pertslist, Times->List, {1}, Heads->True];
+		pertslist = pertslist //.Power[pert_, n_]:>Table[pert, {i, n}];
+		If[ToString[Head[pertslist]]!="List", pertslist = {pertslist}];
+		pertslist = Flatten@pertslist;
+
+		(* Apply hierarchy - pertpsi~pertP~pertphi*)
+		pertslist = pertslist //.pertpsi[LI[ord_]]:>pertphi[LI[ord]];
+		pertslist = pertslist //.pertP[LI[ord_]]:>pertphi[LI[ord]];
+		(* Apply hierarchy - replace pertphi with pertdensity (order by order)*)
+		count = Count[pertslist, pertphi[LI[1]]];
+		pertslist = pertslist //.pertphi[LI[1]]:>pertdensity[LI[1]];
+		nSders = nSders - 2*count;
+		count = Count[pertslist, pertphi[LI[2]]];
+		pertslist = pertslist //.pertphi[LI[2]]:>pertdensity[LI[2]];
+		nSders = nSders - 2*count;
+		count = Count[pertslist, pertphi[LI[3]]];
+		pertslist = pertslist //.pertphi[LI[3]]:>pertdensity[LI[3]];
+		nSders = nSders - 2*count;
+		count = Count[pertslist, pertphi[LI[4]]];
+		pertslist = pertslist //.pertphi[LI[4]]:>pertdensity[LI[4]];
+		nSders = nSders - 2*count;
+		(* Apply hierarchy - replace pertdensity[LI[n]] with pertdensity[LI[1]]^n *)
+		pertslist = pertslist //.pertdensity[LI[ord_]]:>pertdensity[LI[1]]^ord;
+		
+		(* List to Times *)
+		pertslist = pertslist //.List->Times;
+
+		{pertslist, nSders}
+	];
+	
+	(* Listify sums in expr *)
+	tmp = expr // Expand;
+	tmp = Replace[tmp, Plus->List, {1}, Heads->True];
+	If[ToString[Head[tmp]]!="List", tmp = {tmp}];
+
+	(* Get list of perturbations and num of derivatives for each term *)
+	perts = Coeff[#]&/@tmp //.Coeff[__]:>1;
+	order = orderperts[#]&/@perts;
+	{perts, order} = MapThread[List, order];
+
+	(* Get unique perturbations *)
+	pertsunique = DeleteDuplicates@perts;
+
+	(* Get maximum derivatives for each unique set of perturbations *)
+	pos = Position[perts, #]&/@pertsunique;
+	max = Extract[order, #]&/@pos;
+	max = Max[#]&/@max;
+
+	(* Create filter for max order *)
+	ismax[pert_, val_] := val >= Evaluate[pert //.MapThread[Rule, {pertsunique, max}]] - DeltaLeading;
+	tmp = tmp*Boole[MapThread[ismax, {perts, order}]];
+
+	tmp //.List->Plus
 ]
