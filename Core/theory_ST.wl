@@ -531,7 +531,7 @@ EQalphaH3 = -(alphaH3[]*mass2[]) + (F5fun[scalar[], X[]]*hubbleC[]*primescalar[]
 EQalphaH4 = -(alphaH4[]*mass2[]) + primescalar[]^7*hubbleC[]*Derivative[0, 1][F5fun][scalar[], X[]]/scale[]^8;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Functions*)
 
 
@@ -542,6 +542,9 @@ NoG4[expr_]:=expr//.Derivative[__][G4fun][__]:>0//.G4fun[__]:>0//.Derivative[__]
 NoG5[expr_]:=expr//.Derivative[__][G5fun][__]:>0//.G5fun[__]:>0
 NoF4[expr_]:=expr//.Derivative[__][F4fun][__]:>0//.F4fun[__]:>0
 NoF5[expr_]:=expr//.Derivative[__][F5fun][__]:>0//.F5fun[__]:>0
+
+
+StdG4[expr_]:=expr //.Derivative[__][G4fun][__]:>0 //.G4fun[__]:>Mpl^2/2 //.Derivative[__][DG4fun][__]:>0 //.DG4fun[__]:>0
 
 
 PertScalarToPertP[expr_] := Module[{tmp}, tmp = expr;
@@ -709,12 +712,34 @@ Tex[densityS] ^= "\\mathcal{E}_\\textrm{S}";
 Tex[pressureS] ^= "\\mathcal{P}_\\textrm{S}";
 
 
+Tex[primedensityS] ^= "\\mathcal{E}^\\prime_\\textrm{S}";
+Tex[primepressureS] ^= "\\mathcal{P}^\\prime_\\textrm{S}";
+
+
+Tex[pprimedensityS] ^= "\\mathcal{E}^{\\prime\\prime}_\\textrm{S}";
+Tex[pprimepressureS] ^= "\\mathcal{P}^{\\prime\\prime}_\\textrm{S}";
+
+
 Tex[mass2] ^= "M_*^2";
 Tex[alphaM] ^= "\\alpha_\\textrm{M}";
 Tex[alphaK] ^= "\\alpha_\\textrm{K}";
 Tex[alphaB] ^= "\\alpha_\\textrm{B}";
 Tex[alphaT] ^= "\\alpha_\\textrm{T}";
 Tex[alphaH] ^= "\\alpha_\\textrm{H}";
+
+
+Tex[primealphaM] ^= "\\alpha^\\prime_\\textrm{M}";
+Tex[primealphaK] ^= "\\alpha^\\prime_\\textrm{K}";
+Tex[primealphaB] ^= "\\alpha^\\prime_\\textrm{B}";
+Tex[primealphaT] ^= "\\alpha^\\prime_\\textrm{T}";
+Tex[primealphaH] ^= "\\alpha^\\prime_\\textrm{H}";
+
+
+Tex[pprimealphaM] ^= "\\alpha^{\\prime\\prime}_\\textrm{M}";
+Tex[pprimealphaK] ^= "\\alpha^{\\prime\\prime}_\\textrm{K}";
+Tex[pprimealphaB] ^= "\\alpha^{\\prime\\prime}_\\textrm{B}";
+Tex[pprimealphaT] ^= "\\alpha^{\\prime\\prime}_\\textrm{T}";
+Tex[pprimealphaH] ^= "\\alpha^{\\prime\\prime}_\\textrm{H}";
 
 
 Tex[alphaM2] ^= "\\alpha_\\textrm{M2}";
@@ -725,6 +750,22 @@ Tex[alphaH2] ^= "\\alpha_\\textrm{H2}";
 Tex[alphaDEG] ^= "\\alpha_\\textrm{DEG}";
 
 
+Tex[primealphaM2] ^= "\\alpha^\\prime_\\textrm{M2}";
+Tex[primealphaK2] ^= "\\alpha^\\prime_\\textrm{K2}";
+Tex[primealphaB2] ^= "\\alpha^\\prime_\\textrm{B2}";
+Tex[primealphaT2] ^= "\\alpha^\\prime_\\textrm{T2}";
+Tex[primealphaH2] ^= "\\alpha^\\prime_\\textrm{H2}";
+Tex[primealphaDEG] ^= "\\alpha^\\prime_\\textrm{DEG}";
+
+
+Tex[pprimealphaM2] ^= "\\alpha^{\\prime\\prime}_\\textrm{M2}";
+Tex[pprimealphaK2] ^= "\\alpha^{\\prime\\prime}_\\textrm{K2}";
+Tex[pprimealphaB2] ^= "\\alpha^{\\prime\\prime}_\\textrm{B2}";
+Tex[pprimealphaT2] ^= "\\alpha^{\\prime\\prime}_\\textrm{T2}";
+Tex[pprimealphaH2] ^= "\\alpha^{\\prime\\prime}_\\textrm{H2}";
+Tex[pprimealphaDEG] ^= "\\alpha^{\\prime\\prime}_\\textrm{DEG}";
+
+
 Tex[alphaM3] ^= "\\alpha_\\textrm{M3}";
 Tex[alphaK3] ^= "\\alpha_\\textrm{K3}";
 Tex[alphaB3] ^= "\\alpha_\\textrm{B3}";
@@ -733,7 +774,38 @@ Tex[alphaH3] ^= "\\alpha_\\textrm{H3}";
 Tex[alphaH4] ^= "\\alpha_\\textrm{H4}";
 
 
+Tex[primealphaM3] ^= "\\alpha^\\prime_\\textrm{M3}";
+Tex[primealphaK3] ^= "\\alpha^\\prime_\\textrm{K3}";
+Tex[primealphaB3] ^= "\\alpha^\\prime_\\textrm{B3}";
+Tex[primealphaT3] ^= "\\alpha^\\prime_\\textrm{T3}";
+Tex[primealphaH3] ^= "\\alpha^\\prime_\\textrm{H3}";
+Tex[primealphaH4] ^= "\\alpha^\\prime_\\textrm{H4}";
+
+
+Tex[pprimealphaM3] ^= "\\alpha^{\\prime\\prime}_\\textrm{M3}";
+Tex[pprimealphaK3] ^= "\\alpha^{\\prime\\prime}_\\textrm{K3}";
+Tex[pprimealphaB3] ^= "\\alpha^{\\prime\\prime}_\\textrm{B3}";
+Tex[pprimealphaT3] ^= "\\alpha^{\\prime\\prime}_\\textrm{T3}";
+Tex[pprimealphaH3] ^= "\\alpha^{\\prime\\prime}_\\textrm{H3}";
+Tex[pprimealphaH4] ^= "\\alpha^{\\prime\\prime}_\\textrm{H4}";
+
+
 Tex[cs2] ^= "c_\\textrm{S}^2";
 Tex[ct2] ^= "c_\\textrm{T}^2";
 Tex[Qs] ^= "Q_\\textrm{S}";
 Tex[Qt] ^= "Q_\\textrm{T}";
+
+
+Tex[primecs2] ^= "c^\\prime_\\textrm{S}^2";
+Tex[primect2] ^= "c^\\prime_\\textrm{T}^2";
+Tex[primeQs] ^= "Q^\\prime_\\textrm{S}";
+Tex[primeQt] ^= "Q^\\prime_\\textrm{T}";
+
+
+Tex[pprimecs2] ^= "c^{\\prime\\prime}_\\textrm{S}^2";
+Tex[pprimect2] ^= "c^{\\prime\\prime}_\\textrm{T}^2";
+Tex[pprimeQs] ^= "Q^{\\prime\\prime}_\\textrm{S}";
+Tex[pprimeQt] ^= "Q^{\\prime\\prime}_\\textrm{T}";
+
+
+Tex[source11] ^= "S_{11}";

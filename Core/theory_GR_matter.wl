@@ -290,22 +290,16 @@ Print[Column[{"Gauge Decomposition", ScreenDollarIndices[gaugerules]}]]
 Clear[gaugerules]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Tex Corrections*)
 
 
-xAct`TexAct`Private`OpenParenthesis[0] := "\\left";
-xAct`TexAct`Private`CloseParenthesis[0] := "\\right";
-xAct`TexAct`Private`OpenParenthesis[1] := "\\left";
-xAct`TexAct`Private`CloseParenthesis[1] := "\\right";
-xAct`TexAct`Private`OpenParenthesis[2] := "\\left";
-xAct`TexAct`Private`CloseParenthesis[2] := "\\right";
-xAct`TexAct`Private`OpenParenthesis[3] := "\\left";
-xAct`TexAct`Private`CloseParenthesis[3] := "\\right";
-xAct`TexAct`Private`OpenParenthesis[4] := "\\left";
-xAct`TexAct`Private`CloseParenthesis[4] := "\\right";
-xAct`TexAct`Private`OpenParenthesis[level_Integer?NonNegative] := "\\left";
-xAct`TexAct`Private`CloseParenthesis[level_Integer?NonNegative] := "\\right";
+OpenParenthesis[0,"("]:="\\left(";
+CloseParenthesis[0,")"]:="\\right)";
+OpenParenthesis[1,"("]:="\\left[";
+CloseParenthesis[1,")"]:="\\right]";
+OpenParenthesis[2,"("]:="\\left{";
+CloseParenthesis[2,")"]:="\\right}";
 
 
 Tex[f_?ScalarFunctionQ[vars__]] := Tex[f]
@@ -314,7 +308,10 @@ Tex[f_?ScalarFunctionQ[vars__]] := Tex[f]
 Tex[Derivative[ders__][f_?ScalarFunctionQ][vars__]] := StringInsert[StringDrop[StringJoin[Insert[Flatten[{StringSplit[Tex[f], "_"], Map[StringInsert[#, " ", -1] &, Map[ToString, Flatten[MapThread[Table[#1, {#2}] &, {Map[Tex, {vars}], {ders}}]]]]}], "_{", 2]], -1], "}", -1]
 
 
-Tex[Lap[expr_]] := "\\nabla^2\\left(" <> Tex[expr] <> "\\right)"
+(*Tex[Lap[expr_]] := "\\nabla^2\\left(" <> Tex[expr] <> "\\right)"*)
+Tex[Lap] := "\\nabla^2"
+Tex[invLap] := "\\nabla^{-2}"
+Tex[ih_?InertHeadQ[expr_, z___]] := StringJoin[Tex[ih], "\\left(", Tex[expr], "\\right)"];
 
 
 Tex[x_Rational]:="\\frac{"<>ToString[Numerator[x]]<>"}{"<>ToString[Denominator[x]]<>"}"
@@ -343,6 +340,7 @@ TexCovDIndices[post_][first_?UpIndexQ,more___]:=StringJoin["{}^{",post,TexUpInde
 TexCovDIndices[post_][first_?DownIndexQ,more___]:=StringJoin["{}_{",post,TexUpIndex[ChangeIndex@first],TexIndicesFromDown[more],"}"];
 (* Tensors *)
 Tex[tensor_?xTensorQ[LI[1],indices___]]:=StringJoin[Tex[tensor],TexIndices[indices]];
+Tex[tensor_?xTensorQ[LI[order_],indices___]]/;order>1:=StringJoin[Tex[tensor], "^{(", ToString@order, ")}", TexIndices[indices]];
 
 
 Tex[pertdensity] ^= "\\delta_\\textrm{m}";
@@ -366,3 +364,15 @@ Tex[source7] ^= "S_7";
 Tex[source8] ^= "S_8";
 Tex[source9] ^= "S_9";
 Tex[source10] ^= "S_{10}";
+
+
+Tex[density] ^= "\\rho_\\textrm{m}";
+Tex[pressure] ^= "p_\\textrm{m}";
+
+
+Tex[primedensity] ^= "\\rho^\\prime_\\textrm{m}";
+Tex[primepressure] ^= "p^\\prime_\\textrm{m}";
+
+
+Tex[pprimedensity] ^= "\\rho^{\\prime\\prime}_\\textrm{m}";
+Tex[pprimepressure] ^= "p^{\\prime\\prime}_\\textrm{m}";

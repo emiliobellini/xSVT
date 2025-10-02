@@ -1310,7 +1310,7 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 (*PrintWell*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*PrintWell*)
 
 
@@ -1333,6 +1333,7 @@ invLap[expr1_ * expr2_] /; !StringMatchQ[ToString[expr1], "*pert*"] := expr1 * i
 
 
 invLap[Lap[expr_]] := expr
+Lap[invLap[expr_]] := expr
 (*invLap[expr1_*Lap[expr2_]] := expr1*expr2/2-invLap[PD[-i]@expr1 PD[i]@expr2]
 invLap[PD[-i_?TangentM3`Q]@expr1_*PD[i_?TangentM3`Q]@expr2_] := expr1*expr2/2-invLap[Lap[expr1] expr2]/2-invLap[Lap[expr2] expr1]/2*)
 
@@ -1702,4 +1703,56 @@ QuasiStaticSoft[expr_, DeltaLeading_] := Module[
 	tmp = tmp*Boole[MapThread[ismax, {perts, order}]];
 
 	tmp //.List->Plus
+]
+
+
+(* ::Subsection:: *)
+(*ApplyInvLap*)
+
+
+ApplyInvLap[expr_] := Module[{tmp},
+	tmp = PrintWell@expr;
+	tmp = invLap@tmp;
+
+	(* Same pert - 4 derivatives - 1 *)
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertchi[LI[1]] PD[j]@PD[i]@pertchi[LI[1]]], PD[i]@pertchi[LI[1]] PD[-i]@pertchi[LI[1]]/2 - invLap[PD[i]@Lap@pertchi[LI[1]] PD[-i]@pertchi[LI[1]]]}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertchi[LI[1]] PD[i]@PD[j]@pertchi[LI[1]]], PD[i]@pertchi[LI[1]] PD[-i]@pertchi[LI[1]]/2 - invLap[PD[i]@Lap@pertchi[LI[1]] PD[-i]@pertchi[LI[1]]]}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertphi[LI[1]] PD[j]@PD[i]@pertphi[LI[1]]], PD[i]@pertphi[LI[1]] PD[-i]@pertphi[LI[1]]/2 - invLap[PD[i]@Lap@pertphi[LI[1]] PD[-i]@pertphi[LI[1]]]}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertphi[LI[1]] PD[i]@PD[j]@pertphi[LI[1]]], PD[i]@pertphi[LI[1]] PD[-i]@pertphi[LI[1]]/2 - invLap[PD[i]@Lap@pertphi[LI[1]] PD[-i]@pertphi[LI[1]]]}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertpsi[LI[1]] PD[j]@PD[i]@pertpsi[LI[1]]], PD[i]@pertpsi[LI[1]] PD[-i]@pertpsi[LI[1]]/2 - invLap[PD[i]@Lap@pertpsi[LI[1]] PD[-i]@pertpsi[LI[1]]]}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertpsi[LI[1]] PD[i]@PD[j]@pertpsi[LI[1]]], PD[i]@pertpsi[LI[1]] PD[-i]@pertpsi[LI[1]]/2 - invLap[PD[i]@Lap@pertpsi[LI[1]] PD[-i]@pertpsi[LI[1]]]}, MetricOn->All];
+
+	(* Same pert - 4 derivatives - 2 *)
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertchi[LI[1]] PD[i]@Lap@pertchi[LI[1]]], pertchi[LI[1]] Lap@pertchi[LI[1]]/2 - invLap[Lap@pertchi[LI[1]]^2]/2 - invLap[pertchi[LI[1]] Lap@Lap@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertchi[LI[1]] Lap@PD[i]@pertchi[LI[1]]], pertchi[LI[1]] Lap@pertchi[LI[1]]/2 - invLap[Lap@pertchi[LI[1]]^2]/2 - invLap[pertchi[LI[1]] Lap@Lap@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertphi[LI[1]] PD[i]@Lap@pertphi[LI[1]]], pertphi[LI[1]] Lap@pertphi[LI[1]]/2 - invLap[Lap@pertphi[LI[1]]^2]/2 - invLap[pertphi[LI[1]] Lap@Lap@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertphi[LI[1]] Lap@PD[i]@pertphi[LI[1]]], pertphi[LI[1]] Lap@pertphi[LI[1]]/2 - invLap[Lap@pertphi[LI[1]]^2]/2 - invLap[pertphi[LI[1]] Lap@Lap@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertpsi[LI[1]] PD[i]@Lap@pertpsi[LI[1]]], pertpsi[LI[1]] Lap@pertpsi[LI[1]]/2 - invLap[Lap@pertpsi[LI[1]]^2]/2 - invLap[pertpsi[LI[1]] Lap@Lap@pertpsi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertpsi[LI[1]] Lap@PD[i]@pertpsi[LI[1]]], pertpsi[LI[1]] Lap@pertpsi[LI[1]]/2 - invLap[Lap@pertpsi[LI[1]]^2]/2 - invLap[pertpsi[LI[1]] Lap@Lap@pertpsi[LI[1]]]/2}, MetricOn->All];
+
+	(* Two perts - 4 derivatives - 1 *)
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertchi[LI[1]] PD[j]@PD[i]@pertphi[LI[1]]], PD[i]@pertchi[LI[1]] PD[-i]@pertphi[LI[1]]/2 - invLap[PD[i]@Lap@pertchi[LI[1]] PD[-i]@pertphi[LI[1]]]/2 - invLap[PD[i]@Lap@pertphi[LI[1]] PD[-i]@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertchi[LI[1]] PD[i]@PD[j]@pertphi[LI[1]]], PD[i]@pertchi[LI[1]] PD[-i]@pertphi[LI[1]]/2 - invLap[PD[i]@Lap@pertchi[LI[1]] PD[-i]@pertphi[LI[1]]]/2 - invLap[PD[i]@Lap@pertphi[LI[1]] PD[-i]@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertchi[LI[1]] PD[j]@PD[i]@pertpsi[LI[1]]], PD[i]@pertchi[LI[1]] PD[-i]@pertpsi[LI[1]]/2 - invLap[PD[i]@Lap@pertchi[LI[1]] PD[-i]@pertpsi[LI[1]]]/2 - invLap[PD[i]@Lap@pertpsi[LI[1]] PD[-i]@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertchi[LI[1]] PD[i]@PD[j]@pertpsi[LI[1]]], PD[i]@pertchi[LI[1]] PD[-i]@pertpsi[LI[1]]/2 - invLap[PD[i]@Lap@pertchi[LI[1]] PD[-i]@pertpsi[LI[1]]]/2 - invLap[PD[i]@Lap@pertpsi[LI[1]] PD[-i]@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertphi[LI[1]] PD[j]@PD[i]@pertpsi[LI[1]]], PD[i]@pertphi[LI[1]] PD[-i]@pertpsi[LI[1]]/2 - invLap[PD[i]@Lap@pertphi[LI[1]] PD[-i]@pertpsi[LI[1]]]/2 - invLap[PD[i]@Lap@pertpsi[LI[1]] PD[-i]@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-j]@PD[-i]@pertphi[LI[1]] PD[i]@PD[j]@pertpsi[LI[1]]], PD[i]@pertphi[LI[1]] PD[-i]@pertpsi[LI[1]]/2 - invLap[PD[i]@Lap@pertphi[LI[1]] PD[-i]@pertpsi[LI[1]]]/2 - invLap[PD[i]@Lap@pertpsi[LI[1]] PD[-i]@pertphi[LI[1]]]/2}, MetricOn->All];
+
+	(* Two perts - 4 derivatives - 2 *)
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertchi[LI[1]] PD[i]@Lap@pertphi[LI[1]]], pertchi[LI[1]] Lap@pertphi[LI[1]]/2 - invLap[Lap@pertchi[LI[1]] Lap@pertphi[LI[1]]]/2 - invLap[pertchi[LI[1]] Lap@Lap@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertchi[LI[1]] Lap@PD[i]@pertphi[LI[1]]], pertchi[LI[1]] Lap@pertphi[LI[1]]/2 - invLap[Lap@pertchi[LI[1]] Lap@pertphi[LI[1]]]/2 - invLap[pertchi[LI[1]] Lap@Lap@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertchi[LI[1]] PD[i]@Lap@pertpsi[LI[1]]], pertchi[LI[1]] Lap@pertpsi[LI[1]]/2 - invLap[Lap@pertchi[LI[1]] Lap@pertpsi[LI[1]]]/2 - invLap[pertchi[LI[1]] Lap@Lap@pertpsi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertchi[LI[1]] Lap@PD[i]@pertpsi[LI[1]]], pertchi[LI[1]] Lap@pertpsi[LI[1]]/2 - invLap[Lap@pertchi[LI[1]] Lap@pertpsi[LI[1]]]/2 - invLap[pertchi[LI[1]] Lap@Lap@pertpsi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertphi[LI[1]] PD[i]@Lap@pertpsi[LI[1]]], pertphi[LI[1]] Lap@pertpsi[LI[1]]/2 - invLap[Lap@pertphi[LI[1]] Lap@pertpsi[LI[1]]]/2 - invLap[pertphi[LI[1]] Lap@Lap@pertpsi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertphi[LI[1]] Lap@PD[i]@pertpsi[LI[1]]], pertphi[LI[1]] Lap@pertpsi[LI[1]]/2 - invLap[Lap@pertphi[LI[1]] Lap@pertpsi[LI[1]]]/2 - invLap[pertphi[LI[1]] Lap@Lap@pertpsi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertphi[LI[1]] PD[i]@Lap@pertchi[LI[1]]], pertphi[LI[1]] Lap@pertchi[LI[1]]/2 - invLap[Lap@pertphi[LI[1]] Lap@pertchi[LI[1]]]/2 - invLap[pertphi[LI[1]] Lap@Lap@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertphi[LI[1]] Lap@PD[i]@pertchi[LI[1]]], pertphi[LI[1]] Lap@pertchi[LI[1]]/2 - invLap[Lap@pertphi[LI[1]] Lap@pertchi[LI[1]]]/2 - invLap[pertphi[LI[1]] Lap@Lap@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertpsi[LI[1]] PD[i]@Lap@pertphi[LI[1]]], pertpsi[LI[1]] Lap@pertphi[LI[1]]/2 - invLap[Lap@pertpsi[LI[1]] Lap@pertphi[LI[1]]]/2 - invLap[pertpsi[LI[1]] Lap@Lap@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertpsi[LI[1]] Lap@PD[i]@pertphi[LI[1]]], pertpsi[LI[1]] Lap@pertphi[LI[1]]/2 - invLap[Lap@pertpsi[LI[1]] Lap@pertphi[LI[1]]]/2 - invLap[pertpsi[LI[1]] Lap@Lap@pertphi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertpsi[LI[1]] PD[i]@Lap@pertchi[LI[1]]], pertpsi[LI[1]] Lap@pertchi[LI[1]]/2 - invLap[Lap@pertpsi[LI[1]] Lap@pertchi[LI[1]]]/2 - invLap[pertpsi[LI[1]] Lap@Lap@pertchi[LI[1]]]/2}, MetricOn->All];
+	tmp = tmp //.MakeRule[{invLap[PD[-i]@pertpsi[LI[1]] Lap@PD[i]@pertchi[LI[1]]], pertpsi[LI[1]] Lap@pertchi[LI[1]]/2 - invLap[Lap@pertpsi[LI[1]] Lap@pertchi[LI[1]]]/2 - invLap[pertpsi[LI[1]] Lap@Lap@pertchi[LI[1]]]/2}, MetricOn->All];
+
+	tmp = tmp // Expand // SVTExpand;
+	tmp = tmp // UnPrintWell // ReplaceDummies;
+	tmp
 ]
