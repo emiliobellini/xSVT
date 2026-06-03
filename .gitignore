@@ -4,5 +4,6 @@ Notebooks/*
 !Notebooks/get_eqs_GR.nb
 !Notebooks/get_eqs_ST.nb
 !Notebooks/get_eqs_DHOST.nb
+!Notebooks/hi_class_DHOST.nb
 logs/
 *.sh
