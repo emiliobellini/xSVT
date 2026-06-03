@@ -49,7 +49,7 @@ If[exit, Print["Exiting..."]; Exit[]];
 Clear[list, listvar, listtype, exit];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Main xAct call and global settings*)
 
 
@@ -70,7 +70,7 @@ xAct`xTensor`Private`Symmetry1D[sym_StrongGenSet, inds_] := sym;
 $CovDFormat = "Prefix";
 
 (** Suppress verbose **)
-$DefInfoQ = False;
+(*$DefInfoQ = False;*)
 SetOptions[AutomaticRules, Verbose -> False];
 
 SetOptions[MakeRule, ContractMetrics -> False, MetricOn -> None];
@@ -136,8 +136,9 @@ If[FileExistsQ[$ImportDecompositionRules],
 (** Basic definitions: GR and matter **)
 Import[FileNameJoin[{$CodeDirectory,"Core","theory_GR_matter.wl"}]]
 
-(** Additional definitions: ST **)
+(** Additional definitions: ST, DHOST **)
 If[$Theory=="ST" || $Theory=="STfast" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_ST.wl"}]]];
+If[$Theory=="DHOST", Import[FileNameJoin[{$CodeDirectory,"Core","theory_DHOST.wl"}]]];
 
 Clear[fill]
 
@@ -158,6 +159,7 @@ Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_matter.wl"}]];
 If[$Theory=="GR", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_GR.wl"}]]];
 
 If[$Theory=="ST" || $Theory=="STfast", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_ST.wl"}]]];
+If[$Theory=="DHOST", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_DHOST.wl"}]]];
 
 
 (****   ToClass   ****)

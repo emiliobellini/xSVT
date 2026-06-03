@@ -8,7 +8,7 @@
 (*Definitions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Scalar Field*)
 
 
@@ -34,7 +34,7 @@ DefTensor[scalarvelcov[\[Mu]], M4, PrintAs -> "\!\(\*SubscriptBox[\(V\), \(X\)]\
 DefTensorPerturbation[pertscalarvelcov[LI[order], \[Mu]], scalarvelcov[\[Mu]], M4, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]V\), \(X\)]\)"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Alphas*)
 
 
@@ -115,6 +115,18 @@ DefScalarFunction[F5fun, PrintAs -> "\!\(\*SubscriptBox[\(F\), \(5\)]\)"]
 
 
 DefTensor[source11[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(S\), \(11\)]\)"]
+
+
+(* ::Subsection:: *)
+(*Functions*)
+
+
+SubX0=MakeRule[{X[],primescalar[]^2/2/scale[]^2}];
+invSubX0={primescalar[]^n_/;EvenQ[n]:>(2 scale[]^2 X[])^(n/2),primescalar[]^n_/;(OddQ[n] && n>0):>(2 scale[]^2 X[])^((n-1)/2) primescalar[]};
+restoreXinG={Derivative[n_,m_][Gfun_][scalar[],x_]:>Derivative[n,m][Gfun][scalar[],X[]],Gfun_[scalar[],x_]:>Gfun[scalar[],X[]]};
+
+
+TimeDerG[expr_] := TimeDer[expr //.SubX0] //.restoreXinG
 
 
 (* ::Section::Closed:: *)
@@ -531,7 +543,7 @@ EQalphaH3 = -(alphaH3[]*mass2[]) + (F5fun[scalar[], X[]]*hubbleC[]*primescalar[]
 EQalphaH4 = -(alphaH4[]*mass2[]) + primescalar[]^7*hubbleC[]*Derivative[0, 1][F5fun][scalar[], X[]]/scale[]^8;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Functions*)
 
 

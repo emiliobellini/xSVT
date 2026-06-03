@@ -15,7 +15,7 @@ DefManifold[M3, 3, IndexRange[i, p]]
 DefManifold[M4, 4, {\[Alpha], \[Beta], \[Eta], \[Lambda], \[Mu], \[Nu], \[Sigma], \[Tau], \[Gamma]}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Metric*)
 
 
@@ -26,6 +26,14 @@ AutomaticRules[metricg, {
 	metricg[a_?TangentM1`pmQ, i_?TangentM3`pmQ] :> 0,
 	metricg[i_?TangentM3`pmQ, a_?TangentM1`pmQ] :> 0
 	}]
+
+
+DefTensor[Omega[], M4, PrintAs -> "\[CapitalOmega]"]
+
+
+DefMetric[-1, metricgtilde[-\[Mu], -\[Nu]], CDtilde, SymbolOfCovD -> {":","\!\(\*OverscriptBox[\(\[Del]\), \(~\)]\)"},
+	PrintAs -> "\!\(\*OverscriptBox[\(g\), \(~\)]\)", CurvatureRelations->True,
+	ConformalTo->{metricg[-\[Mu], -\[Nu]], Omega[]^2}]
 
 
 (*TODO: rethink this when adding curvature*)
@@ -124,7 +132,7 @@ DefTensorSVT[pertF[LI[order], -i], {M1, M3}, PrintAs -> "F", VectorPertQ->True]
 DefTensorSVT[perth[LI[order], -i, -j], {M1, M3}, Symmetric[{-i, -j}], PrintAs -> "h", TensorPertQ->True]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Matter*)
 
 
@@ -163,6 +171,7 @@ DefTensorPerturbation[pertshearcov[LI[order], -\[Mu], -\[Nu]], shearcov[-\[Mu], 
 
 DefTensorSVT[density[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(m\)]\)", BackgroundQ->True]
 DefTensorSVT[pressure[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(m\)]\)", BackgroundQ->True]
+DefTensorSVT[w[], M1, PrintAs -> "\!\(\*SubscriptBox[\(w\), \(m\)]\)", BackgroundQ->True]
 
 
 DefTensorSVT[pertdensity[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\(\[Delta]\), \(m\)]\)", ScalarPertQ->True]

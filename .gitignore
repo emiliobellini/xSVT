@@ -1,5 +1,8 @@
 Equations/
 Notebooks/*
 !Notebooks/Template.nb
+!Notebooks/get_eqs_GR.nb
+!Notebooks/get_eqs_ST.nb
+!Notebooks/get_eqs_DHOST.nb
 logs/
 *.sh

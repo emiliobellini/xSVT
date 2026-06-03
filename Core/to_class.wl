@@ -1,10 +1,5 @@
 (* ::Package:: *)
 
-SubX0=MakeRule[{X[],primescalar[]^2/2/scale[]^2}];
-invSubX0={primescalar[]^n_/;EvenQ[n]:>(2 scale[]^2 X[])^(n/2),primescalar[]^n_/;(OddQ[n] && n>0):>(2 scale[]^2 X[])^((n-1)/2) primescalar[]};
-restoreXinG={Derivative[n_,m_][Gfun_][scalar[],x_]:>Derivative[n,m][Gfun][scalar[],X[]],Gfun_[scalar[],x_]:>Gfun[scalar[],X[]]};
-
-
 (* ::Subsection:: *)
 (*Definitions*)
 
@@ -15,6 +10,9 @@ restoreXinG={Derivative[n_,m_][Gfun_][scalar[],x_]:>Derivative[n,m][Gfun][scalar
 DefTensor[kscalsquared[], M3, PrintAs -> "\!\(\*SuperscriptBox[\(k\), \(2\)]\)"]
 
 AutomaticRules[kscalsquared, {PD[ind1_]@kscalsquared[] :> 0}]
+
+
+DefTensor[kscalsquaredH[], M3, PrintAs -> "\!\(\*SuperscriptBox[\(\!\(\*SubscriptBox[\(k\), \(H\)]\)\), \(2\)]\)"]
 
 
 DefTensorSVT[pertetasync[LI[order]], {M1, M3}, PrintAs -> "\[Eta]", ScalarPertQ->True]
@@ -47,6 +45,10 @@ DefTensorSVT[pertxsyncden[LI[order]], {M1, M3}, PrintAs -> "\!\(\*SubscriptBox[\
 
 DefTensorSVT[densityC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(mC\)]\)", BackgroundQ->True]
 DefTensorSVT[pressureC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(mC\)]\)", BackgroundQ->True]
+
+
+DefTensorSVT[densityBC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(mBC\)]\)", BackgroundQ->True]
+DefTensorSVT[pressureBC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(p\), \(mBC\)]\)", BackgroundQ->True]
 
 
 DefTensorSVT[densityRC[], M1, PrintAs -> "\!\(\*SubscriptBox[\(\[Rho]\), \(rC\)]\)", BackgroundQ->True]
@@ -229,7 +231,7 @@ SyncToClass[expr_,toalpha_:True] := Module[{tmp}, tmp = expr;
 
 MatterToClass[expr_] := Module[{tmp}, tmp = expr;
 	tmp = tmp //.pertdensity[LI[1]]:> pertdensityC[LI[1]]/densityC[];
-	tmp = tmp //.pertvelocity[LI[1]] :> -3 scale[]/kscal[]^2/(density[] + pressure[]) pertvelocityC[LI[1]];
+	tmp = tmp //.pertvelocity[LI[1]] :> -3/kscal[]^2/(density[] + pressure[]) pertvelocityC[LI[1]];
 	tmp = tmp //.pertpressure[LI[1]] :> 3 (pertpressureC[LI[1]]-pertshearC[LI[1]]);
 	tmp = tmp //.pertshear[LI[1]] :> 9 pertshearC[LI[1]] scale[]^2/kscal[]^2/(density[] + pressure[]);
 	tmp = tmp //.primepertshear[LI[1]] :> Evaluate[PrintWell[TimeDer[3 pertshearC[LI[1]] scale[]^2/kscal[]^2/(density[] + pressure[])]]];
@@ -237,6 +239,14 @@ MatterToClass[expr_] := Module[{tmp}, tmp = expr;
 	tmp = tmp //.densityS[]:>3 densitySC[] //.primedensityS[]:>3 primedensitySC[];
 	tmp = tmp //.pressure[]:>3 pressureC[] //.primepressure[]:>3 primepressureC[];
 	tmp = tmp //.pressureS[]:>3 pressureSC[] //.primepressureS[]:>3 primepressureSC[];
+	tmp = tmp //.densityR[]:>3 densityRC[];
+	tmp // Expand
+]
+
+
+MatterBToClass[expr_] := Module[{tmp}, tmp = expr;
+	tmp = tmp //.densityB[]:>3 densityBC[] //.primedensityB[]:>3 primedensityBC[];
+	tmp = tmp //.pressureB[]:>3 pressureBC[] //.primepressureB[]:>3 primepressureBC[];
 	tmp // Expand
 ]
 
@@ -249,7 +259,15 @@ HubbleToClass[expr_] := Module[{tmp}, tmp = expr;
 ]
 
 
-ClassSolve[expr_, var_] := Expand[Flatten[Solve[expr == 0, var, Reals]] //. List[elems___] /; Length[List[elems]] == 1 :> elems //. Rule -> Equal]
+HubbleBToClass[expr_] := Module[{tmp}, tmp = expr;
+	tmp = tmp //.pprimehubbleBC[] :> scaleB[] pprimehubbleBP[] + 3 scaleB[]^2 hubbleBP[] primehubbleBP[] + 2 scaleB[]^3 hubbleBP[]^3;
+	tmp = tmp //.primehubbleBC[] :> scaleB[] primehubbleBP[] + scaleB[]^2 hubbleBP[]^2;
+	tmp = tmp //.hubbleBC[] :> scaleB[] hubbleBP[];
+	tmp // Expand
+]
+
+
+ClassSolve[expr_, var_] := Expand[Flatten[Solve[expr == 0, var, Assumptions->{primescalar[]!=0}]] //. List[elems___] /; Length[List[elems]] == 1 :> elems //. Rule -> Equal]
 
 
 ScalarToXsync[expr_]:=Module[{tmp},
@@ -297,7 +315,7 @@ XsyncToScalar[expr_]:=Module[{tmp},
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*MathematicaToClass Dictionary*)
 
 
@@ -313,16 +331,17 @@ $MathematicaToClass =
 	<|
 	(* Metric *)
 	scale[]            -> {"a"},
-	hubbleP[]          -> {"H"},
-	primehubbleP[]     -> {"pvecback[pba->index_bg_H_prime]"},
+	hubbleP[]          -> {"H", "pvecback[pba->index_bg_H]"},
+	primehubbleP[]     -> {"H_prime", "pvecback[pba->index_bg_H_prime]"},
 	pprimehubbleP[]    -> {"pvecback[pba->index_bg_H_prime_prime]"},
 	kscalsquared[]     -> {"k2"},
+	kscalsquaredH[]     -> {"k2H"},
 	(* Scalar field *)
 	X[]                -> {"X"},
 	scalar[]           -> {"phi"},
 	primescalar[]      -> {"phi_prime"},
-	primescalar[]      -> {"phi_prime"},
-	pprimescalar[]     -> {"pvecback[pba->index_bg_phi_prime_prime_smg]"},
+	pprimescalar[]     -> {"pvecback[pba->index_bg_phi_prime_prime_smg]", "phi_prime_prime"},
+	ppprimescalar[]    -> {"pvecback[pba->index_bg_phi_prime_prime_prime_smg]", "phi_prime_prime_prime"},
 	(* Functions *)
 	G2fun              -> {"G2"},
 	G3fun              -> {"G3"},
@@ -451,8 +470,14 @@ $MathematicaToClass =
 	primecD[]          -> {"cD_p"},
 	primecB[]          -> {"cB_p"},
 	primecH[]          -> {"cH_p"},
+	primec4[]          -> {"c4_p"},
+	primec5[]          -> {"c5_p"},
+	primec6[]          -> {"c6_p"},
+	primec7[]          -> {"c7_p"},
+	primec8[]          -> {"c8_p"},
 	primec9[]          -> {"c9_p"},
 	primec10[]         -> {"c10_p"},
+	primec11[]          -> {"c11_p"},
 	primec12[]         -> {"c12_p"},
 	primec13[]         -> {"c13_p"},
 	(* Perturbations metric *)
@@ -466,6 +491,8 @@ $MathematicaToClass =
 	pertpsi[LI[1]]            -> {"ppw->pvecmetric[ppw->index_mt_psi]"},
 	pertphi[LI[1]]            -> {"y[ppw->pv->index_pt_phi]", "ppw->pvecmetric[ppw->index_mt_phi]"},
 	primepertphi[LI[1]]       -> {"ppw->pvecmetric[ppw->index_mt_phi_prime]"},
+	primeperthsyncB[LI[1]]    -> {"perth_b_prime"},
+	pprimeperthsyncB[LI[1]]   -> {"perth_b_prime_prime"},
 	(* Perturbations matter *)
 	pertdensityC[LI[1]]       -> {"ppw->delta_rho"},
 	pertpressureC[LI[1]]      -> {"ppw->delta_p"},
@@ -474,11 +501,13 @@ $MathematicaToClass =
 	pertpressureCRSA[LI[1]]   -> {"ppw->pvecmetric[ppw->index_mt_rsa_p_smg]"},
 	pertdensityRC[LI[1]]      -> {"ppw->delta_rho_r"},
 	pertvelocityRC[LI[1]]     -> {"ppw->rho_plus_p_theta_r"},
+	pertshearRC[LI[1]]        -> {"rho_plus_p_shear_r"},
 	primepertshearC[LI[1]]    -> {"ppw->rho_plus_p_shear_prime"},
 	(* Perturbations scalar field *)
 	pertxsync[LI[1]]          -> {"ppw->pvecmetric[ppw->index_mt_x_smg]", "*x_qs_smg"},
 	primepertxsync[LI[1]]     -> {"ppw->pvecmetric[ppw->index_mt_x_prime_smg]", "*x_prime_qs_smg"},
 	pprimepertxsync[LI[1]]    -> {"ppw->pvecmetric[ppw->index_mt_x_prime_prime_smg]"},
+	ppprimepertxsync[LI[1]]   -> {"pertx_prime_prime_prime"},
 	primepertxsyncnum[LI[1]]  -> {"x_prime_qs_smg_num"},
 	primepertxsyncden[LI[1]]  -> {"x_prime_qs_smg_den"},
 	(* Quasi static approximation *)
@@ -495,11 +524,36 @@ $MathematicaToClass =
 	DGlight[]                 -> {"dglight"},
 	primeGeff[]               -> {"geff_p"},
 	primeslip[]               -> {"slip_p"},
-	primeGlight[]             -> {"glight_p"}
+	primeGlight[]             -> {"glight_p"},
+	(* Metric B *)
+	scaleB[]            -> {"b"},
+	hubbleBP[]          -> {"H_b"},
+	(* Scalar field B *)
+	XB[]                -> {"X_b"},
+	scalarB[]           -> {"phi_b"},
+	primescalarB[]      -> {"phi_b_prime"},
+	pprimescalarB[]     -> {"pvecback[pba->index_bg_phi_b_prime_prime_smg]"},
+	(* lambda's *)
+	lambda1[]           -> {"l1", "pvecback[pba->index_bg_lambda_1_smg]"},
+	lambda2[]           -> {"l2", "pvecback[pba->index_bg_lambda_2_smg]"},
+	lambda3[]           -> {"l3", "pvecback[pba->index_bg_lambda_3_smg]"},
+	lambda4[]           -> {"l4", "pvecback[pba->index_bg_lambda_4_smg]"},
+	lambda5[]           -> {"l5", "pvecback[pba->index_bg_lambda_5_smg]"},
+	lambda6[]           -> {"l6", "pvecback[pba->index_bg_lambda_6_smg]"},
+	lambda7[]           -> {"l7", "pvecback[pba->index_bg_lambda_7_smg]"},
+	lambda8[]           -> {"l8", "pvecback[pba->index_bg_lambda_8_smg]"},
+	lambda9[]           -> {"l9", "pvecback[pba->index_bg_lambda_9_smg]"},
+	lambda10[]          -> {"l10", "pvecback[pba->index_bg_lambda_10_smg]"},
+	(* Densities *)
+	densityBC[]         -> {"rho_tot_b"},
+	pressureBC[]        -> {"p_tot_b"},
+	(* Scalar B Dhost *)
+	primescalarBB[]     -> {"phi_b_prime_over_b"},
+	pprimescalarBB[]    -> {"phi_b_prime_prime_over_b2"}
 	|>;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*MathematicaToClass*)
 
 
@@ -622,7 +676,7 @@ ParseEquation[text_, var_,pos_:1,OptionsPattern[]]:=Module[
 ]
 
 
-Options@ClassToMathematica = {
+(*Options@ClassToMathematica = {
 	SymbolRules    -> $MathematicaToClass,
 	Gfunctions     -> {G2fun, G3fun, G4fun, DG4fun, G5fun, F4fun, F5fun},
 	GfunDependence -> {scalar[], X[]},
@@ -635,7 +689,7 @@ ClassToMathematica[text_, var_, pos_:1, OptionsPattern[]]:=Module[
 	verbose = OptionValue@Verbose,
 	Gfuns = OptionValue@Gfunctions,
 	Gdeps = OptionValue@GfunDependence,
-	str,spec,specQ,GfunsQ,GdepsQ,GdepsN,dictQ,ldict,gd,todict
+	str,spec,specQ,GfunsQ,GdepsQ,GdepsN,dictQ,ldict,gd,todict, starttime
 	},
 	
 	(* List of operators and parenthesis allowed in C *)
@@ -683,22 +737,128 @@ ClassToMathematica[text_, var_, pos_:1, OptionsPattern[]]:=Module[
 	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
 	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
 	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
+	str = StringReplace[str, "pow("~~x__~~","~~n__~~")"/;StringFreeQ[x,"pow("] && StringMatchQ[n,RegularExpression["-*[0-9]+/[0-9]+"]]:>"(("<>x<>")^("<>n<>"))"];
 
 	(* G functions and their derivatives *)
 	gd = "["<>StringRiffle[StringReplace[Gdeps,dict],","]<>"]";
 	str = StringReplace[str,b1_~~x__~~b2_/;(specQ[b1] && GfunsQ[x] && specQ[b2]):>b1<>x<>gd<>b2];
 	str = StringReplace[str,x__~~"_"~~y__/;(GfunsQ[x] && GdepsQ[y]):>"Derivative["<>StringRiffle[GdepsN[y],","]<>"]["<>x<>"]"<>gd];
+	
+	spec = Union[spec,{"\\[","\\]"}];
 
 	(* Replace dictionary of symbols *)
 	(* TODO: improve this. StringReplace applied many times to replace all the occurencies but then I need to remove the extra [] *)
-	spec = Union[spec,{"\\[","\\]"}];
-	str = StringReplace[str,b1_~~x__~~b2_/;(specQ[b1] && dictQ[x] && specQ[b2]):>b1<>todict[x]<>b2];
-	str = StringReplace[str,b1_~~x__~~b2_/;(specQ[b1] && dictQ[x] && specQ[b2]):>b1<>todict[x]<>b2];
-	str = StringReplace[str,b1_~~x__~~b2_/;(specQ[b1] && dictQ[x] && specQ[b2]):>b1<>todict[x]<>b2];
+	starttime = AbsoluteTime[];
+	str = StringReplace[str, Dispatch[dict]];
+	Print[AbsoluteTime[] - starttime];
+	str = StringReplace[str, Dispatch[dict]];
+	Print[AbsoluteTime[]-starttime];
 	str = StringReplace[str,RegularExpression["(\\[\\])+"]:>"[]"];
 
 	(* Replace dictionary of symbols *)
 	str = str // ToExpression;
 
 	str
-]
+]*)
+
+
+Options@ClassToMathematica = {
+    SymbolRules    -> $MathematicaToClass,
+    Gfunctions     -> {G2fun, G3fun, G4fun, DG4fun, G5fun, F4fun, F5fun},
+    GfunDependence -> {scalar[], X[]},
+    Verbose        -> False
+};
+
+ClassToMathematica[text_, var_, pos_:1, OptionsPattern[]] := Module[
+    {
+        dict = OptionValue@SymbolRules,
+        verbose = OptionValue@Verbose,
+        Gfuns = OptionValue@Gfunctions,
+        Gdeps = OptionValue@GfunDependence,
+        str, spec, specQ, GfunsQ, GdepsQ, GdepsN, gd,
+        dictRules, idQ, complexRules, idRules, idAssoc, tokens
+    },
+
+    (* C operators / delimiters *)
+    spec = {"=","\\+","-","\\*","\\^","/","\\(","\\)",","};
+    specQ[expr_] := AnyTrue[spec, StringMatchQ[expr, RegularExpression[#]] &];
+
+    (* G-function names and dependencies from dictionary *)
+    Gfuns = dict[#][[1]] & /@ Gfuns;
+    Gdeps = dict[#][[1]] & /@ Gdeps;
+
+    GfunsQ[expr_] := MemberQ[Gfuns, expr];
+    GdepsQ[expr_] := Module[{reg},
+        reg = RegularExpression["(" <> StringRiffle[Reverse@Gdeps, ")*("] <> ")*"];
+        StringMatchQ[expr, reg]
+    ];
+    GdepsN[expr_] := Module[{tmp1, tmp2},
+        tmp1 = StringCount[expr, #] & /@ Gdeps;
+        tmp2 = StringCount[Gdeps, #] & /@ Gdeps - IdentityMatrix@Length@Gdeps;
+        tmp1 - Dot[tmp2, tmp1]
+    ];
+
+    (* Invert SymbolRules: CLASS string -> Mathematica symbol string *)
+    dictRules = Flatten @ (Normal@dict /. Rule[x_, ys_List] :> Thread[ys -> x]);
+    dictRules = Cases[dictRules, Rule[lhs_String, rhs_] :> (lhs -> ToString[rhs]), {1}];
+    dictRules = SortBy[DeleteDuplicatesBy[dictRules, First], -StringLength[First[#]] &];
+
+    (* Parse equation *)
+    str = ParseEquation[text, var, pos, Verbose -> verbose];
+    If[str === "" || !StringQ[str], Return[$Failed]];
+
+    (* Remove whitespace/newlines and decimal dots *)
+    str = StringReplace[str, {
+        RegularExpression["\\n"] -> "",
+        RegularExpression["\\s"] -> "",
+        RegularExpression["\\."] -> ""
+    }];
+
+    (* Equation syntax *)
+    str = "(" <> StringReplace[str, {"=" -> ")==(", ";" -> ")"}];
+
+    (* Nested pow(...) conversion *)
+    str = FixedPoint[
+        StringReplace[
+            #,
+            "pow(" ~~ x__ ~~ "," ~~ n__ ~~ ")" /;
+                StringFreeQ[x, "pow("] &&
+                StringMatchQ[n, RegularExpression["-*[0-9]+(/[0-9]+)?"]] :>
+                "((" <> x <> ")^(" <> n <> "))"
+        ] &,
+        str
+    ];
+
+    (* G functions and derivatives *)
+    gd = "[" <> StringRiffle[StringReplace[Gdeps, dictRules], ","] <> "]";
+    str = StringReplace[
+        str,
+        b1_ ~~ x__ ~~ b2_ /; (specQ[b1] && GfunsQ[x] && specQ[b2]) :> b1 <> x <> gd <> b2
+    ];
+    str = StringReplace[
+        str,
+        x__ ~~ "_" ~~ y__ /; (GfunsQ[x] && GdepsQ[y]) :>
+            "Derivative[" <> StringRiffle[ToString /@ GdepsN[y], ","] <> "][" <> x <> "]" <> gd
+    ];
+
+    (* Safe symbol replacement: no partial-word corruption *)
+    idQ[s_] := StringMatchQ[s, RegularExpression["[A-Za-z_][A-Za-z0-9_]*"]];
+    complexRules = Select[dictRules, Not @* idQ @* First];
+    idRules      = Select[dictRules, idQ @ First[#] &];
+
+    (* complex literals first *)
+    str = StringReplace[str, complexRules];
+
+    (* identifiers only, token-by-token *)
+    idAssoc = Association[idRules];
+    tokens = StringCases[str, RegularExpression["[A-Za-z_][A-Za-z0-9_]*|[^A-Za-z_]+"]];
+    str = StringJoin @ (Replace[
+        #,
+        t_String /; KeyExistsQ[idAssoc, t] :> idAssoc[t]
+    ] & /@ tokens);
+
+    (* Cleanup *)
+    str = StringReplace[str, RegularExpression["(\\[\\])+" ] -> "[]"];
+
+    Quiet @ Check[ToExpression[str], $Failed]
+];

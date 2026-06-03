@@ -350,7 +350,7 @@ DivTraceFree[expr_, OptionsPattern[{GlobalOptionsSVT}]] := Module[
 End[];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Import/Export*)
 
 
@@ -425,14 +425,14 @@ ImportEquations[dir_, OptionsPattern[]] := Module[
 	files, names
 	},
 
-	files = FileNames[dir<>"*"<>suffix<>".m"];
+	files = FileNames[dir<>"*_"<>suffix<>".m"];
 	names = StringReplace[files, dir->""];
 	names = StringReplace[names, ".m"->""];
 	If[suffix==="",
 		names = StringReplace[names, "_"->""];,
 		names = StringSplit[#,"_"][[1]]&/@names;
 	];
-	
+
 	SVTImport[#,
 		ImportVarName -> #,
 		ImportDirectory -> dir,
@@ -909,6 +909,47 @@ GRToBuildingBlocks[expr_, cd_?CovDQ, opts:OptionsPattern[{GRToBuildingBlocks, Gl
 ]
 
 
+(* ::Subsection:: *)
+(*Conformal Transformations*)
+
+
+ConformalTransformation[expr_] := Module[{tmp},
+	tmp = expr;
+	tmp = WeylToRiemann@tmp;
+	tmp = RiemannDownToRiemann@tmp;
+	tmp = SeparateMetric[metricg][tmp];
+	tmp = ChangeCurvature[tmp, CD, CDtilde];
+	tmp = ChangeCovD[tmp, CD, CDtilde];
+	tmp = ChristoffelToGradConformal[tmp, metricg, metricgtilde];
+	tmp = RiemannToWeyl@tmp;
+	tmp = tmp /.ConformalRules[metricg, metricgtilde];
+	tmp = ContractMetric@tmp;
+	tmp = NoScalar@tmp;
+	tmp = SeparateMetric[metricgtilde][tmp];
+	tmp = ToCanonical[tmp, UseMetricOnVBundle -> None];
+	tmp
+]
+
+
+InverseConformalTransformation[expr_] := Module[{tmp},
+	tmp = expr;
+	tmp = WeylToRiemann@tmp;
+	tmp = RiemannDownToRiemann@tmp;
+	tmp = SeparateMetric[metricgtilde][tmp];
+	tmp = ChangeCurvature[tmp, CDtilde, CD];
+	tmp = ChangeCovD[tmp, CDtilde, CD];
+	tmp = ChristoffelToGradConformal[tmp, metricgtilde, metricg];
+	tmp = RiemannToWeyl@tmp;
+	tmp = tmp /.ConformalRules[metricgtilde, metricg];
+	tmp = ContractMetric@tmp;
+	tmp = Simplification@tmp;
+	tmp = NoScalar@tmp;
+	tmp = SeparateMetric[metricg][tmp];
+	tmp = ToCanonical@tmp;
+	tmp
+]
+
+
 (* ::Section:: *)
 (*3+1 Decomposition*)
 
@@ -1310,7 +1351,7 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 (*PrintWell*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*PrintWell*)
 
 
@@ -1489,7 +1530,7 @@ NDers[n_,type_:All][expr_] := Module[{tmp,order},
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*ToPhysical & ToConformal (TODO)*)
 
 
@@ -1505,7 +1546,11 @@ ToPhysical[expr_] := Module[{hubblerules, primerules, match, sub, isolate, tmp},
 	primerules = {tens_ /; match[tens, "prime*"] :> scale[] sub[tens, "prime", "dot"],
 		tens_ /; match[tens, "pprime*"] :> scale[]^2 (sub[tens, "pprime", "ddot"] + hubbleP[] sub[tens, "pprime", "dot"]),
 		tens_ /; match[tens, "ppprime*"] :> scale[]^3 (sub[tens, "ppprime", "dddot"] + 3 hubbleP[] sub[tens, "ppprime", "ddot"]
-			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"])};
+			+ 2 hubbleP[]^2 sub[tens, "ppprime", "dot"] + dothubbleP[] sub[tens, "ppprime", "dot"]),
+		tens_ /; match[tens, "pppprime*"] :> scale[]^4 (sub[tens, "pppprime", "ddddot"] + 6 hubbleP[] sub[tens, "pppprime", "dddot"]
+		    + 11 hubbleP[]^2 sub[tens, "pppprime", "ddot"] + 4 dothubbleP[] sub[tens, "pppprime", "ddot"]
+			+ 6 hubbleP[]^3 sub[tens, "pppprime", "dot"] + 7 hubbleP[] dothubbleP[] sub[tens, "pppprime", "dot"] + ddothubbleP[] sub[tens, "pppprime", "dot"])
+			};
 	tmp = isolate[PrintWell[expr]] //.hubblerules //.primerules // Expand;
 	tmp //.isolate[tmp1_]:>tmp1 // Expand
 ]
@@ -1706,7 +1751,7 @@ QuasiStaticSoft[expr_, DeltaLeading_] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*ApplyInvLap*)
 
 
