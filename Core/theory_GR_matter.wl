@@ -31,9 +31,9 @@ AutomaticRules[metricg, {
 DefTensor[Omega[], M4, PrintAs -> "\[CapitalOmega]"]
 
 
-DefMetric[-1, metricgtilde[-\[Mu], -\[Nu]], CDtilde, SymbolOfCovD -> {":","\!\(\*OverscriptBox[\(\[Del]\), \(~\)]\)"},
+(*DefMetric[-1, metricgtilde[-\[Mu], -\[Nu]], CDtilde, SymbolOfCovD -> {":","\!\(\*OverscriptBox[\(\[Del]\), \(~\)]\)"},
 	PrintAs -> "\!\(\*OverscriptBox[\(g\), \(~\)]\)", CurvatureRelations->True,
-	ConformalTo->{metricg[-\[Mu], -\[Nu]], Omega[]^2}]
+	ConformalTo->{metricg[-\[Mu], -\[Nu]], Omega[]^2}]*)
 
 
 (*TODO: rethink this when adding curvature*)

@@ -4,7 +4,7 @@
 (*Functions usage*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Global variables*)
 
 
@@ -75,7 +75,7 @@ contains all the derived rules. Note that if you want to use all the rules toget
 or even just rulesBasic alone you should Flatten them.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Import/Export*)
 
 
@@ -114,8 +114,19 @@ it removes the suffix, to shorten the name of the variable. If ImportSuffix is a
 string it imports all the equations in the folder, without removing the suffix to avoid \
 conflicts. Check Options[SVTImport] for a full list of available options.";
 
+ImportCovariantQ::usage = "ImportCovariantQ (boolean, default: True) is an option for \
+ImportEquations. If True it imports the covariant equations, otherwise no.";
+ImportFirstOrderQ::usage = "ImportFirstOrderQ (boolean, default: True) is an option for \
+ImportEquations. If True it imports the first order equations, otherwise no.";
+ImportSecondOrderQ::usage = "ImportSecondOrderQ (boolean, default: True) is an option for \
+ImportEquations. If True it imports the second order equations, otherwise no.";
+ImportThirdOrderQ::usage = "ImportThirdOrderQ (boolean, default: True) is an option for \
+ImportEquations. If True it imports the third order equations, otherwise no.";
+ImportFourthOrderQ::usage = "ImportFourthOrderQ (boolean, default: True) is an option for \
+ImportEquations. If True it imports the fourth order equations, otherwise no.";
 
-(* ::Section::Closed:: *)
+
+(* ::Section:: *)
 (*Definition and properties of tensors*)
 
 
@@ -229,7 +240,7 @@ GRToBuildingBlocks. If True avoid using ToCanonical, to save time and avoid the 
 crash when there are too many indices.";
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*3+1 Decomposition*)
 
 
@@ -276,7 +287,7 @@ It fixes how many dummy indices are split at each step of SplitAndExpand before 
 applying the expansion rules. Setting it to a small value can speed up calculations.";
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*SVTDecomposition*)
 
 
@@ -319,6 +330,11 @@ StoreResultQ::usage =
 in the derived rules of $DecompostionRules. To build the rules it uses the built-in MakeRule with its default options. \
 The left-hand side is given by the input expression (after substituting the right indices with IndicesRules) while the \
 right-hand side is the result. It is particularly convenient to decompose long calculation in smaller ones.";
+
+StorePosition::usage =
+"StorePosition (default: 1) is an integer option for SVTDecomposition. If StoreResultQ==True, it stores the result of \
+the computation in the derived rules of $DecompostionRules, i.e. $DecompostionRules[[2, StorePosition]].";
+
 
 StoreName::usage =
 "StoreName (default: None) is an option for SVTDecomposition. It used only in combination with StoreResultQ=True. \

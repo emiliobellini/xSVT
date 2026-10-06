@@ -18,7 +18,7 @@ Options[GlobalOptionsSVT] = {
 GlobalOptionsSVT[opt_, OptionsPattern[]] := Return@OptionValue@opt;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Utilities*)
 
 
@@ -150,18 +150,13 @@ ListifyExpr[expr_, method_, partlength_, collectvars_] := Module[
 
 	If[Head[tmpexpr]=!=Plus, tmpexpr = Expand[tmpexpr], tmpexpr = tmpexpr];
 	If[method==="All", tmpexpr = {tmpexpr}];
-	If[method==="Part",
-		If[Head[tmpexpr]===Plus,
-			tmpexpr = Replace[tmpexpr,Plus->List,{1},Heads->True];
-			tmpexpr1 = Partition[tmpexpr /.Plus->List,partlength];
-			tmpexpr2 = tmpexpr[[-Mod[Length[tmpexpr],partlength];;-1]];
-			tmpexpr = If[tmpexpr2==={},
-				tmpexpr1,
-				Append[tmpexpr1, tmpexpr2]
-			];
-			tmpexpr = Map[# /.List->Plus &, tmpexpr];,
-			tmpexpr = {tmpexpr}
-		];
+	If[method === "Part",
+	  If[Head[tmpexpr] === Plus,
+	    tmpexpr1 = List @@ tmpexpr;
+	    tmpexpr1 = Partition[tmpexpr1, UpTo[partlength]];
+	    tmpexpr = Total /@ tmpexpr1;,
+	    tmpexpr = {tmpexpr}
+	  ];
 	];
 	If[method==="Collect",
 		tmpexpr1 = Table[0,Length[collectvars]+1];
@@ -370,7 +365,8 @@ SVTExport[expr_, OptionsPattern[]]:=Module[
 	file, success
 	},
 
-	If[name===Automatic,
+	(* Get file name *)
+	If[name === Automatic,
 		name = ToString@HoldForm@expr;
 		If[suffix=!="",
 			name = name <> "_" <> suffix;];
@@ -416,16 +412,72 @@ SVTImport[name_, OptionsPattern[]]:=Module[
 
 
 Options[ImportEquations] = {
-	ImportSuffix -> $Theory
+	ImportSuffix -> $Theory,
+	ImportCovariantQ -> True,
+	ImportFirstOrderQ -> True,
+	ImportSecondOrderQ -> True,
+	ImportThirdOrderQ -> True,
+	ImportFourthOrderQ -> True
 };
 
 ImportEquations[dir_, OptionsPattern[]] := Module[
 	{
 	suffix = OptionValue@ImportSuffix,
-	files, names
+	importcov = OptionValue@ImportCovariantQ,
+	importfirst = OptionValue@ImportFirstOrderQ,
+	importsec = OptionValue@ImportSecondOrderQ,
+	importthird = OptionValue@ImportThirdOrderQ,
+	importfourth = OptionValue@ImportFourthOrderQ,
+	files = {},
+	covstr = "cov",
+	backstr = "back",
+	firststr = "first",
+	secstr = {"sec", "source"},
+	thirdstr = {"third", "tource"},
+	fourthstr = {"fourth", "fource"},
+	names,
+	removedfiles
 	},
+	
+	(* All equations *)
+	files = FileNames["*_"<>suffix<>".m", dir];
 
-	files = FileNames[dir<>"*_"<>suffix<>".m"];
+	(* Covariant equations *)
+	If[Not@importcov,
+		removedfiles = FileNames["EQ"<>covstr<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+	];
+
+	(* First Order equations *)
+	If[Not@importfirst,
+		removedfiles = FileNames["EQ"<>firststr<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+	];
+
+	(* Second Order equations *)
+	If[Not@importsec,
+		removedfiles = FileNames["EQ"<>secstr[[1]]<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+		removedfiles = FileNames["EQ"<>secstr[[2]]<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+	];
+
+	(* Third Order equations *)
+	If[Not@importthird,
+		removedfiles = FileNames["EQ"<>thirdstr[[1]]<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+		removedfiles = FileNames["EQ"<>thirdstr[[2]]<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+	];
+
+	(* Fourth Order equations *)
+	If[Not@importfourth,
+		removedfiles = FileNames["EQ"<>fourthstr[[1]]<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+		removedfiles = FileNames["EQ"<>fourthstr[[2]]<>"*_"<>suffix<>".m", dir];
+		files = DeleteElements[files, removedfiles];
+	];
+
 	names = StringReplace[files, dir->""];
 	names = StringReplace[names, ".m"->""];
 	If[suffix==="",
@@ -440,6 +492,31 @@ ImportEquations[dir_, OptionsPattern[]] := Module[
 		Verbose -> False]&/@names;
 	Print["Imported equations:"];
 	Print[names];
+]
+
+
+Options[AllEquationsNames] = {
+	ImportSuffix -> $Theory
+};
+
+AllEquationsNames[dir_, OptionsPattern[]] := Module[
+	{
+	suffix = OptionValue@ImportSuffix,
+	files = {},
+	names
+	},
+	
+	(* All equations *)
+	files = FileNames["*_"<>suffix<>".m", dir];
+
+	names = StringReplace[files, dir->""];
+	names = StringReplace[names, ".m"->""];
+	If[suffix==="",
+		names = StringReplace[names, "_"->""];,
+		names = StringSplit[#,"_"][[1]]&/@names;
+	];
+
+	names
 ]
 
 
@@ -780,7 +857,7 @@ DefTensorSVT[tensor_, man_, sym_, opts : OptionsPattern[{DefTensorSVT, GlobalOpt
 (*Manipulation of expressions*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Listify*)
 
 
@@ -797,7 +874,8 @@ Listify[fun_, expr_, args_, OptionsPattern[]] := Module[
 	partlength  = OptionValue@PartLength,
 	collectvars = OptionValue@CollectVars,
 	verbose     = OptionValue@Verbose,
-	tmpexpr, x, time, lengths
+	maxlength   = 100,
+	tmpexpr, x, time, lengths, dprint
 	},
 
 	(** Check that the input is as expected **)
@@ -812,7 +890,7 @@ Listify[fun_, expr_, args_, OptionsPattern[]] := Module[
 		{time, tmpexpr[[x]]} = Timing@fun[tmpexpr[[x]], Sequence@@args];
 		If[verbose && Length@tmpexpr>1,
 			xSVTUtilities`PrintLevel["Step "<>ToString[x]<>"/"<>ToString[Length@tmpexpr]<>" evaluated in "<>ToString[time]<>" seconds.", 1]
-		];, {x,Length@tmpexpr}];
+		];, {x, Length@tmpexpr}];
 	tmpexpr = xSVTUtilities`DeListifyExpr[tmpexpr];
 	
 	tmpexpr
@@ -954,7 +1032,7 @@ InverseConformalTransformation[expr_] := Module[{tmp},
 (*3+1 Decomposition*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*SplitAndExpand*)
 
 
@@ -980,7 +1058,7 @@ SplitAndExpand[expr_, freeindsrules_, opts : OptionsPattern[{SplitAndExpand, Glo
 	nsplits = OptionValue@Nsplits,
 	usederived = OptionValue@UseDerivedResults,
 	baserules = ToExpression[OptionValue@DecompositionRules][[1]],
-	derivedrules = ToExpression[OptionValue@DecompositionRules][[2]],
+	derivedrules = Flatten@ToExpression[OptionValue@DecompositionRules][[2]],
 	(** Additional variables **)
 	timevecs, tmpexpr, listall, subs, mod, count
 	},
@@ -1123,7 +1201,7 @@ SVTPerturbation[expr_, order_, opts : OptionsPattern[{SVTPerturbation, GlobalOpt
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*SVTExpand*)
 
 
@@ -1141,7 +1219,7 @@ SVTExpand[expr_, opts:OptionsPattern[{SVTExpand, GlobalOptionsSVT}]] := Module[
 	metric3 = OptionValue@Metric3D,
 	usederived = OptionValue@UseDerivedResults,
 	baserules = ToExpression[OptionValue@DecompositionRules][[1]],
-	derivedrules = ToExpression[OptionValue@DecompositionRules][[2]],
+	derivedrules = Flatten@ToExpression[OptionValue@DecompositionRules][[2]],
 	checkdivtracefree = OptionValue@CheckDivTraceFree,
 	fullexpand = OptionValue@FullExpand,
 	tanm3 = Tangent@OptionValue@Manifold3D,
@@ -1208,6 +1286,7 @@ Options[SVTDecomposition] = Join[{
 	SplitSpaceTimeQ            -> True,
 	SVTExpandQ                 -> True,
 	StoreResultQ               -> False,
+	StorePosition              -> 1,
 	StoreName                  -> None,
 	MaxBytesPrint              -> 20000
 }, Options[GRToBuildingBlocks], Options[SplitSpaceTime], Options[SVTPerturbation], Options[SVTExpand], Options[Listify]];
@@ -1226,6 +1305,7 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 	tanm3                   = Tangent@OptionValue@Manifold3D,
 	tanm4                   = Tangent@OptionValue@Manifold4D,
 	decrules                = OptionValue@DecompositionRules,
+	storeposition           = OptionValue@StorePosition,
 	storename               = OptionValue@StoreName,
 	bytesprint              = OptionValue@MaxBytesPrint,
 	baserules               = ToExpression[OptionValue@DecompositionRules][[1]],
@@ -1339,7 +1419,7 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 					xSVTUtilities`PrintLevel[Row[{ScreenDollarIndices@storename, " \[RuleDelayed] ... (too long expression!)"}], 1];
 				];
 			];
-            Function[{lhs}, lhs = Insert[Symbol[decrules], rule[[1]], {2,-1}], HoldAll] @@ MakeExpression[decrules, StandardForm];
+            Function[{lhs}, lhs = Insert[Symbol[decrules], rule[[1]], {2,storeposition,-1}], HoldAll] @@ MakeExpression[decrules, StandardForm];
 		];
 	];
 
@@ -1351,7 +1431,7 @@ SVTDecomposition[expr_, orderPT_, freeindsrules_, opts : OptionsPattern[{SVTDeco
 (*PrintWell*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*PrintWell*)
 
 
@@ -1530,7 +1610,7 @@ NDers[n_,type_:All][expr_] := Module[{tmp,order},
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*ToPhysical & ToConformal (TODO)*)
 
 
@@ -1800,4 +1880,33 @@ ApplyInvLap[expr_] := Module[{tmp},
 	tmp = tmp // Expand // SVTExpand;
 	tmp = tmp // UnPrintWell // ReplaceDummies;
 	tmp
+]
+
+
+(* ::Subsection:: *)
+(*RunIf*)
+
+
+SetAttributes[RunIf, HoldRest]
+SetAttributes[RunIfElse, HoldRest]
+
+RunIf[condition_, innames_, outnames_, codeif_] := RunIfElse[condition, innames, outnames, codeif, Print["Skipping evaluation!"];]
+RunIf[innames_, outnames_, codeif_] := RunIfElse[True, innames, outnames, codeif, Print["Skipping evaluation!"];]
+
+RunIfElse[innames_, outnames_, codeif_, codeelse_] := RunIfElse[True, innames, outnames, codeif, codeelse]
+
+RunIfElse[condition_, innames_, outnames_, codeif_, codeelse_] := Module[{allin, allout},
+	(* Check that input names are all defined *)
+	allin = AllTrue[innames, ValueQ];
+	(* Check if output names are all defined *)
+	If[outnames == {},
+		allout = False;,
+		allout = AllTrue[outnames, ValueQ];	
+	];
+
+	(* Evaluate only if all input is defined and not all output is calculated *)
+	If[condition && allin && Not@allout,
+		codeif;,
+		codeelse;
+	];
 ]

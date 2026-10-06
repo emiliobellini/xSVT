@@ -195,21 +195,6 @@ DefTensorSVT[DGlight[], M1, PrintAs->"\[Delta]\[CapitalSigma]", BackgroundQ->Tru
 (*Functions*)
 
 
-ToHorndeski[expr_] := Module[{tmp}, tmp = expr;
-	tmp = tmp //.alphaH[]:>0 //.alphaHH[]:>0;
-	tmp = tmp //.primealphaH[]:>0 //.primealphaHH[]:>0;
-	tmp = tmp //.pprimealphaH[]:>0 //.pprimealphaHH[]:>0;
-	tmp = tmp //.ppprimealphaH[]:>0 //.ppprimealphaHH[]:>0;
-	tmp = tmp //.pppprimealphaH[]:>0 //.pppprimealphaHH[]:>0;
-	tmp = tmp //.dotalphaH[]:>0 //.dotalphaHH[]:>0;
-	tmp = tmp //.ddotalphaH[]:>0 //.ddotalphaHH[]:>0;
-	tmp = tmp //.dddotalphaH[]:>0 //.dddotalphaHH[]:>0;
-	tmp = tmp //.ddddotalphaH[]:>0 //.ddddotalphaHH[]:>0;
-	tmp = tmp // NoF4 // NoF5 // Expand;
-	tmp // Expand
-]
-
-
 ToSync[expr_] := Module[{tmp}, tmp = expr;
 	tmp = tmp //.pertpsi[LI[order_]]:>0;
 	tmp = tmp //.pertB[LI[order_]]:>0;

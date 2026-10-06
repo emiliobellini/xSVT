@@ -8,7 +8,7 @@
 (*Initialise*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Preliminary checks*)
 
 
@@ -118,7 +118,7 @@ If[FileExistsQ[$ImportDecompositionRules],
 	Print["Using rules from "<>$ImportDecompositionRules<>"."];
 	Print[Column[{"Basic decomposition rules", ScreenDollarIndices[$SVTDecompositionRules[[1]]]}]];
 	Print[Column[{"Derived decomposition rules", ScreenDollarIndices[$SVTDecompositionRules[[2]]]}]];,
-	$SVTDecompositionRules = {{},{}};
+	$SVTDecompositionRules = {{},{{},{},{},{},{}}};
 	fill = True;
 	Print["Using default rules."];
 ];
@@ -137,7 +137,10 @@ If[FileExistsQ[$ImportDecompositionRules],
 Import[FileNameJoin[{$CodeDirectory,"Core","theory_GR_matter.wl"}]]
 
 (** Additional definitions: ST, DHOST **)
-If[$Theory=="ST" || $Theory=="STfast" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_ST.wl"}]]];
+If[$Theory=="STLH" || $Theory=="STH" || $Theory=="STBH" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_ST.wl"}]]];
+If[$Theory=="STLH" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_STLH.wl"}]]];
+If[$Theory=="STH" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_STH.wl"}]]];
+If[$Theory=="STBH" || $Theory=="ALL", Import[FileNameJoin[{$CodeDirectory,"Core","theory_STBH.wl"}]]];
 If[$Theory=="DHOST", Import[FileNameJoin[{$CodeDirectory,"Core","theory_DHOST.wl"}]]];
 
 Clear[fill]
@@ -158,7 +161,9 @@ Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_matter.wl"}]];
 
 If[$Theory=="GR", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_GR.wl"}]]];
 
-If[$Theory=="ST" || $Theory=="STfast", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_ST.wl"}]]];
+If[$Theory=="STLH", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_STLH.wl"}]]];
+If[$Theory=="STH", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_STH.wl"}]]];
+If[$Theory=="STBH", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_STBH.wl"}]]];
 If[$Theory=="DHOST", Import[FileNameJoin[{$CodeDirectory,"Core","lagrangian_DHOST.wl"}]]];
 
 
